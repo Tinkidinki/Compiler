@@ -1,0 +1,2 @@
+1. Bison ONLY recognises the tokens that flex sends. So if you see a useless character you need to send it to Bison
+Otherwise since it's not even sent to Bison, it won't get recognised as a useless character.

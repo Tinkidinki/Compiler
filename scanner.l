@@ -1,31 +1,14 @@
 %{
-    #include <iostream>
-    using namespace std;
-    extern int yylex();
+#include "parser.tab.h"
+int lineno = 0;
 %}
+
+%% 
+[ \t] 			{ /* eat white spaces */  }
+true|false      { printf("BOOL: %s\n", yytext); return BOOL_LITERAL; }
+\'.\'|EOF       { printf("CHAR: %s\n", yytext); return CHAR_LITERAL; }
+[0-9]+	        { printf("INT: %s\n", yytext); return INT_LITERAL; }
+\".*\"          { printf("STRING: %s\n", yytext); return STRING_LITERAL; }
+.			    { printf("Unrecognized character '%c'\n", yytext[0]); return BAD_CHAR;}
 %%
-[ \t\n]         {printf("\n %s"); return TYPE;}
-[A][a-z]+wal    { cout << "Found one " << yytext << endl; }
-.               ;
 
-[c][l][a][s][s]   {return CLASS;}
-
-
-
-%%
-
-int main(){
-    // open a file handler to a particular file
-    FILE *myfile = fopen("names.csv", "r");
-
-    // make sure it's valid
-
-    if (!myfile){
-        cout << "I can't open file!" <<endl;
-        return -1;
-    }
-
-    yyin = myfile;
-
-    while(yylex());
-}
