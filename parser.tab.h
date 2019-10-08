@@ -45,11 +45,15 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    INT_LITERAL = 258,
-    CHAR_LITERAL = 259,
-    BOOL_LITERAL = 260,
-    STRING_LITERAL = 261,
-    BAD_CHAR = 262
+    BAD_CHAR = 258,
+    INT_LITERAL = 259,
+    CHAR_LITERAL = 260,
+    BOOL_LITERAL = 261,
+    STRING_LITERAL = 262,
+    ARITH_OP = 263,
+    REL_OP = 264,
+    EQ_OP = 265,
+    COND_OP = 266
   };
 #endif
 
