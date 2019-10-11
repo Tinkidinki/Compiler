@@ -53,7 +53,16 @@ extern int yydebug;
     ARITH_OP = 263,
     REL_OP = 264,
     EQ_OP = 265,
-    COND_OP = 266
+    COND_OP = 266,
+    MINUS = 267,
+    NOT = 268,
+    LEFT_ROUND = 269,
+    RIGHT_ROUND = 270,
+    LEFT_SQUARE = 271,
+    RIGHT_SQUARE = 272,
+    LEFT_CURLY = 273,
+    RIGHT_CURLY = 274,
+    ID = 275
   };
 #endif
 
