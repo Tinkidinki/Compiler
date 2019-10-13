@@ -9,8 +9,13 @@ int lineno = 0;
 true|false              { printf("flex: BOOL: %s\n", yytext); return BOOL_LITERAL; }
 \'.\'|EOF               { printf("flex: CHAR: %s\n", yytext); return CHAR_LITERAL; }
 [0-9]+	                { printf("flex: INT: %s\n", yytext); return INT_LITERAL; }
-\".*?\"                 { printf("flex: STRING: %s\n", yytext); return STRING_LITERAL; }
+\"[^\"]*+\"                 { printf("flex: STRING: %s\n", yytext); return STRING_LITERAL; }
 
+
+,                       {return COMMA;}
+;                       {return SEMICOLON;}
+\?                      {return QUESTION_MARK;}    
+\:                      {return COLON;}                   
 \-                      {printf("flex: MINUS\n"); return MINUS;}
 !                       {printf("flex: NOT\n"); return NOT;}
 \(                      {return LEFT_ROUND;}
@@ -18,11 +23,20 @@ true|false              { printf("flex: BOOL: %s\n", yytext); return BOOL_LITERA
 \[                      {return LEFT_SQUARE;}
 \]                      {return RIGHT_SQUARE;}
 
+=                       {return EQUALS;}
 (==|!=)                 {return EQ_OP;}
 (<=|>=|<|>)             {return REL_OP;}
 [\+\-\*/%]              {return ARITH_OP;}
 \|\||&&                 {return COND_OP;}
 
+callout                 {return CALLOUT;}
+if                      {return IF;}
+else                    {return ELSE;}
+for                     {return FOR;}
+while                   {return WHILE;}
+return                  {return RETURN;}    
+break                   {return BREAK;}
+continue                {return CONTINUE;}    
 [a-zA-Z][a-zA-Z0-9]*    {return ID;}
 
 

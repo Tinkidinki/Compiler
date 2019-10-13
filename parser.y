@@ -4,15 +4,32 @@
 %}
 
 %token  BAD_CHAR
+        COMMA SEMICOLON EQUALS QUESTION_MARK COLON
         INT_LITERAL CHAR_LITERAL BOOL_LITERAL  STRING_LITERAL 
         ARITH_OP REL_OP EQ_OP COND_OP
         MINUS NOT 
         LEFT_ROUND RIGHT_ROUND LEFT_SQUARE RIGHT_SQUARE LEFT_CURLY RIGHT_CURLY
         ID
+        CALLOUT IF ELSE FOR WHILE RETURN BREAK CONTINUE
 
 %%
 
-Goal:	expr 
+Goal:	statement
+
+block:          statement
+
+statement:      location EQUALS expr SEMICOLON
+        |       method_call SEMICOLON
+        |       IF LEFT_ROUND expr RIGHT_ROUND block
+        |       IF LEFT_ROUND expr RIGHT_ROUND block ELSE block
+        |       expr QUESTION_MARK statement COLON statement 
+        |       WHILE LEFT_ROUND expr RIGHT_ROUND block 
+        |       FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND block
+        |       RETURN expr SEMICOLON
+        |       BREAK SEMICOLON
+        |       CONTINUE SEMICOLON
+        |       block
+
 
 expr:           literal 
         |       expr bin_op expr
@@ -36,7 +53,10 @@ location:       ID {printf("BISON: Sawn an ID\n");}
         |       ID LEFT_SQUARE expr RIGHT_SQUARE
         |       ID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE
 
-// method_call:    CALLOUT LEFT_ROUND string_literal 
+method_call:    CALLOUT LEFT_ROUND STRING_LITERAL COMMA callout_args RIGHT_ROUND
+        |       CALLOUT LEFT_ROUND STRING_LITERAL RIGHT_ROUND
+
+callout_args:   expr |  STRING_LITERAL | callout_args COMMA callout_args 
 
 
 
