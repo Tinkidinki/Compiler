@@ -7,10 +7,10 @@ int lineno = 0;
 
 [ \t] 			                    { /* eat white spaces */  }
 
-true|false                          { printf("flex: BOOL: %s\n", yytext); return BOOL_LITERAL; }
-\'.\'|EOF                           { printf("flex: CHAR: %s\n", yytext); return CHAR_LITERAL; }
-[0-9]+	                            { printf("flex: INT: %s\n", yytext); return INT_LITERAL; }
-\"[^\"]*+\"                         { printf("flex: STRING: %s\n", yytext); return STRING_LITERAL; }
+true|false                          { return BOOL_LITERAL; }
+\'.\'|EOF                           { return CHAR_LITERAL; }
+[0-9]+	                            { return INT_LITERAL; }
+\"[^\"]*+\"                         { return STRING_LITERAL; }
 
 
 ,                                   {return COMMA;}
@@ -47,7 +47,7 @@ continue                            {return CONTINUE;}
 
 
 
-.			                        { printf("Unrecognized character '%c'\n", yytext[0]); return BAD_CHAR;}
+.			                        { printf("FLEX: Unrecognized character '%c'\n", yytext[0]); return BAD_CHAR;}
 
 
 %%

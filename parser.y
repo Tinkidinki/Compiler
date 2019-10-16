@@ -12,86 +12,83 @@
         ID
         CALLOUT IF ELSE FOR WHILE RETURN BREAK CONTINUE TYPE CLASS PROGRAM
 
+%left   MINUS NOT 
 %left   ARITH_OP REL_OP EQ_OP COND_OP
 
 %%
 
-Goal:	expr
+Goal:	program
 
-// program:        CLASS PROGRAM LEFT_CURLY method_decls RIGHT_CURLY {printf("program -> CLASS PROGRAM LEFT_CURLY method_decls RIGHT_CURLY ");}
+program:        CLASS PROGRAM LEFT_CURLY var_decls method_decls RIGHT_CURLY {printf("program -> CLASS PROGRAM LEFT_CURLY var_decls method_decls RIGHT_CURLY \n");}
+       |       CLASS PROGRAM LEFT_CURLY method_decls RIGHT_CURLY {printf("program -> CLASS PROGRAM LEFT_CURLY method_decls RIGHT_CURLY \n");}
 
-// method_decl:    composite_type ID LEFT_ROUND parameters RIGHT_ROUND block  {printf("method_decl -> composite_type ID LEFT_ROUND parameters RIGHT_ROUND block");}
+method_decl:    composite_type ID LEFT_ROUND parameters RIGHT_ROUND block  {printf("method_decl -> composite_type ID LEFT_ROUND parameters RIGHT_ROUND block\n");}
+       |       composite_type ID LEFT_ROUND RIGHT_ROUND block  {printf("method_decl -> composite_type ID LEFT_ROUND RIGHT_ROUND block\n");}
 
-// method_decls:   {}  {printf("method_decls ->  {} ");}
-//         |       method_decl  {printf("method_decls -> method_decl");}
-//         |       method_decls method_decl {printf("method_decls -> method_decls method_decl ");}
+method_decls:   method_decl  {printf("method_decls -> method_decl\n");}
+        |       method_decls method_decl {printf("method_decls -> method_decls method_decl \n");}
 
-// parameters:     {} {printf("parameters -> {} ");}
-//         |       composite_type ID {printf("parameters -> composite_type ID ");}
-//         |       parameters COMMA composite_type ID {printf("parameters -> parameters COMMA composite_type ID ");}
+parameters:     composite_type ID {printf("parameters -> composite_type ID \n");}
+        |       parameters COMMA composite_type ID {printf("parameters -> parameters COMMA composite_type ID \n");}
         
-// composite_type: TYPE {printf("composite_type -> TYPE");}
-//         |       TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE {printf("composite_type -> TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE");}
-//         |       TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE {printf("composite_type -> TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE");}
+composite_type: TYPE {printf("composite_type -> TYPE\n");}
+        |       TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE {printf("composite_type -> TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE\n");}
+        |       TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE {printf("composite_type -> TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE \n");}
 
 
-// block:          LEFT_CURLY var_decls statements RIGHT_CURLY {printf("block -> LEFT_CURLY var_decls statements RIGHT_CURLY");}
+block:          LEFT_CURLY var_decls statements RIGHT_CURLY {printf("block -> LEFT_CURLY var_decls statements RIGHT_CURLY\n");}
+        |       LEFT_CURLY statements RIGHT_CURLY {printf("block -> LEFT_CURLY statements RIGHT_CURLY\n");}
 
-// var_decls:      {} {printf("var_decls -> {}");}
-//         |       var_decl {printf("var_decls -> var_decl");}
-//         |       var_decls var_decl {printf("var_decls-> var_decls var_decl");}
+var_decls:      var_decl {printf("var_decls -> var_decl\n");}
+        |       var_decls var_decl {printf("var_decls-> var_decls var_decl\n");}
 
-// var_decl:       TYPE location SEMICOLON {printf("var_decl -> TYPE location SEMICOLON");}
-//         |       composite_type ID SEMICOLON {printf("var_decl -> composite_type ID SEMICOLON");}
+var_decl:       composite_type ID SEMICOLON {printf("var_decl -> composite_type ID SEMICOLON\n");}
+//              TYPE location SEMICOLON {printf("var_decl -> TYPE location SEMICOLON\n");}
+         
 
-// statements:     statement  {printf("statements -> statement");}
-//         |       statements statement  {printf("statements -> statements statement");}
+statements:     statement  {printf("statements -> statement\n");}
+        |       statements statement  {printf("statements -> statements statement\n");}
 
-// statement:      statement bin_op statement  {printf("statement -> statement bin_op statement");}
-//         |       location EQUALS expr SEMICOLON  {printf("statement -> location EQUALS expr SEMICOLON");}
-//         |       method_call SEMICOLON  {printf("statement -> method_call SEMICOLON");}
-//         |       IF LEFT_ROUND expr RIGHT_ROUND statement  {printf("statement -> IF LEFT_ROUND expr RIGHT_ROUND statement");}
-//         |       IF LEFT_ROUND expr RIGHT_ROUND statement ELSE statement  {printf("statement -> IF LEFT_ROUND expr RIGHT_ROUND statement ELSE statement ");}
-//         |       expr  QUESTION_MARK statement COLON statement  {printf("statement -> expr  QUESTION_MARK statement COLON statement ");}
-//         |       WHILE LEFT_ROUND expr RIGHT_ROUND statement {printf("statement -> WHILE LEFT_ROUND expr RIGHT_ROUND statement ");}
-//         |       FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND statement {printf("statement -> FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND statement ");}
-//         |       RETURN expr SEMICOLON {printf("statement -> RETURN expr SEMICOLON ");}
-//         |       BREAK SEMICOLON {printf("statement -> BREAK SEMICOLON ");}
-//         |       CONTINUE SEMICOLON {printf("statement -> CONTINUE SEMICOLON");}
+statement:      location EQUALS expr SEMICOLON  {printf("statement -> location EQUALS expr SEMICOLON \n");}
+        |       method_call SEMICOLON  {printf("statement -> method_call SEMICOLON \n");}
+        |       IF LEFT_ROUND expr RIGHT_ROUND block  {printf("statement -> IF LEFT_ROUND expr RIGHT_ROUND statement \n");}
+        |       IF LEFT_ROUND expr RIGHT_ROUND block ELSE block  {printf("statement -> IF LEFT_ROUND expr RIGHT_ROUND statement ELSE statement \n");}
+        |       expr  QUESTION_MARK statement COLON statement  {printf("statement -> expr  QUESTION_MARK statement COLON statement \n");}
+        |       WHILE LEFT_ROUND expr RIGHT_ROUND block {printf("statement -> WHILE LEFT_ROUND expr RIGHT_ROUND statement \n");}
+        |       FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND block{printf("statement -> FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND statement \n");}
+        |       RETURN expr SEMICOLON {printf("statement -> RETURN expr SEMICOLON \n");}
+        |       BREAK SEMICOLON {printf("statement -> BREAK SEMICOLON \n");}
+        |       CONTINUE SEMICOLON {printf("statement -> CONTINUE SEMICOLON \n");}
       
 
 
-expr:           literal {printf("expr -> literal");}
-        |       expr bin_op expr {printf("expr -> expr bin_op expr ");}
-        // |       MINUS expr {printf("expr -> MINUS expr");}
-        // |       NOT expr {printf("expr -> NOT expr ");}
-        // |       LEFT_ROUND expr RIGHT_ROUND {printf("expr -> LEFT_ROUND expr RIGHT_ROUND ");}
-        // |       location {printf("expr -> location ");}
-        // |       method_call {printf("expr -> method_call");}
+expr:           literal {printf("expr -> literal \n");}
+        |       expr bin_op literal {printf("expr -> expr bin_op expr \n");}
+        |       MINUS expr {printf("expr -> MINUS expr \n");}
+        |       NOT expr {printf("expr -> NOT expr \n");}
+        |       LEFT_ROUND expr RIGHT_ROUND {printf("expr -> LEFT_ROUND expr RIGHT_ROUND \n");}
+        |       location {printf("expr -> location \n");}
+        |       method_call {printf("expr -> method_call \n");}
 
-literal:        INT_LITERAL {printf("literal -> INT_LITERAL ");}
-        |       CHAR_LITERAL {printf("literal -> CHAR_LITERAL");}
-        |       BOOL_LITERAL {printf("literal -> BOOL_LITERAL");}
-        |       STRING_LITERAL  {printf("literal -> STRING_LITERAL");}
+literal:        INT_LITERAL {printf("literal -> INT_LITERAL \n");}
+        |       CHAR_LITERAL {printf("literal -> CHAR_LITERAL \n");}
+        |       BOOL_LITERAL {printf("literal -> BOOL_LITERAL \n");}
+        |       STRING_LITERAL  {printf("literal -> STRING_LITERAL \n");}
 
-bin_op:         ARITH_OP  {printf("bin_op -> ARITH_OP ");}
-        |       REL_OP  {printf("bin_op -> REL_OP");}
-        |       EQ_OP  {printf("bin_op -> EQ_OP ");}
-        |       COND_OP   {printf("bin_op -> COND_OP ");}
+bin_op:         ARITH_OP  {printf("bin_op -> ARITH_OP \n");}
+        |       REL_OP  {printf("bin_op -> REL_OP \n");}
+        |       EQ_OP  {printf("bin_op -> EQ_OP \n");}
+        |       COND_OP   {printf("bin_op -> COND_OP \n");}
 
-// location:       ID {printf("location -> ID ");}
-//         |       ID LEFT_SQUARE expr RIGHT_SQUARE {printf("location -> ID LEFT_SQUARE expr RIGHT_SQUARE ");}
-//         |       ID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE {printf("location -> ID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE ");}
+location:       ID {printf("location -> ID \n");}
+        |       ID LEFT_SQUARE expr RIGHT_SQUARE {printf("location -> ID LEFT_SQUARE expr RIGHT_SQUARE \n");}
+        |       ID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE {printf("location -> ID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE \n");}
 
-// method_call:    CALLOUT LEFT_ROUND STRING_LITERAL COMMA callout_args RIGHT_ROUND {printf("method_call -> CALLOUT LEFT_ROUND STRING_LITERAL COMMA callout_args RIGHT_ROUND ");}
-//         |       CALLOUT LEFT_ROUND STRING_LITERAL RIGHT_ROUND {printf("method_call -> CALLOUT LEFT_ROUND STRING_LITERAL RIGHT_ROUND");}
+method_call:    CALLOUT LEFT_ROUND STRING_LITERAL COMMA callout_args RIGHT_ROUND {printf("method_call -> CALLOUT LEFT_ROUND STRING_LITERAL COMMA callout_args RIGHT_ROUND \n");}
+        |       CALLOUT LEFT_ROUND STRING_LITERAL RIGHT_ROUND {printf("method_call -> CALLOUT LEFT_ROUND STRING_LITERAL RIGHT_ROUND \n");}
 
-// callout_args:   expr {printf("callout_args -> expr ");}
-//         |       STRING_LITERAL {printf("callout_args -> STRING_LITERAL ");}
-//         |       callout_args COMMA callout_args {printf("callout_args -> callout_args COMMA callout_args ");}
-
-
-
+callout_args:   expr {printf("callout_args -> callout_arg \n");}
+        |       callout_args COMMA expr {printf("callout_args -> callout_args COMMA callout_arg \n");}
 
 %%
 

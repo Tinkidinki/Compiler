@@ -804,23 +804,23 @@ YY_RULE_SETUP
 case 2:
 YY_RULE_SETUP
 #line 10 "scanner.l"
-{ printf("flex: BOOL: %s\n", yytext); return BOOL_LITERAL; }
+{ return BOOL_LITERAL; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
 #line 11 "scanner.l"
-{ printf("flex: CHAR: %s\n", yytext); return CHAR_LITERAL; }
+{ return CHAR_LITERAL; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
 #line 12 "scanner.l"
-{ printf("flex: INT: %s\n", yytext); return INT_LITERAL; }
+{ return INT_LITERAL; }
 	YY_BREAK
 case 5:
 /* rule 5 can match eol */
 YY_RULE_SETUP
 #line 13 "scanner.l"
-{ printf("flex: STRING: %s\n", yytext); return STRING_LITERAL; }
+{ return STRING_LITERAL; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
@@ -970,7 +970,7 @@ YY_RULE_SETUP
 case 35:
 YY_RULE_SETUP
 #line 50 "scanner.l"
-{ printf("Unrecognized character '%c'\n", yytext[0]); return BAD_CHAR;}
+{ printf("FLEX: Unrecognized character '%c'\n", yytext[0]); return BAD_CHAR;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
