@@ -28,7 +28,7 @@ using namespace std;
 
 %%
 
-Goal:	program
+Goal:	expr
 
 program:        CLASS PROGRAM LEFT_CURLY var_decls method_decls RIGHT_CURLY {printf("program -> CLASS PROGRAM LEFT_CURLY var_decls method_decls RIGHT_CURLY \n");}
        |        CLASS PROGRAM LEFT_CURLY method_decls RIGHT_CURLY {printf("program -> CLASS PROGRAM LEFT_CURLY method_decls RIGHT_CURLY \n");}
@@ -75,11 +75,11 @@ statement:      location EQUALS expr SEMICOLON  {printf("statement -> location E
 
 expr:           literal {printf("expr -> literal \n");}
         |       expr bin_op literal {printf("expr -> expr bin_op expr \n");}
-        |       MINUS expr {printf("expr -> MINUS expr \n");}
-        |       NOT expr {printf("expr -> NOT expr \n");}
-        |       LEFT_ROUND expr RIGHT_ROUND {printf("expr -> LEFT_ROUND expr RIGHT_ROUND \n");}
-        |       location {printf("expr -> location \n");}
-        |       method_call {printf("expr -> method_call \n");}
+        // |       MINUS expr {printf("expr -> MINUS expr \n");}
+        // |       NOT expr {printf("expr -> NOT expr \n");}
+        // |       LEFT_ROUND expr RIGHT_ROUND {printf("expr -> LEFT_ROUND expr RIGHT_ROUND \n");}
+        // |       location {printf("expr -> location \n");}
+        // |       method_call {printf("expr -> method_call \n");}
 
 literal:        INT_LITERAL {printf("literal -> INT_LITERAL \n");}
         |       CHAR_LITERAL {printf("literal -> CHAR_LITERAL \n");}
