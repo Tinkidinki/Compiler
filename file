@@ -1,6 +1,6 @@
-{   int a;
-    for(a = 0; a< 10 ; a = a+5){
-        int a[4][4];
-        a[4][4] = 10;
+class Program {   
+    int method(){
+        a = 5;
+        b = 7;
     }
 }

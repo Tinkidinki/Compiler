@@ -1,8 +1,17 @@
 %{
 #define YYERROR_VERBOSE
-#include <stdio.h>
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#include "AST_node.h"
+#include "node_types_functionality.h"
+#include "node_types_numbers.h"
+#include "all_nodes.h"
+
 %}
 
+/*-----------------------------TOKENS----------------------------- */
 %token  BAD_CHAR
         COMMA SEMICOLON EQUALS QUESTION_MARK COLON
         INT_LITERAL CHAR_LITERAL BOOL_LITERAL  STRING_LITERAL 
@@ -14,16 +23,18 @@
 
 %left   MINUS NOT 
 %left   ARITH_OP REL_OP EQ_OP COND_OP
+/*----------------------------------------------------------------*/
+
 
 %%
 
 Goal:	program
 
 program:        CLASS PROGRAM LEFT_CURLY var_decls method_decls RIGHT_CURLY {printf("program -> CLASS PROGRAM LEFT_CURLY var_decls method_decls RIGHT_CURLY \n");}
-       |       CLASS PROGRAM LEFT_CURLY method_decls RIGHT_CURLY {printf("program -> CLASS PROGRAM LEFT_CURLY method_decls RIGHT_CURLY \n");}
+       |        CLASS PROGRAM LEFT_CURLY method_decls RIGHT_CURLY {printf("program -> CLASS PROGRAM LEFT_CURLY method_decls RIGHT_CURLY \n");}
 
 method_decl:    composite_type ID LEFT_ROUND parameters RIGHT_ROUND block  {printf("method_decl -> composite_type ID LEFT_ROUND parameters RIGHT_ROUND block\n");}
-       |       composite_type ID LEFT_ROUND RIGHT_ROUND block  {printf("method_decl -> composite_type ID LEFT_ROUND RIGHT_ROUND block\n");}
+       |        composite_type ID LEFT_ROUND RIGHT_ROUND block  {printf("method_decl -> composite_type ID LEFT_ROUND RIGHT_ROUND block\n");}
 
 method_decls:   method_decl  {printf("method_decls -> method_decl\n");}
         |       method_decls method_decl {printf("method_decls -> method_decls method_decl \n");}

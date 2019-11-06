@@ -85,7 +85,10 @@
 # define YYERROR_VERBOSE 0
 #endif
 
-
+/* In a future release of Bison, this section will be replaced
+   by #include "parser.tab.h".  */
+#ifndef YY_YY_PARSER_TAB_H_INCLUDED
+# define YY_YY_PARSER_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -148,11 +151,11 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-
+#endif /* !YY_YY_PARSER_TAB_H_INCLUDED  */
 
 /* Copy the second part of user declarations.  */
 
-#line 156 "parser.tab.c" /* yacc.c:358  */
+#line 159 "parser.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -1331,305 +1334,305 @@ yyreduce:
         case 3:
 #line 22 "parser.y" /* yacc.c:1646  */
     {printf("program -> CLASS PROGRAM LEFT_CURLY var_decls method_decls RIGHT_CURLY \n");}
-#line 1335 "parser.tab.c" /* yacc.c:1646  */
+#line 1338 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
 #line 23 "parser.y" /* yacc.c:1646  */
     {printf("program -> CLASS PROGRAM LEFT_CURLY method_decls RIGHT_CURLY \n");}
-#line 1341 "parser.tab.c" /* yacc.c:1646  */
+#line 1344 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
 #line 25 "parser.y" /* yacc.c:1646  */
     {printf("method_decl -> composite_type ID LEFT_ROUND parameters RIGHT_ROUND block\n");}
-#line 1347 "parser.tab.c" /* yacc.c:1646  */
+#line 1350 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
 #line 26 "parser.y" /* yacc.c:1646  */
     {printf("method_decl -> composite_type ID LEFT_ROUND RIGHT_ROUND block\n");}
-#line 1353 "parser.tab.c" /* yacc.c:1646  */
+#line 1356 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
 #line 28 "parser.y" /* yacc.c:1646  */
     {printf("method_decls -> method_decl\n");}
-#line 1359 "parser.tab.c" /* yacc.c:1646  */
+#line 1362 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
 #line 29 "parser.y" /* yacc.c:1646  */
     {printf("method_decls -> method_decls method_decl \n");}
-#line 1365 "parser.tab.c" /* yacc.c:1646  */
+#line 1368 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
 #line 31 "parser.y" /* yacc.c:1646  */
     {printf("parameters -> composite_type ID \n");}
-#line 1371 "parser.tab.c" /* yacc.c:1646  */
+#line 1374 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
 #line 32 "parser.y" /* yacc.c:1646  */
     {printf("parameters -> parameters COMMA composite_type ID \n");}
-#line 1377 "parser.tab.c" /* yacc.c:1646  */
+#line 1380 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
 #line 34 "parser.y" /* yacc.c:1646  */
     {printf("composite_type -> TYPE\n");}
-#line 1383 "parser.tab.c" /* yacc.c:1646  */
+#line 1386 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
 #line 35 "parser.y" /* yacc.c:1646  */
     {printf("composite_type -> TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE\n");}
-#line 1389 "parser.tab.c" /* yacc.c:1646  */
+#line 1392 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
 #line 36 "parser.y" /* yacc.c:1646  */
     {printf("composite_type -> TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE \n");}
-#line 1395 "parser.tab.c" /* yacc.c:1646  */
+#line 1398 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
 #line 39 "parser.y" /* yacc.c:1646  */
     {printf("block -> LEFT_CURLY var_decls statements RIGHT_CURLY\n");}
-#line 1401 "parser.tab.c" /* yacc.c:1646  */
+#line 1404 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
 #line 40 "parser.y" /* yacc.c:1646  */
     {printf("block -> LEFT_CURLY statements RIGHT_CURLY\n");}
-#line 1407 "parser.tab.c" /* yacc.c:1646  */
+#line 1410 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
 #line 42 "parser.y" /* yacc.c:1646  */
     {printf("var_decls -> var_decl\n");}
-#line 1413 "parser.tab.c" /* yacc.c:1646  */
+#line 1416 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
 #line 43 "parser.y" /* yacc.c:1646  */
     {printf("var_decls-> var_decls var_decl\n");}
-#line 1419 "parser.tab.c" /* yacc.c:1646  */
+#line 1422 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
 #line 45 "parser.y" /* yacc.c:1646  */
     {printf("var_decl -> composite_type ID SEMICOLON\n");}
-#line 1425 "parser.tab.c" /* yacc.c:1646  */
+#line 1428 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
 #line 49 "parser.y" /* yacc.c:1646  */
     {printf("statements -> statement\n");}
-#line 1431 "parser.tab.c" /* yacc.c:1646  */
+#line 1434 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
 #line 50 "parser.y" /* yacc.c:1646  */
     {printf("statements -> statements statement\n");}
-#line 1437 "parser.tab.c" /* yacc.c:1646  */
+#line 1440 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
 #line 52 "parser.y" /* yacc.c:1646  */
     {printf("statement -> location EQUALS expr SEMICOLON \n");}
-#line 1443 "parser.tab.c" /* yacc.c:1646  */
+#line 1446 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
 #line 53 "parser.y" /* yacc.c:1646  */
     {printf("statement -> method_call SEMICOLON \n");}
-#line 1449 "parser.tab.c" /* yacc.c:1646  */
+#line 1452 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
 #line 54 "parser.y" /* yacc.c:1646  */
     {printf("statement -> IF LEFT_ROUND expr RIGHT_ROUND statement \n");}
-#line 1455 "parser.tab.c" /* yacc.c:1646  */
+#line 1458 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
 #line 55 "parser.y" /* yacc.c:1646  */
     {printf("statement -> IF LEFT_ROUND expr RIGHT_ROUND statement ELSE statement \n");}
-#line 1461 "parser.tab.c" /* yacc.c:1646  */
+#line 1464 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
 #line 56 "parser.y" /* yacc.c:1646  */
     {printf("statement -> expr  QUESTION_MARK statement COLON statement \n");}
-#line 1467 "parser.tab.c" /* yacc.c:1646  */
+#line 1470 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
 #line 57 "parser.y" /* yacc.c:1646  */
     {printf("statement -> WHILE LEFT_ROUND expr RIGHT_ROUND statement \n");}
-#line 1473 "parser.tab.c" /* yacc.c:1646  */
+#line 1476 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
 #line 58 "parser.y" /* yacc.c:1646  */
     {printf("statement -> FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND statement \n");}
-#line 1479 "parser.tab.c" /* yacc.c:1646  */
+#line 1482 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
 #line 59 "parser.y" /* yacc.c:1646  */
     {printf("statement -> RETURN expr SEMICOLON \n");}
-#line 1485 "parser.tab.c" /* yacc.c:1646  */
+#line 1488 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
 #line 60 "parser.y" /* yacc.c:1646  */
     {printf("statement -> BREAK SEMICOLON \n");}
-#line 1491 "parser.tab.c" /* yacc.c:1646  */
+#line 1494 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
 #line 61 "parser.y" /* yacc.c:1646  */
     {printf("statement -> CONTINUE SEMICOLON \n");}
-#line 1497 "parser.tab.c" /* yacc.c:1646  */
+#line 1500 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
 #line 65 "parser.y" /* yacc.c:1646  */
     {printf("expr -> literal \n");}
-#line 1503 "parser.tab.c" /* yacc.c:1646  */
+#line 1506 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
 #line 66 "parser.y" /* yacc.c:1646  */
     {printf("expr -> expr bin_op expr \n");}
-#line 1509 "parser.tab.c" /* yacc.c:1646  */
+#line 1512 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
 #line 67 "parser.y" /* yacc.c:1646  */
     {printf("expr -> MINUS expr \n");}
-#line 1515 "parser.tab.c" /* yacc.c:1646  */
+#line 1518 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
 #line 68 "parser.y" /* yacc.c:1646  */
     {printf("expr -> NOT expr \n");}
-#line 1521 "parser.tab.c" /* yacc.c:1646  */
+#line 1524 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
 #line 69 "parser.y" /* yacc.c:1646  */
     {printf("expr -> LEFT_ROUND expr RIGHT_ROUND \n");}
-#line 1527 "parser.tab.c" /* yacc.c:1646  */
+#line 1530 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
 #line 70 "parser.y" /* yacc.c:1646  */
     {printf("expr -> location \n");}
-#line 1533 "parser.tab.c" /* yacc.c:1646  */
+#line 1536 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
 #line 71 "parser.y" /* yacc.c:1646  */
     {printf("expr -> method_call \n");}
-#line 1539 "parser.tab.c" /* yacc.c:1646  */
+#line 1542 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
 #line 73 "parser.y" /* yacc.c:1646  */
     {printf("literal -> INT_LITERAL \n");}
-#line 1545 "parser.tab.c" /* yacc.c:1646  */
+#line 1548 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
 #line 74 "parser.y" /* yacc.c:1646  */
     {printf("literal -> CHAR_LITERAL \n");}
-#line 1551 "parser.tab.c" /* yacc.c:1646  */
+#line 1554 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
 #line 75 "parser.y" /* yacc.c:1646  */
     {printf("literal -> BOOL_LITERAL \n");}
-#line 1557 "parser.tab.c" /* yacc.c:1646  */
+#line 1560 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
 #line 76 "parser.y" /* yacc.c:1646  */
     {printf("literal -> STRING_LITERAL \n");}
-#line 1563 "parser.tab.c" /* yacc.c:1646  */
+#line 1566 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
 #line 78 "parser.y" /* yacc.c:1646  */
     {printf("bin_op -> ARITH_OP \n");}
-#line 1569 "parser.tab.c" /* yacc.c:1646  */
+#line 1572 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
 #line 79 "parser.y" /* yacc.c:1646  */
     {printf("bin_op -> REL_OP \n");}
-#line 1575 "parser.tab.c" /* yacc.c:1646  */
+#line 1578 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
 #line 80 "parser.y" /* yacc.c:1646  */
     {printf("bin_op -> EQ_OP \n");}
-#line 1581 "parser.tab.c" /* yacc.c:1646  */
+#line 1584 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
 #line 81 "parser.y" /* yacc.c:1646  */
     {printf("bin_op -> COND_OP \n");}
-#line 1587 "parser.tab.c" /* yacc.c:1646  */
+#line 1590 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
 #line 83 "parser.y" /* yacc.c:1646  */
     {printf("location -> ID \n");}
-#line 1593 "parser.tab.c" /* yacc.c:1646  */
+#line 1596 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
 #line 84 "parser.y" /* yacc.c:1646  */
     {printf("location -> ID LEFT_SQUARE expr RIGHT_SQUARE \n");}
-#line 1599 "parser.tab.c" /* yacc.c:1646  */
+#line 1602 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
 #line 85 "parser.y" /* yacc.c:1646  */
     {printf("location -> ID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE \n");}
-#line 1605 "parser.tab.c" /* yacc.c:1646  */
+#line 1608 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
 #line 87 "parser.y" /* yacc.c:1646  */
     {printf("method_call -> CALLOUT LEFT_ROUND STRING_LITERAL COMMA callout_args RIGHT_ROUND \n");}
-#line 1611 "parser.tab.c" /* yacc.c:1646  */
+#line 1614 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
 #line 88 "parser.y" /* yacc.c:1646  */
     {printf("method_call -> CALLOUT LEFT_ROUND STRING_LITERAL RIGHT_ROUND \n");}
-#line 1617 "parser.tab.c" /* yacc.c:1646  */
+#line 1620 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 51:
 #line 90 "parser.y" /* yacc.c:1646  */
     {printf("callout_args -> callout_arg \n");}
-#line 1623 "parser.tab.c" /* yacc.c:1646  */
+#line 1626 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
 #line 91 "parser.y" /* yacc.c:1646  */
     {printf("callout_args -> callout_args COMMA callout_arg \n");}
-#line 1629 "parser.tab.c" /* yacc.c:1646  */
+#line 1632 "parser.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1633 "parser.tab.c" /* yacc.c:1646  */
+#line 1636 "parser.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
