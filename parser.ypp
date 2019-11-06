@@ -9,6 +9,8 @@ using namespace std;
 #include "node_types_numbers.h"
 #include "all_nodes.h"
 
+IntLiteral* start = NULL;
+
 %}
 
 /*-----------------------------TOKENS----------------------------- */
@@ -73,15 +75,15 @@ statement:      location EQUALS expr SEMICOLON  {printf("statement -> location E
       
 
 
-expr:           literal {printf("expr -> literal \n");}
-        |       expr bin_op literal {printf("expr -> expr bin_op expr \n");}
+expr:           literal {$$ = $1; } //printf("expr -> literal \n");
+        // |       expr bin_op literal {printf("expr -> expr bin_op expr \n");}
         // |       MINUS expr {printf("expr -> MINUS expr \n");}
         // |       NOT expr {printf("expr -> NOT expr \n");}
         // |       LEFT_ROUND expr RIGHT_ROUND {printf("expr -> LEFT_ROUND expr RIGHT_ROUND \n");}
         // |       location {printf("expr -> location \n");}
         // |       method_call {printf("expr -> method_call \n");}
 
-literal:        INT_LITERAL {printf("literal -> INT_LITERAL \n");}
+literal:        INT_LITERAL {$$ = new IntLiteral($1);} // printf("literal -> INT_LITERAL \n");
         |       CHAR_LITERAL {printf("literal -> CHAR_LITERAL \n");}
         |       BOOL_LITERAL {printf("literal -> BOOL_LITERAL \n");}
         |       STRING_LITERAL  {printf("literal -> STRING_LITERAL \n");}
@@ -115,5 +117,8 @@ main(int argc, char **argv)
         printf("Parsing Over\n");
 }
 
-
-
+%%
+int main(){
+        PrettyPrint printer;
+        start.DoOperation(printer);
+}

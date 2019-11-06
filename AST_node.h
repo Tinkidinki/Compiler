@@ -4,8 +4,8 @@ using namespace std;
 #include "node_types_functionality.h"
 
 union ASTnode{
-    Expr* exp;
+    IntLiteral* intliteral;
 };
 
-typedef union ASTnode ASTnode;
+typedef union ASTnode YYSTYPE;
 
