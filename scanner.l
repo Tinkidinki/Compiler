@@ -1,9 +1,11 @@
 %{
-// #include <bits/stdc++.h>
-// using namespace std;
-#include "parser.tab.h"     
+#include <bits/stdc++.h>
+using namespace std;
+#include "parser.tab.hpp"     
 int lineno = 0;     
 %}      
+
+%option noyywrap
 
 %%     
 

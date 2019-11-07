@@ -1,11 +1,11 @@
 %{
-	// #include <bits/stdc++.h>
-        // using namespace std;
+	#include <bits/stdc++.h>
+        using namespace std;
         
-	// extern  int yylex();
-        // extern  int yyparse ();
-        // // extern FILE* yyin;
-	// void yyerror(char *s);
+	extern  int yylex();
+        extern  int yyparse ();
+        extern FILE* yyin;
+	void yyerror(const char *s);
 
 
 
@@ -111,7 +111,7 @@ callout_args:   expr {printf("callout_args -> callout_arg \n");}
 
 %%
 
-void yyerror(char *s)
+void yyerror(const char *s)
 {
         fprintf(stderr, "error: %s\n", s);
 }
