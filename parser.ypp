@@ -1,4 +1,4 @@
-%{
+%{      #include "small_test_file.cpp"
 	#include <bits/stdc++.h>
         using namespace std;
         
@@ -13,16 +13,19 @@
 // #include "node_types_functionality.h"
 // #include "node_types_numbers.h"
 // #include "all_nodes.h"
-// #include "small_test_file.h"
 
-// IntLiteral* start = NULL;
+        
+        class IntLiteral* start = NULL;
+        extern YYSTYPE yylval;
 
 %}
 
 /*-----------------------------TOKENS----------------------------- */
+%token <value> INT_LITERAL 
 %token  BAD_CHAR
         COMMA SEMICOLON EQUALS QUESTION_MARK COLON
-        INT_LITERAL CHAR_LITERAL BOOL_LITERAL  STRING_LITERAL 
+        
+        CHAR_LITERAL BOOL_LITERAL  STRING_LITERAL 
         
         MINUS NOT 
         LEFT_ROUND RIGHT_ROUND LEFT_SQUARE RIGHT_SQUARE LEFT_CURLY RIGHT_CURLY
@@ -33,10 +36,10 @@
 %left   ARITH_OP REL_OP EQ_OP COND_OP
 /*----------------------------------------------------------------*/
 
-
+%type <literal> literal
 %%
 
-Goal:	program
+Goal:	literal
 
 program:        CLASS PROGRAM LEFT_CURLY var_decls method_decls RIGHT_CURLY {printf("program -> CLASS PROGRAM LEFT_CURLY var_decls method_decls RIGHT_CURLY \n");}
        |        CLASS PROGRAM LEFT_CURLY method_decls RIGHT_CURLY {printf("program -> CLASS PROGRAM LEFT_CURLY method_decls RIGHT_CURLY \n");}
@@ -81,18 +84,18 @@ statement:      location EQUALS expr SEMICOLON  {printf("statement -> location E
       
 
 
-expr:           literal {} // $$ = $1; printf("expr -> literal \n");
-        |       expr bin_op literal {printf("expr -> expr bin_op expr \n");}
-        |       MINUS expr {printf("expr -> MINUS expr \n");}
-        |       NOT expr {printf("expr -> NOT expr \n");}
-        |       LEFT_ROUND expr RIGHT_ROUND {printf("expr -> LEFT_ROUND expr RIGHT_ROUND \n");}
-        |       location {printf("expr -> location \n");}
-        |       method_call {printf("expr -> method_call \n");}
+expr:   // |    literal {$$ = $1; start = $$;} // printf("expr -> literal \n");
+        // |       expr bin_op literal {printf("expr -> expr bin_op expr \n");}
+        // |       MINUS expr {printf("expr -> MINUS expr \n");}
+        // |       NOT expr {printf("expr -> NOT expr \n");}
+        // |       LEFT_ROUND expr RIGHT_ROUND {printf("expr -> LEFT_ROUND expr RIGHT_ROUND \n");}
+        // |       location {printf("expr -> location \n");}
+        // |       method_call {printf("expr -> method_call \n");}
 
-literal:        INT_LITERAL {} // $$ = new IntLiteral($1); printf("literal -> INT_LITERAL \n");
-        |       CHAR_LITERAL {printf("literal -> CHAR_LITERAL \n");}
-        |       BOOL_LITERAL {printf("literal -> BOOL_LITERAL \n");}
-        |       STRING_LITERAL  {printf("literal -> STRING_LITERAL \n");}
+literal:        INT_LITERAL {$$ = new IntLiteral($1); start = $$;} //  printf("literal -> INT_LITERAL \n");
+        // |       CHAR_LITERAL {printf("literal -> CHAR_LITERAL \n");}
+        // |       BOOL_LITERAL {printf("literal -> BOOL_LITERAL \n");}
+        // |       STRING_LITERAL  {printf("literal -> STRING_LITERAL \n");}
 
 bin_op:         ARITH_OP  {printf("bin_op -> ARITH_OP \n");}
         |       REL_OP  {printf("bin_op -> REL_OP \n");}
@@ -117,14 +120,12 @@ void yyerror(const char *s)
 }
 
 
-main(int argc, char **argv)
+int main(int argc, char **argv)
 {
         yyparse();
         printf("Parsing Over\n");
-}
 
-// %%
-// int main(){
-//         PrettyPrint printer;
-//         start.DoOperation(printer);
-// }
+        PrettyPrint printer;
+        start->DoOperation(&printer);
+        return 0;
+}

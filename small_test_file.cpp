@@ -1,3 +1,4 @@
+# define YYSTYPE_IS_DECLARED 1
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -15,7 +16,8 @@ class Operation{
 };
 
 union ASTnode{
-    class IntLiteral* intliteral;
+    int value;
+    class Literal* literal;
 };
 typedef union ASTnode YYSTYPE;
 
@@ -43,7 +45,12 @@ class Leaf{
 };
 typedef class Leaf Leaf;
 
-class IntLiteral : public Leaf {
+class Literal{
+
+};
+typedef class Literal Literal;
+
+class IntLiteral : public Literal, public Leaf {
     public:
 
         string name = "INT_LITERAL";
