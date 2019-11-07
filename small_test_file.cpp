@@ -87,9 +87,9 @@ class PrettyPrint : public Operation{
         }
 };
 
-int main(){
-    IntLiteral l(5);
-    PrettyPrint printer;
-    l.DoOperation(&printer);
-    return 0;
-}
+// int main(){
+//     IntLiteral l(5);
+//     PrettyPrint printer;
+//     l.DoOperation(&printer);
+//     return 0;
+// }
