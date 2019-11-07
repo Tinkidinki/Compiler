@@ -15,8 +15,8 @@
 // #include "all_nodes.h"
 
         
-        class IntLiteral* start = NULL;
-        extern YYSTYPE yylval;
+        class Literal* start = NULL;
+        // extern YYSTYPE yylval;
 
 %}
 
@@ -92,7 +92,7 @@ expr:   // |    literal {$$ = $1; start = $$;} // printf("expr -> literal \n");
         // |       location {printf("expr -> location \n");}
         // |       method_call {printf("expr -> method_call \n");}
 
-literal:        INT_LITERAL {$$ = new IntLiteral($1); start = $$;} //  printf("literal -> INT_LITERAL \n");
+literal:        INT_LITERAL {$$ = new IntLiteral($1); } //  printf("literal -> INT_LITERAL \n");
         // |       CHAR_LITERAL {printf("literal -> CHAR_LITERAL \n");}
         // |       BOOL_LITERAL {printf("literal -> BOOL_LITERAL \n");}
         // |       STRING_LITERAL  {printf("literal -> STRING_LITERAL \n");}
@@ -125,7 +125,7 @@ int main(int argc, char **argv)
         yyparse();
         printf("Parsing Over\n");
 
-        PrettyPrint printer;
-        start->DoOperation(&printer);
+        // PrettyPrint printer;
+        // start->DoOperation(&printer);
         return 0;
 }

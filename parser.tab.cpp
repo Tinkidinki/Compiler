@@ -80,8 +80,8 @@
 // #include "all_nodes.h"
 
         
-        class IntLiteral* start = NULL;
-        extern YYSTYPE yylval;
+        class Literal* start = NULL;
+        // extern YYSTYPE yylval;
 
 
 #line 88 "parser.tab.cpp" /* yacc.c:339  */
@@ -1243,7 +1243,7 @@ yyreduce:
     {
         case 3:
 #line 95 "parser.ypp" /* yacc.c:1646  */
-    {(yyval.literal) = new IntLiteral((yyvsp[0].value)); start = (yyval.literal);}
+    {(yyval.literal) = new IntLiteral((yyvsp[0].value)); }
 #line 1248 "parser.tab.cpp" /* yacc.c:1646  */
     break;
 
@@ -1490,7 +1490,7 @@ int main(int argc, char **argv)
         yyparse();
         printf("Parsing Over\n");
 
-        PrettyPrint printer;
-        start->DoOperation(&printer);
+        // PrettyPrint printer;
+        // start->DoOperation(&printer);
         return 0;
 }

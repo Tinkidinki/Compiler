@@ -45,8 +45,9 @@ class Leaf{
 };
 typedef class Leaf Leaf;
 
-class Literal{
-
+class Literal {
+    public:
+        virtual void DoOperation(Operation* o) = 0;
 };
 typedef class Literal Literal;
 
