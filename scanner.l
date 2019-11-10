@@ -1,8 +1,20 @@
 %{
 #include <bits/stdc++.h>
+#include <string.h>
 using namespace std;
+
+union ASTnode{
+    int int_val;
+    bool bool_val;
+    char char_val;
+    char* str_val;
+    char* symbol;
+    class Node* node;
+};
+typedef union ASTnode YYSTYPE;
+
 #include "parser.tab.hpp"     
-int lineno = 0;     
+  
 %}      
 
 %option noyywrap
@@ -11,18 +23,18 @@ int lineno = 0;
 
 [ \t] 			                    { /* eat white spaces */  }
 
-true|false                          { return BOOL_LITERAL; }
-\'.\'|EOF                           { return CHAR_LITERAL; }
-[0-9]+	                            { return INT_LITERAL; }
-\"[^\"]*+\"                         { return STRING_LITERAL; }
+true|false                          { yylval.bool_val = strcmp(yytext,"true") ? true : false; return BOOL_LITERAL; }
+\'.\'                               { yylval.char_val = yytext[1]; return CHAR_LITERAL; }
+[0-9]+	                            { yylval.int_val = atoi(yytext); return INT_LITERAL; }
+\"[^\"]*+\"                         { yylval.str_val = strdup(yytext); return STRING_LITERAL; }
 
 
 ,                                   {return COMMA;}
 ;                                   {return SEMICOLON;}
 \?                                  {return QUESTION_MARK;}    
 \:                                  {return COLON;}                   
-\-                                  {printf("flex: MINUS\n"); return MINUS;}
-!                                   {printf("flex: NOT\n"); return NOT;}
+\-                                  {return MINUS;}
+!                                   {return NOT;}
 \(                                  {return LEFT_ROUND;}
 \)                                  {return RIGHT_ROUND;}
 \[                                  {return LEFT_SQUARE;}
@@ -31,14 +43,14 @@ true|false                          { return BOOL_LITERAL; }
 \}                                  {return RIGHT_CURLY;}
 
 =                                   {return EQUALS;}
-(==|!=)                             {return EQ_OP;}
-(<=|>=|<|>)                         {return REL_OP;}
-[\+\-\*/%]                          {return ARITH_OP;}
-\|\||&&                             {return COND_OP;}
+(==|!=)                             {yylval.symbol = strdup(yytext); return EQ_OP;}
+(<=|>=|<|>)                         {yylval.symbol = strdup(yytext); return REL_OP;}
+[\+\-\*/%]                          {yylval.symbol = strdup(yytext); return ARITH_OP;}
+\|\||&&                             {yylval.symbol = strdup(yytext); return COND_OP;}
 
 class                               {return CLASS;}
 Program                             {return PROGRAM;}
-int|uint|bool|char|string|void      {return TYPE;}
+int|uint|bool|char|string|void      {yylval.symbol = strdup(yytext); return TYPE;}
 callout                             {return CALLOUT;}
 if                                  {return IF;}
 else                                {return ELSE;}
@@ -47,7 +59,7 @@ while                               {return WHILE;}
 return                              {return RETURN;}    
 break                               {return BREAK;}
 continue                            {return CONTINUE;}    
-[a-zA-Z][a-zA-Z0-9]*                {return ID;}
+[a-zA-Z][a-zA-Z0-9]*                {yylval.symbol = strdup(yytext); return ID;}
 
 
 
