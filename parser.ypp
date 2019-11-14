@@ -34,6 +34,12 @@
 %token <symbol> MINUS
 %token <symbol> NOT
 %token <symbol> ID
+%token <symbol> ARITH_OP
+%token <symbol> REL_OP
+%token <symbol> EQ_OP 
+%token <symbol> COND_OP
+
+
 %token  BAD_CHAR
         COMMA SEMICOLON EQUALS QUESTION_MARK COLON
         INT_LITERAL BOOL_LITERAL CHAR_LITERAL STRING_LITERAL
@@ -50,9 +56,11 @@
 %type <node> literal 
 %type <node> expr
 %type <node> location
+%type <node> statement
+%type <node> bin_op
 %%
 
-Goal: expr
+Goal: statement
 
 program:        CLASS PROGRAM LEFT_CURLY var_decls method_decls RIGHT_CURLY {printf("program -> CLASS PROGRAM LEFT_CURLY var_decls method_decls RIGHT_CURLY \n");}
        |        CLASS PROGRAM LEFT_CURLY method_decls RIGHT_CURLY {printf("program -> CLASS PROGRAM LEFT_CURLY method_decls RIGHT_CURLY \n");}
@@ -84,7 +92,7 @@ var_decl:       composite_type ID SEMICOLON {printf("var_decl -> composite_type 
 statements:     statement  {printf("statements -> statement\n");}
         // |       statements statement  {printf("statements -> statements statement\n");}
 
-statement:      location EQUALS expr SEMICOLON  {printf("statement -> location EQUALS expr SEMICOLON \n");}
+statement:      location EQUALS expr SEMICOLON  {$$ = new AssignmentStatement($1, $3); start = $$;} //printf("statement -> location EQUALS expr SEMICOLON \n");
         |       method_call SEMICOLON  {printf("statement -> method_call SEMICOLON \n");}
         |       IF LEFT_ROUND expr RIGHT_ROUND block  {printf("statement -> IF LEFT_ROUND expr RIGHT_ROUND statement \n");}
         |       IF LEFT_ROUND expr RIGHT_ROUND block ELSE block  {printf("statement -> IF LEFT_ROUND expr RIGHT_ROUND statement ELSE statement \n");}
@@ -98,11 +106,11 @@ statement:      location EQUALS expr SEMICOLON  {printf("statement -> location E
 
 
 expr:           literal {$$ = $1; start = $$;} // printf("expr -> literal \n");
-        |       expr bin_op literal {printf("expr -> expr bin_op expr \n");}
+        |       expr bin_op literal {$$ = new BinaryExpression($1, $2, $3); }//{printf("expr -> expr bin_op expr \n");}
         |       MINUS expr {$$ = new UnaryExpression($1, $2); start = $$;} // printf("expr -> MINUS expr \n");
         |       NOT expr {$$ = new UnaryExpression($1, $2); start = $$;} //  printf("expr -> NOT expr \n");
-        |       LEFT_ROUND expr RIGHT_ROUND {printf("expr -> LEFT_ROUND expr RIGHT_ROUND \n");}
-        |       location {printf("expr -> location \n");}
+        |       LEFT_ROUND expr RIGHT_ROUND {$$ = $1;}//{printf("expr -> LEFT_ROUND expr RIGHT_ROUND \n");}
+        |       location {$$ = $1; start = $$;} // printf("expr -> location \n");
         |       method_call {printf("expr -> method_call \n");}
 
 literal:        INT_LITERAL {$$ = new IntLiteral($1);} //  printf("literal -> INT_LITERAL \n");
@@ -110,10 +118,10 @@ literal:        INT_LITERAL {$$ = new IntLiteral($1);} //  printf("literal -> IN
         |       BOOL_LITERAL {$$ = new BoolLiteral($1);} // printf("literal -> BOOL_LITERAL \n");
         |       STRING_LITERAL  {$$ = new StringLiteral($1);} //printf("literal -> STRING_LITERAL \n");}
 
-bin_op:         ARITH_OP  {printf("bin_op -> ARITH_OP \n");}
-        |       REL_OP  {printf("bin_op -> REL_OP \n");}
-        |       EQ_OP  {printf("bin_op -> EQ_OP \n");}
-        |       COND_OP   {printf("bin_op -> COND_OP \n");}
+bin_op:         ARITH_OP  {$$ = new ArithmeticOperator($1);} //{printf("bin_op -> ARITH_OP \n");}
+        |       REL_OP  {$$ = new RelationalOperator($1);} //{printf("bin_op -> REL_OP \n");}
+        |       EQ_OP  {$$ = new EqualOperator($1);} //{printf("bin_op -> EQ_OP \n");}
+        |       COND_OP   {$$ = new ConditionalOperator($1);} //{printf("bin_op -> COND_OP \n");}
 
 location:       ID {$$ = new Identifier($1);} // printf("location -> ID \n");
         |       ID LEFT_SQUARE expr RIGHT_SQUARE {printf("location -> ID LEFT_SQUARE expr RIGHT_SQUARE \n");}
@@ -140,6 +148,7 @@ int main(int argc, char **argv)
 
         PrettyPrint printer;
         start->doOp(&printer);
+        cout << endl;
         
         return 0;
 }
