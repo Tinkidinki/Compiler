@@ -14,12 +14,11 @@ typedef class Node{
     public: 
         virtual void doOp(Operation* op) = 0;
         virtual string getname() = 0;
-        virtual string getvalue() = 0;
 } Node;
 
 class Operation{
     public:
-        virtual string LeafOp(Leaf* l) = 0;
+        virtual void LeafOp(Leaf* l) = 0;
         virtual void UnaryOp(Unary* u) = 0;
         // virtual void BinaryOp(Binary* b) = 0;
         // virtual void TernaryOp(Ternary* t) = 0;
@@ -28,8 +27,8 @@ class Operation{
 
 class PrettyPrint: public Operation{
     public: 
-        string LeafOp(Leaf* l);
-        void UnaryOp(Unary* u) = 0;
+        void LeafOp(Leaf* l);
+        void UnaryOp(Unary* u);
         // void BinaryOp(Binary* b) = 0;
         // void TernaryOp(Ternary* t) = 0;
         // void ListOp(List* l) = 0;
@@ -40,10 +39,12 @@ class Leaf: public Node{
         void doOp(Operation* op){
             op->LeafOp(this);
         }
+        virtual string getvalue() = 0;
+    
 };
 
-string PrettyPrint::LeafOp(Leaf* l){
-    return "(" +  l->getname() + " , " + l->getvalue() + ")" ;
+void PrettyPrint::LeafOp(Leaf* l){
+    cout << "(" +  l->getname() + " , " + l->getvalue() + ")" ;
 } 
 
 class Unary: public Node{

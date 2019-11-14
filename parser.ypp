@@ -32,14 +32,15 @@
 %token <char_val> CHAR_LITERAL
 %token <str_val> STRING_LITERAL 
 %token <symbol> MINUS
+%token <symbol> NOT
+%token <symbol> ID
 %token  BAD_CHAR
         COMMA SEMICOLON EQUALS QUESTION_MARK COLON
         INT_LITERAL BOOL_LITERAL CHAR_LITERAL STRING_LITERAL
            
         
-         NOT 
         LEFT_ROUND RIGHT_ROUND LEFT_SQUARE RIGHT_SQUARE LEFT_CURLY RIGHT_CURLY
-        ID
+       
         CALLOUT IF ELSE FOR WHILE RETURN BREAK CONTINUE TYPE CLASS PROGRAM
 
 %left   MINUS NOT 
@@ -48,6 +49,7 @@
 
 %type <node> literal 
 %type <node> expr
+%type <node> location
 %%
 
 Goal: expr
@@ -98,22 +100,22 @@ statement:      location EQUALS expr SEMICOLON  {printf("statement -> location E
 expr:           literal {$$ = $1; start = $$;} // printf("expr -> literal \n");
         |       expr bin_op literal {printf("expr -> expr bin_op expr \n");}
         |       MINUS expr {$$ = new UnaryExpression($1, $2); start = $$;} // printf("expr -> MINUS expr \n");
-        |       NOT expr {printf("expr -> NOT expr \n");}
+        |       NOT expr {$$ = new UnaryExpression($1, $2); start = $$;} //  printf("expr -> NOT expr \n");
         |       LEFT_ROUND expr RIGHT_ROUND {printf("expr -> LEFT_ROUND expr RIGHT_ROUND \n");}
         |       location {printf("expr -> location \n");}
         |       method_call {printf("expr -> method_call \n");}
 
-literal:        INT_LITERAL {cout << $1 << endl; $$ = new IntLiteral($1);} //  printf("literal -> INT_LITERAL \n");
-        |       CHAR_LITERAL {cout << $1 << endl; $$ = new CharLiteral($1); start = $$;} // printf("literal -> CHAR_LITERAL \n");
-        |       BOOL_LITERAL {cout << $1 << endl; printf("literal -> BOOL_LITERAL \n");}
-        |       STRING_LITERAL  { printf("literal -> STRING_LITERAL \n");}
+literal:        INT_LITERAL {$$ = new IntLiteral($1);} //  printf("literal -> INT_LITERAL \n");
+        |       CHAR_LITERAL {$$ = new CharLiteral($1);} // printf("literal -> CHAR_LITERAL \n");
+        |       BOOL_LITERAL {$$ = new BoolLiteral($1);} // printf("literal -> BOOL_LITERAL \n");
+        |       STRING_LITERAL  {$$ = new StringLiteral($1);} //printf("literal -> STRING_LITERAL \n");}
 
 bin_op:         ARITH_OP  {printf("bin_op -> ARITH_OP \n");}
         |       REL_OP  {printf("bin_op -> REL_OP \n");}
         |       EQ_OP  {printf("bin_op -> EQ_OP \n");}
         |       COND_OP   {printf("bin_op -> COND_OP \n");}
 
-location:       ID {printf("location -> ID \n");}
+location:       ID {$$ = new Identifier($1);} // printf("location -> ID \n");
         |       ID LEFT_SQUARE expr RIGHT_SQUARE {printf("location -> ID LEFT_SQUARE expr RIGHT_SQUARE \n");}
         |       ID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE {printf("location -> ID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE \n");}
 

@@ -33,8 +33,8 @@ true|false                          { yylval.bool_val = strcmp(yytext,"true") ? 
 ;                                   {return SEMICOLON;}
 \?                                  {return QUESTION_MARK;}    
 \:                                  {return COLON;}                   
-\-                                  {return MINUS;}
-!                                   {return NOT;}
+\-                                  {yylval.symbol = strdup(yytext); return MINUS;}
+!                                   {yylval.symbol = strdup(yytext); return NOT;}
 \(                                  {return LEFT_ROUND;}
 \)                                  {return RIGHT_ROUND;}
 \[                                  {return LEFT_SQUARE;}
