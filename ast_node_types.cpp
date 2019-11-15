@@ -23,7 +23,7 @@ class Operation{
         virtual void UnaryOp(Unary* u) = 0;
         virtual void BinaryOp(Binary* b) = 0;
         virtual void TernaryOp(Ternary* t) = 0;
-        // virtual void ListOp(List* l) = 0;
+        virtual void ListOp(List* l) = 0;
 };
 
 class PrettyPrint: public Operation{
@@ -32,7 +32,7 @@ class PrettyPrint: public Operation{
         void UnaryOp(Unary* u);
         void BinaryOp(Binary* b);
         void TernaryOp(Ternary* t);
-        // void ListOp(List* l) = 0;
+        void ListOp(List* l);
 };
 
 class Leaf: public Node{
@@ -97,4 +97,21 @@ void PrettyPrint::TernaryOp(Ternary* t){
     cout << ",";
     (t->child3)->doOp(this);
     cout <<  ")\n";
+} 
+
+class List: public Node{
+    public:
+        void doOp(Operation* op){
+            op->ListOp(this);
+        }
+        vector <Node*> list;
+};
+
+void PrettyPrint::ListOp(List* l){
+    cout << "(" <<  l->getname() << "\n"; 
+    for(auto node: l->list){
+        cout << ",";
+        node->doOp(this);
+    }
+    cout << ")";
 } 

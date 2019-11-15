@@ -1,1 +1,1 @@
-a=(1+2)+1;
+callout("method", "arg", 34543, true);

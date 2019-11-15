@@ -158,5 +158,8 @@ class MethodCall: public Unary{
 
 class CalloutArgs: public List{
     public:
-        CallOutArgs
-}
+        CalloutArgs(){
+            name = "ARGS";
+            cout << "constructor got called";
+        }
+};
