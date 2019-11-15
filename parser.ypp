@@ -55,7 +55,7 @@
         CALLOUT IF ELSE FOR WHILE RETURN BREAK CONTINUE CLASS PROGRAM
 
 %left   MINUS NOT 
-%left   ARITH_OP REL_OP EQ_OP COND_OP
+%left   ARITH_OP REL_OP EQ_OP COND_OP 
 /*----------------------------------------------------------------*/
 
 %type <node> literal 
@@ -95,7 +95,7 @@ block:          LEFT_CURLY var_decls statements RIGHT_CURLY {$$ = new DecBlock($
         |       LEFT_CURLY statements RIGHT_CURLY {$$ = new StatBlock($2); printf("block -> LEFT_CURLY statements RIGHT_CURLY\n"); start = $$;}
 
 var_decls:      var_decl {$$ = new VarDecls(); $$->list.push_back($1); printf("var_decls -> var_decl\n");}
-        |       var_decls var_decl {$$->list.push_back($1); printf("var_decls-> var_decls var_decl\n");}
+        |       var_decls var_decl {$$->list.push_back($2); printf("var_decls-> var_decls var_decl\n");}
 
 var_decl:       composite_type ID SEMICOLON {$$ = new VarDecl($1, $2); printf("var_decl -> composite_type ID SEMICOLON\n");}
 
@@ -103,7 +103,7 @@ var_decl:       composite_type ID SEMICOLON {$$ = new VarDecl($1, $2); printf("v
 statements:     statement  {$$ = new Statements(); $$->list.push_back($1); printf("statements -> statement\n");}
         |       statements statement  {$$ = $1; $$->list.push_back($2); printf("statements -> statements statement\n");}
 
-statement:      location EQUALS expr SEMICOLON  {$$ = new AssignmentStatement($1, $3); } //printf("statement -> location EQUALS expr SEMICOLON \n");
+statement:      location EQUALS expr SEMICOLON  {$$ = new AssignmentStatement($1, $3); start = $$; printf("statement -> location EQUALS expr SEMICOLON \n"); } //
         |       method_call SEMICOLON  {$$ = $1; printf("statement -> method_call SEMICOLON \n"); } 
         |       IF LEFT_ROUND expr RIGHT_ROUND block  { printf("statement -> IF LEFT_ROUND expr RIGHT_ROUND statement \n");}
         |       IF LEFT_ROUND expr RIGHT_ROUND block ELSE block  {printf("statement -> IF LEFT_ROUND expr RIGHT_ROUND statement ELSE statement \n");}
@@ -116,7 +116,10 @@ statement:      location EQUALS expr SEMICOLON  {$$ = new AssignmentStatement($1
 
 
 expr:           literal {$$ = $1;} // printf("expr -> literal \n");
-        |       expr bin_op literal {$$ = new BinaryExpression($1, $2, $3); }//{printf("expr -> expr bin_op expr \n");}
+        |       expr ARITH_OP expr {$$ = new ArithmeticExpression($1, $2, $3); }//{printf("expr -> expr bin_op expr \n");}
+        |       expr REL_OP expr {$$ = new RelationalExpression($1, $2, $3); }//{printf("expr -> expr bin_op expr \n");}
+        |       expr EQ_OP expr {$$ = new EqualExpression($1, $2, $3); }//{printf("expr -> expr bin_op expr \n");}
+        |       expr COND_OP expr {$$ = new ConditionalExpression($1, $2, $3); }//{printf("expr -> expr bin_op expr \n");}
         |       MINUS expr {$$ = new UnaryExpression($1, $2); } // printf("expr -> MINUS expr \n");
         |       NOT expr {$$ = new UnaryExpression($1, $2); } //  printf("expr -> NOT expr \n");
         |       LEFT_ROUND expr RIGHT_ROUND {$$ = new EnclosedExpression($2);}//{printf("expr -> LEFT_ROUND expr RIGHT_ROUND \n");}
@@ -157,9 +160,9 @@ int main(int argc, char **argv)
         yyparse();
         printf("Parsing Over\n");
 
-        // PrettyPrint printer;
-        // start->doOp(&printer);
-        // cout << endl;
+        PrettyPrint printer;
+        start->doOp(&printer);
+        cout << endl;
         
         return 0;
 }

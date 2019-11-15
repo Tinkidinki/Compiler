@@ -130,12 +130,42 @@ class ConditionalOperator: public Leaf{
         
 };
 
-class BinaryExpression: public Ternary{
+class ArithmeticExpression: public Ternary{
     public:
-        BinaryExpression(Node* expr, Node* op, Node* literal){
+        ArithmeticExpression(Node* expr, char* op, Node* literal){
             name = "EXP_BIN";
             child1 = expr;
-            child2 = op;
+            child2 = new ArithmeticOperator(op);
+            child3 = literal;
+        }
+};
+
+class EqualExpression: public Ternary{
+    public:
+        EqualExpression(Node* expr, char* op, Node* literal){
+            name = "EXP_BIN";
+            child1 = expr;
+            child2 = new EqualOperator(op);
+            child3 = literal;
+        }
+};
+
+class ConditionalExpression: public Ternary{
+    public:
+        ConditionalExpression(Node* expr, char* op, Node* literal){
+            name = "EXP_BIN";
+            child1 = expr;
+            child2 = new ConditionalOperator(op);
+            child3 = literal;
+        }
+};
+
+class RelationalExpression: public Ternary{
+    public:
+        RelationalExpression(Node* expr, char* op, Node* literal){
+            name = "EXP_BIN";
+            child1 = expr;
+            child2 = new RelationalOperator(op);
             child3 = literal;
         }
 };

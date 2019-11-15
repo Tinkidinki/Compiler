@@ -1,0 +1,1464 @@
+Nonterminals useless in grammar
+
+   program
+   method_decl
+   method_decls
+   parameters
+   bin_op
+
+
+Terminals unused in grammar
+
+   BAD_CHAR
+   CLASS
+   PROGRAM
+
+
+Rules useless in grammar
+
+   43 program: CLASS PROGRAM LEFT_CURLY var_decls method_decls RIGHT_CURLY
+   44        | CLASS PROGRAM LEFT_CURLY method_decls RIGHT_CURLY
+
+   45 method_decl: composite_type ID LEFT_ROUND parameters RIGHT_ROUND block
+   46            | composite_type ID LEFT_ROUND RIGHT_ROUND block
+
+   47 method_decls: method_decl
+   48             | method_decls method_decl
+
+   49 parameters: composite_type ID
+   50           | parameters COMMA composite_type ID
+
+   51 bin_op: ARITH_OP
+   52       | REL_OP
+   53       | EQ_OP
+   54       | COND_OP
+
+
+Grammar
+
+    0 $accept: Goal $end
+
+    1 Goal: block
+
+    2 composite_type: TYPE
+    3               | TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE
+    4               | TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE
+
+    5 block: LEFT_CURLY var_decls statements RIGHT_CURLY
+    6      | LEFT_CURLY statements RIGHT_CURLY
+
+    7 var_decls: var_decl
+    8          | var_decls var_decl
+
+    9 var_decl: composite_type ID SEMICOLON
+
+   10 statements: statement
+   11           | statements statement
+
+   12 statement: location EQUALS expr SEMICOLON
+   13          | method_call SEMICOLON
+   14          | IF LEFT_ROUND expr RIGHT_ROUND block
+   15          | IF LEFT_ROUND expr RIGHT_ROUND block ELSE block
+   16          | expr QUESTION_MARK statement COLON statement
+   17          | WHILE LEFT_ROUND expr RIGHT_ROUND block
+   18          | FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND block
+   19          | RETURN expr SEMICOLON
+   20          | BREAK SEMICOLON
+   21          | CONTINUE SEMICOLON
+
+   22 expr: literal
+   23     | expr ARITH_OP expr
+   24     | expr REL_OP expr
+   25     | expr EQ_OP expr
+   26     | expr COND_OP expr
+   27     | MINUS expr
+   28     | NOT expr
+   29     | LEFT_ROUND expr RIGHT_ROUND
+   30     | location
+   31     | method_call
+
+   32 literal: INT_LITERAL
+   33        | CHAR_LITERAL
+   34        | BOOL_LITERAL
+   35        | STRING_LITERAL
+
+   36 location: ID
+   37         | ID LEFT_SQUARE expr RIGHT_SQUARE
+   38         | ID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE
+
+   39 method_call: CALLOUT LEFT_ROUND STRING_LITERAL COMMA callout_args RIGHT_ROUND
+   40            | CALLOUT LEFT_ROUND STRING_LITERAL RIGHT_ROUND
+
+   41 callout_args: expr
+   42             | callout_args COMMA expr
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+INT_LITERAL (258) 3 4 32
+BOOL_LITERAL (259) 34
+CHAR_LITERAL (260) 33
+STRING_LITERAL (261) 35 39 40
+MINUS (262) 27
+NOT (263) 28
+ID (264) 9 18 36 37 38
+ARITH_OP (265) 23
+REL_OP (266) 24
+EQ_OP (267) 25
+COND_OP (268) 26
+LEFT_ROUND (269) 14 15 17 18 29 39 40
+RIGHT_ROUND (270) 14 15 17 18 29 39 40
+TYPE (271) 2 3 4
+BAD_CHAR (272)
+COMMA (273) 39 42
+SEMICOLON (274) 9 12 13 18 19 20 21
+EQUALS (275) 12 18
+QUESTION_MARK (276) 16
+COLON (277) 16
+LEFT_SQUARE (278) 3 4 37 38
+RIGHT_SQUARE (279) 3 4 37 38
+LEFT_CURLY (280) 5 6
+RIGHT_CURLY (281) 5 6
+CALLOUT (282) 39 40
+IF (283) 14 15
+ELSE (284) 15
+FOR (285) 18
+WHILE (286) 17
+RETURN (287) 19
+BREAK (288) 20
+CONTINUE (289) 21
+CLASS (290)
+PROGRAM (291)
+
+
+Nonterminals, with rules where they appear
+
+$accept (37)
+    on left: 0
+Goal (38)
+    on left: 1, on right: 0
+composite_type (39)
+    on left: 2 3 4, on right: 9
+block (40)
+    on left: 5 6, on right: 1 14 15 17 18
+var_decls (41)
+    on left: 7 8, on right: 5 8
+var_decl (42)
+    on left: 9, on right: 7 8
+statements (43)
+    on left: 10 11, on right: 5 6 11
+statement (44)
+    on left: 12 13 14 15 16 17 18 19 20 21, on right: 10 11 16
+expr (45)
+    on left: 22 23 24 25 26 27 28 29 30 31, on right: 12 14 15 16 17
+    18 19 23 24 25 26 27 28 29 37 38 41 42
+literal (46)
+    on left: 32 33 34 35, on right: 22
+location (47)
+    on left: 36 37 38, on right: 12 30
+method_call (48)
+    on left: 39 40, on right: 13 31
+callout_args (49)
+    on left: 41 42, on right: 39 42
+
+
+State 0
+
+    0 $accept: . Goal $end
+
+    LEFT_CURLY  shift, and go to state 1
+
+    Goal   go to state 2
+    block  go to state 3
+
+
+State 1
+
+    5 block: LEFT_CURLY . var_decls statements RIGHT_CURLY
+    6      | LEFT_CURLY . statements RIGHT_CURLY
+
+    INT_LITERAL     shift, and go to state 4
+    BOOL_LITERAL    shift, and go to state 5
+    CHAR_LITERAL    shift, and go to state 6
+    STRING_LITERAL  shift, and go to state 7
+    MINUS           shift, and go to state 8
+    NOT             shift, and go to state 9
+    ID              shift, and go to state 10
+    LEFT_ROUND      shift, and go to state 11
+    TYPE            shift, and go to state 12
+    CALLOUT         shift, and go to state 13
+    IF              shift, and go to state 14
+    FOR             shift, and go to state 15
+    WHILE           shift, and go to state 16
+    RETURN          shift, and go to state 17
+    BREAK           shift, and go to state 18
+    CONTINUE        shift, and go to state 19
+
+    composite_type  go to state 20
+    var_decls       go to state 21
+    var_decl        go to state 22
+    statements      go to state 23
+    statement       go to state 24
+    expr            go to state 25
+    literal         go to state 26
+    location        go to state 27
+    method_call     go to state 28
+
+
+State 2
+
+    0 $accept: Goal . $end
+
+    $end  shift, and go to state 29
+
+
+State 3
+
+    1 Goal: block .
+
+    $default  reduce using rule 1 (Goal)
+
+
+State 4
+
+   32 literal: INT_LITERAL .
+
+    $default  reduce using rule 32 (literal)
+
+
+State 5
+
+   34 literal: BOOL_LITERAL .
+
+    $default  reduce using rule 34 (literal)
+
+
+State 6
+
+   33 literal: CHAR_LITERAL .
+
+    $default  reduce using rule 33 (literal)
+
+
+State 7
+
+   35 literal: STRING_LITERAL .
+
+    $default  reduce using rule 35 (literal)
+
+
+State 8
+
+   27 expr: MINUS . expr
+
+    INT_LITERAL     shift, and go to state 4
+    BOOL_LITERAL    shift, and go to state 5
+    CHAR_LITERAL    shift, and go to state 6
+    STRING_LITERAL  shift, and go to state 7
+    MINUS           shift, and go to state 8
+    NOT             shift, and go to state 9
+    ID              shift, and go to state 10
+    LEFT_ROUND      shift, and go to state 11
+    CALLOUT         shift, and go to state 13
+
+    expr         go to state 30
+    literal      go to state 26
+    location     go to state 31
+    method_call  go to state 32
+
+
+State 9
+
+   28 expr: NOT . expr
+
+    INT_LITERAL     shift, and go to state 4
+    BOOL_LITERAL    shift, and go to state 5
+    CHAR_LITERAL    shift, and go to state 6
+    STRING_LITERAL  shift, and go to state 7
+    MINUS           shift, and go to state 8
+    NOT             shift, and go to state 9
+    ID              shift, and go to state 10
+    LEFT_ROUND      shift, and go to state 11
+    CALLOUT         shift, and go to state 13
+
+    expr         go to state 33
+    literal      go to state 26
+    location     go to state 31
+    method_call  go to state 32
+
+
+State 10
+
+   36 location: ID .
+   37         | ID . LEFT_SQUARE expr RIGHT_SQUARE
+   38         | ID . LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE
+
+    LEFT_SQUARE  shift, and go to state 34
+
+    $default  reduce using rule 36 (location)
+
+
+State 11
+
+   29 expr: LEFT_ROUND . expr RIGHT_ROUND
+
+    INT_LITERAL     shift, and go to state 4
+    BOOL_LITERAL    shift, and go to state 5
+    CHAR_LITERAL    shift, and go to state 6
+    STRING_LITERAL  shift, and go to state 7
+    MINUS           shift, and go to state 8
+    NOT             shift, and go to state 9
+    ID              shift, and go to state 10
+    LEFT_ROUND      shift, and go to state 11
+    CALLOUT         shift, and go to state 13
+
+    expr         go to state 35
+    literal      go to state 26
+    location     go to state 31
+    method_call  go to state 32
+
+
+State 12
+
+    2 composite_type: TYPE .
+    3               | TYPE . LEFT_SQUARE INT_LITERAL RIGHT_SQUARE
+    4               | TYPE . LEFT_SQUARE INT_LITERAL RIGHT_SQUARE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE
+
+    LEFT_SQUARE  shift, and go to state 36
+
+    $default  reduce using rule 2 (composite_type)
+
+
+State 13
+
+   39 method_call: CALLOUT . LEFT_ROUND STRING_LITERAL COMMA callout_args RIGHT_ROUND
+   40            | CALLOUT . LEFT_ROUND STRING_LITERAL RIGHT_ROUND
+
+    LEFT_ROUND  shift, and go to state 37
+
+
+State 14
+
+   14 statement: IF . LEFT_ROUND expr RIGHT_ROUND block
+   15          | IF . LEFT_ROUND expr RIGHT_ROUND block ELSE block
+
+    LEFT_ROUND  shift, and go to state 38
+
+
+State 15
+
+   18 statement: FOR . LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND block
+
+    LEFT_ROUND  shift, and go to state 39
+
+
+State 16
+
+   17 statement: WHILE . LEFT_ROUND expr RIGHT_ROUND block
+
+    LEFT_ROUND  shift, and go to state 40
+
+
+State 17
+
+   19 statement: RETURN . expr SEMICOLON
+
+    INT_LITERAL     shift, and go to state 4
+    BOOL_LITERAL    shift, and go to state 5
+    CHAR_LITERAL    shift, and go to state 6
+    STRING_LITERAL  shift, and go to state 7
+    MINUS           shift, and go to state 8
+    NOT             shift, and go to state 9
+    ID              shift, and go to state 10
+    LEFT_ROUND      shift, and go to state 11
+    CALLOUT         shift, and go to state 13
+
+    expr         go to state 41
+    literal      go to state 26
+    location     go to state 31
+    method_call  go to state 32
+
+
+State 18
+
+   20 statement: BREAK . SEMICOLON
+
+    SEMICOLON  shift, and go to state 42
+
+
+State 19
+
+   21 statement: CONTINUE . SEMICOLON
+
+    SEMICOLON  shift, and go to state 43
+
+
+State 20
+
+    9 var_decl: composite_type . ID SEMICOLON
+
+    ID  shift, and go to state 44
+
+
+State 21
+
+    5 block: LEFT_CURLY var_decls . statements RIGHT_CURLY
+    8 var_decls: var_decls . var_decl
+
+    INT_LITERAL     shift, and go to state 4
+    BOOL_LITERAL    shift, and go to state 5
+    CHAR_LITERAL    shift, and go to state 6
+    STRING_LITERAL  shift, and go to state 7
+    MINUS           shift, and go to state 8
+    NOT             shift, and go to state 9
+    ID              shift, and go to state 10
+    LEFT_ROUND      shift, and go to state 11
+    TYPE            shift, and go to state 12
+    CALLOUT         shift, and go to state 13
+    IF              shift, and go to state 14
+    FOR             shift, and go to state 15
+    WHILE           shift, and go to state 16
+    RETURN          shift, and go to state 17
+    BREAK           shift, and go to state 18
+    CONTINUE        shift, and go to state 19
+
+    composite_type  go to state 20
+    var_decl        go to state 45
+    statements      go to state 46
+    statement       go to state 24
+    expr            go to state 25
+    literal         go to state 26
+    location        go to state 27
+    method_call     go to state 28
+
+
+State 22
+
+    7 var_decls: var_decl .
+
+    $default  reduce using rule 7 (var_decls)
+
+
+State 23
+
+    6 block: LEFT_CURLY statements . RIGHT_CURLY
+   11 statements: statements . statement
+
+    INT_LITERAL     shift, and go to state 4
+    BOOL_LITERAL    shift, and go to state 5
+    CHAR_LITERAL    shift, and go to state 6
+    STRING_LITERAL  shift, and go to state 7
+    MINUS           shift, and go to state 8
+    NOT             shift, and go to state 9
+    ID              shift, and go to state 10
+    LEFT_ROUND      shift, and go to state 11
+    RIGHT_CURLY     shift, and go to state 47
+    CALLOUT         shift, and go to state 13
+    IF              shift, and go to state 14
+    FOR             shift, and go to state 15
+    WHILE           shift, and go to state 16
+    RETURN          shift, and go to state 17
+    BREAK           shift, and go to state 18
+    CONTINUE        shift, and go to state 19
+
+    statement    go to state 48
+    expr         go to state 25
+    literal      go to state 26
+    location     go to state 27
+    method_call  go to state 28
+
+
+State 24
+
+   10 statements: statement .
+
+    $default  reduce using rule 10 (statements)
+
+
+State 25
+
+   16 statement: expr . QUESTION_MARK statement COLON statement
+   23 expr: expr . ARITH_OP expr
+   24     | expr . REL_OP expr
+   25     | expr . EQ_OP expr
+   26     | expr . COND_OP expr
+
+    ARITH_OP       shift, and go to state 49
+    REL_OP         shift, and go to state 50
+    EQ_OP          shift, and go to state 51
+    COND_OP        shift, and go to state 52
+    QUESTION_MARK  shift, and go to state 53
+
+
+State 26
+
+   22 expr: literal .
+
+    $default  reduce using rule 22 (expr)
+
+
+State 27
+
+   12 statement: location . EQUALS expr SEMICOLON
+   30 expr: location .
+
+    EQUALS  shift, and go to state 54
+
+    $default  reduce using rule 30 (expr)
+
+
+State 28
+
+   13 statement: method_call . SEMICOLON
+   31 expr: method_call .
+
+    SEMICOLON  shift, and go to state 55
+
+    $default  reduce using rule 31 (expr)
+
+
+State 29
+
+    0 $accept: Goal $end .
+
+    $default  accept
+
+
+State 30
+
+   23 expr: expr . ARITH_OP expr
+   24     | expr . REL_OP expr
+   25     | expr . EQ_OP expr
+   26     | expr . COND_OP expr
+   27     | MINUS expr .
+
+    ARITH_OP  shift, and go to state 49
+    REL_OP    shift, and go to state 50
+    EQ_OP     shift, and go to state 51
+    COND_OP   shift, and go to state 52
+
+    $default  reduce using rule 27 (expr)
+
+
+State 31
+
+   30 expr: location .
+
+    $default  reduce using rule 30 (expr)
+
+
+State 32
+
+   31 expr: method_call .
+
+    $default  reduce using rule 31 (expr)
+
+
+State 33
+
+   23 expr: expr . ARITH_OP expr
+   24     | expr . REL_OP expr
+   25     | expr . EQ_OP expr
+   26     | expr . COND_OP expr
+   28     | NOT expr .
+
+    ARITH_OP  shift, and go to state 49
+    REL_OP    shift, and go to state 50
+    EQ_OP     shift, and go to state 51
+    COND_OP   shift, and go to state 52
+
+    $default  reduce using rule 28 (expr)
+
+
+State 34
+
+   37 location: ID LEFT_SQUARE . expr RIGHT_SQUARE
+   38         | ID LEFT_SQUARE . expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE
+
+    INT_LITERAL     shift, and go to state 4
+    BOOL_LITERAL    shift, and go to state 5
+    CHAR_LITERAL    shift, and go to state 6
+    STRING_LITERAL  shift, and go to state 7
+    MINUS           shift, and go to state 8
+    NOT             shift, and go to state 9
+    ID              shift, and go to state 10
+    LEFT_ROUND      shift, and go to state 11
+    CALLOUT         shift, and go to state 13
+
+    expr         go to state 56
+    literal      go to state 26
+    location     go to state 31
+    method_call  go to state 32
+
+
+State 35
+
+   23 expr: expr . ARITH_OP expr
+   24     | expr . REL_OP expr
+   25     | expr . EQ_OP expr
+   26     | expr . COND_OP expr
+   29     | LEFT_ROUND expr . RIGHT_ROUND
+
+    ARITH_OP     shift, and go to state 49
+    REL_OP       shift, and go to state 50
+    EQ_OP        shift, and go to state 51
+    COND_OP      shift, and go to state 52
+    RIGHT_ROUND  shift, and go to state 57
+
+
+State 36
+
+    3 composite_type: TYPE LEFT_SQUARE . INT_LITERAL RIGHT_SQUARE
+    4               | TYPE LEFT_SQUARE . INT_LITERAL RIGHT_SQUARE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE
+
+    INT_LITERAL  shift, and go to state 58
+
+
+State 37
+
+   39 method_call: CALLOUT LEFT_ROUND . STRING_LITERAL COMMA callout_args RIGHT_ROUND
+   40            | CALLOUT LEFT_ROUND . STRING_LITERAL RIGHT_ROUND
+
+    STRING_LITERAL  shift, and go to state 59
+
+
+State 38
+
+   14 statement: IF LEFT_ROUND . expr RIGHT_ROUND block
+   15          | IF LEFT_ROUND . expr RIGHT_ROUND block ELSE block
+
+    INT_LITERAL     shift, and go to state 4
+    BOOL_LITERAL    shift, and go to state 5
+    CHAR_LITERAL    shift, and go to state 6
+    STRING_LITERAL  shift, and go to state 7
+    MINUS           shift, and go to state 8
+    NOT             shift, and go to state 9
+    ID              shift, and go to state 10
+    LEFT_ROUND      shift, and go to state 11
+    CALLOUT         shift, and go to state 13
+
+    expr         go to state 60
+    literal      go to state 26
+    location     go to state 31
+    method_call  go to state 32
+
+
+State 39
+
+   18 statement: FOR LEFT_ROUND . ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND block
+
+    ID  shift, and go to state 61
+
+
+State 40
+
+   17 statement: WHILE LEFT_ROUND . expr RIGHT_ROUND block
+
+    INT_LITERAL     shift, and go to state 4
+    BOOL_LITERAL    shift, and go to state 5
+    CHAR_LITERAL    shift, and go to state 6
+    STRING_LITERAL  shift, and go to state 7
+    MINUS           shift, and go to state 8
+    NOT             shift, and go to state 9
+    ID              shift, and go to state 10
+    LEFT_ROUND      shift, and go to state 11
+    CALLOUT         shift, and go to state 13
+
+    expr         go to state 62
+    literal      go to state 26
+    location     go to state 31
+    method_call  go to state 32
+
+
+State 41
+
+   19 statement: RETURN expr . SEMICOLON
+   23 expr: expr . ARITH_OP expr
+   24     | expr . REL_OP expr
+   25     | expr . EQ_OP expr
+   26     | expr . COND_OP expr
+
+    ARITH_OP   shift, and go to state 49
+    REL_OP     shift, and go to state 50
+    EQ_OP      shift, and go to state 51
+    COND_OP    shift, and go to state 52
+    SEMICOLON  shift, and go to state 63
+
+
+State 42
+
+   20 statement: BREAK SEMICOLON .
+
+    $default  reduce using rule 20 (statement)
+
+
+State 43
+
+   21 statement: CONTINUE SEMICOLON .
+
+    $default  reduce using rule 21 (statement)
+
+
+State 44
+
+    9 var_decl: composite_type ID . SEMICOLON
+
+    SEMICOLON  shift, and go to state 64
+
+
+State 45
+
+    8 var_decls: var_decls var_decl .
+
+    $default  reduce using rule 8 (var_decls)
+
+
+State 46
+
+    5 block: LEFT_CURLY var_decls statements . RIGHT_CURLY
+   11 statements: statements . statement
+
+    INT_LITERAL     shift, and go to state 4
+    BOOL_LITERAL    shift, and go to state 5
+    CHAR_LITERAL    shift, and go to state 6
+    STRING_LITERAL  shift, and go to state 7
+    MINUS           shift, and go to state 8
+    NOT             shift, and go to state 9
+    ID              shift, and go to state 10
+    LEFT_ROUND      shift, and go to state 11
+    RIGHT_CURLY     shift, and go to state 65
+    CALLOUT         shift, and go to state 13
+    IF              shift, and go to state 14
+    FOR             shift, and go to state 15
+    WHILE           shift, and go to state 16
+    RETURN          shift, and go to state 17
+    BREAK           shift, and go to state 18
+    CONTINUE        shift, and go to state 19
+
+    statement    go to state 48
+    expr         go to state 25
+    literal      go to state 26
+    location     go to state 27
+    method_call  go to state 28
+
+
+State 47
+
+    6 block: LEFT_CURLY statements RIGHT_CURLY .
+
+    $default  reduce using rule 6 (block)
+
+
+State 48
+
+   11 statements: statements statement .
+
+    $default  reduce using rule 11 (statements)
+
+
+State 49
+
+   23 expr: expr ARITH_OP . expr
+
+    INT_LITERAL     shift, and go to state 4
+    BOOL_LITERAL    shift, and go to state 5
+    CHAR_LITERAL    shift, and go to state 6
+    STRING_LITERAL  shift, and go to state 7
+    MINUS           shift, and go to state 8
+    NOT             shift, and go to state 9
+    ID              shift, and go to state 10
+    LEFT_ROUND      shift, and go to state 11
+    CALLOUT         shift, and go to state 13
+
+    expr         go to state 66
+    literal      go to state 26
+    location     go to state 31
+    method_call  go to state 32
+
+
+State 50
+
+   24 expr: expr REL_OP . expr
+
+    INT_LITERAL     shift, and go to state 4
+    BOOL_LITERAL    shift, and go to state 5
+    CHAR_LITERAL    shift, and go to state 6
+    STRING_LITERAL  shift, and go to state 7
+    MINUS           shift, and go to state 8
+    NOT             shift, and go to state 9
+    ID              shift, and go to state 10
+    LEFT_ROUND      shift, and go to state 11
+    CALLOUT         shift, and go to state 13
+
+    expr         go to state 67
+    literal      go to state 26
+    location     go to state 31
+    method_call  go to state 32
+
+
+State 51
+
+   25 expr: expr EQ_OP . expr
+
+    INT_LITERAL     shift, and go to state 4
+    BOOL_LITERAL    shift, and go to state 5
+    CHAR_LITERAL    shift, and go to state 6
+    STRING_LITERAL  shift, and go to state 7
+    MINUS           shift, and go to state 8
+    NOT             shift, and go to state 9
+    ID              shift, and go to state 10
+    LEFT_ROUND      shift, and go to state 11
+    CALLOUT         shift, and go to state 13
+
+    expr         go to state 68
+    literal      go to state 26
+    location     go to state 31
+    method_call  go to state 32
+
+
+State 52
+
+   26 expr: expr COND_OP . expr
+
+    INT_LITERAL     shift, and go to state 4
+    BOOL_LITERAL    shift, and go to state 5
+    CHAR_LITERAL    shift, and go to state 6
+    STRING_LITERAL  shift, and go to state 7
+    MINUS           shift, and go to state 8
+    NOT             shift, and go to state 9
+    ID              shift, and go to state 10
+    LEFT_ROUND      shift, and go to state 11
+    CALLOUT         shift, and go to state 13
+
+    expr         go to state 69
+    literal      go to state 26
+    location     go to state 31
+    method_call  go to state 32
+
+
+State 53
+
+   16 statement: expr QUESTION_MARK . statement COLON statement
+
+    INT_LITERAL     shift, and go to state 4
+    BOOL_LITERAL    shift, and go to state 5
+    CHAR_LITERAL    shift, and go to state 6
+    STRING_LITERAL  shift, and go to state 7
+    MINUS           shift, and go to state 8
+    NOT             shift, and go to state 9
+    ID              shift, and go to state 10
+    LEFT_ROUND      shift, and go to state 11
+    CALLOUT         shift, and go to state 13
+    IF              shift, and go to state 14
+    FOR             shift, and go to state 15
+    WHILE           shift, and go to state 16
+    RETURN          shift, and go to state 17
+    BREAK           shift, and go to state 18
+    CONTINUE        shift, and go to state 19
+
+    statement    go to state 70
+    expr         go to state 25
+    literal      go to state 26
+    location     go to state 27
+    method_call  go to state 28
+
+
+State 54
+
+   12 statement: location EQUALS . expr SEMICOLON
+
+    INT_LITERAL     shift, and go to state 4
+    BOOL_LITERAL    shift, and go to state 5
+    CHAR_LITERAL    shift, and go to state 6
+    STRING_LITERAL  shift, and go to state 7
+    MINUS           shift, and go to state 8
+    NOT             shift, and go to state 9
+    ID              shift, and go to state 10
+    LEFT_ROUND      shift, and go to state 11
+    CALLOUT         shift, and go to state 13
+
+    expr         go to state 71
+    literal      go to state 26
+    location     go to state 31
+    method_call  go to state 32
+
+
+State 55
+
+   13 statement: method_call SEMICOLON .
+
+    $default  reduce using rule 13 (statement)
+
+
+State 56
+
+   23 expr: expr . ARITH_OP expr
+   24     | expr . REL_OP expr
+   25     | expr . EQ_OP expr
+   26     | expr . COND_OP expr
+   37 location: ID LEFT_SQUARE expr . RIGHT_SQUARE
+   38         | ID LEFT_SQUARE expr . RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE
+
+    ARITH_OP      shift, and go to state 49
+    REL_OP        shift, and go to state 50
+    EQ_OP         shift, and go to state 51
+    COND_OP       shift, and go to state 52
+    RIGHT_SQUARE  shift, and go to state 72
+
+
+State 57
+
+   29 expr: LEFT_ROUND expr RIGHT_ROUND .
+
+    $default  reduce using rule 29 (expr)
+
+
+State 58
+
+    3 composite_type: TYPE LEFT_SQUARE INT_LITERAL . RIGHT_SQUARE
+    4               | TYPE LEFT_SQUARE INT_LITERAL . RIGHT_SQUARE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE
+
+    RIGHT_SQUARE  shift, and go to state 73
+
+
+State 59
+
+   39 method_call: CALLOUT LEFT_ROUND STRING_LITERAL . COMMA callout_args RIGHT_ROUND
+   40            | CALLOUT LEFT_ROUND STRING_LITERAL . RIGHT_ROUND
+
+    RIGHT_ROUND  shift, and go to state 74
+    COMMA        shift, and go to state 75
+
+
+State 60
+
+   14 statement: IF LEFT_ROUND expr . RIGHT_ROUND block
+   15          | IF LEFT_ROUND expr . RIGHT_ROUND block ELSE block
+   23 expr: expr . ARITH_OP expr
+   24     | expr . REL_OP expr
+   25     | expr . EQ_OP expr
+   26     | expr . COND_OP expr
+
+    ARITH_OP     shift, and go to state 49
+    REL_OP       shift, and go to state 50
+    EQ_OP        shift, and go to state 51
+    COND_OP      shift, and go to state 52
+    RIGHT_ROUND  shift, and go to state 76
+
+
+State 61
+
+   18 statement: FOR LEFT_ROUND ID . EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND block
+
+    EQUALS  shift, and go to state 77
+
+
+State 62
+
+   17 statement: WHILE LEFT_ROUND expr . RIGHT_ROUND block
+   23 expr: expr . ARITH_OP expr
+   24     | expr . REL_OP expr
+   25     | expr . EQ_OP expr
+   26     | expr . COND_OP expr
+
+    ARITH_OP     shift, and go to state 49
+    REL_OP       shift, and go to state 50
+    EQ_OP        shift, and go to state 51
+    COND_OP      shift, and go to state 52
+    RIGHT_ROUND  shift, and go to state 78
+
+
+State 63
+
+   19 statement: RETURN expr SEMICOLON .
+
+    $default  reduce using rule 19 (statement)
+
+
+State 64
+
+    9 var_decl: composite_type ID SEMICOLON .
+
+    $default  reduce using rule 9 (var_decl)
+
+
+State 65
+
+    5 block: LEFT_CURLY var_decls statements RIGHT_CURLY .
+
+    $default  reduce using rule 5 (block)
+
+
+State 66
+
+   23 expr: expr . ARITH_OP expr
+   23     | expr ARITH_OP expr .
+   24     | expr . REL_OP expr
+   25     | expr . EQ_OP expr
+   26     | expr . COND_OP expr
+
+    $default  reduce using rule 23 (expr)
+
+
+State 67
+
+   23 expr: expr . ARITH_OP expr
+   24     | expr . REL_OP expr
+   24     | expr REL_OP expr .
+   25     | expr . EQ_OP expr
+   26     | expr . COND_OP expr
+
+    $default  reduce using rule 24 (expr)
+
+
+State 68
+
+   23 expr: expr . ARITH_OP expr
+   24     | expr . REL_OP expr
+   25     | expr . EQ_OP expr
+   25     | expr EQ_OP expr .
+   26     | expr . COND_OP expr
+
+    $default  reduce using rule 25 (expr)
+
+
+State 69
+
+   23 expr: expr . ARITH_OP expr
+   24     | expr . REL_OP expr
+   25     | expr . EQ_OP expr
+   26     | expr . COND_OP expr
+   26     | expr COND_OP expr .
+
+    $default  reduce using rule 26 (expr)
+
+
+State 70
+
+   16 statement: expr QUESTION_MARK statement . COLON statement
+
+    COLON  shift, and go to state 79
+
+
+State 71
+
+   12 statement: location EQUALS expr . SEMICOLON
+   23 expr: expr . ARITH_OP expr
+   24     | expr . REL_OP expr
+   25     | expr . EQ_OP expr
+   26     | expr . COND_OP expr
+
+    ARITH_OP   shift, and go to state 49
+    REL_OP     shift, and go to state 50
+    EQ_OP      shift, and go to state 51
+    COND_OP    shift, and go to state 52
+    SEMICOLON  shift, and go to state 80
+
+
+State 72
+
+   37 location: ID LEFT_SQUARE expr RIGHT_SQUARE .
+   38         | ID LEFT_SQUARE expr RIGHT_SQUARE . LEFT_SQUARE expr RIGHT_SQUARE
+
+    LEFT_SQUARE  shift, and go to state 81
+
+    $default  reduce using rule 37 (location)
+
+
+State 73
+
+    3 composite_type: TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE .
+    4               | TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE . LEFT_SQUARE INT_LITERAL RIGHT_SQUARE
+
+    LEFT_SQUARE  shift, and go to state 82
+
+    $default  reduce using rule 3 (composite_type)
+
+
+State 74
+
+   40 method_call: CALLOUT LEFT_ROUND STRING_LITERAL RIGHT_ROUND .
+
+    $default  reduce using rule 40 (method_call)
+
+
+State 75
+
+   39 method_call: CALLOUT LEFT_ROUND STRING_LITERAL COMMA . callout_args RIGHT_ROUND
+
+    INT_LITERAL     shift, and go to state 4
+    BOOL_LITERAL    shift, and go to state 5
+    CHAR_LITERAL    shift, and go to state 6
+    STRING_LITERAL  shift, and go to state 7
+    MINUS           shift, and go to state 8
+    NOT             shift, and go to state 9
+    ID              shift, and go to state 10
+    LEFT_ROUND      shift, and go to state 11
+    CALLOUT         shift, and go to state 13
+
+    expr          go to state 83
+    literal       go to state 26
+    location      go to state 31
+    method_call   go to state 32
+    callout_args  go to state 84
+
+
+State 76
+
+   14 statement: IF LEFT_ROUND expr RIGHT_ROUND . block
+   15          | IF LEFT_ROUND expr RIGHT_ROUND . block ELSE block
+
+    LEFT_CURLY  shift, and go to state 1
+
+    block  go to state 85
+
+
+State 77
+
+   18 statement: FOR LEFT_ROUND ID EQUALS . expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND block
+
+    INT_LITERAL     shift, and go to state 4
+    BOOL_LITERAL    shift, and go to state 5
+    CHAR_LITERAL    shift, and go to state 6
+    STRING_LITERAL  shift, and go to state 7
+    MINUS           shift, and go to state 8
+    NOT             shift, and go to state 9
+    ID              shift, and go to state 10
+    LEFT_ROUND      shift, and go to state 11
+    CALLOUT         shift, and go to state 13
+
+    expr         go to state 86
+    literal      go to state 26
+    location     go to state 31
+    method_call  go to state 32
+
+
+State 78
+
+   17 statement: WHILE LEFT_ROUND expr RIGHT_ROUND . block
+
+    LEFT_CURLY  shift, and go to state 1
+
+    block  go to state 87
+
+
+State 79
+
+   16 statement: expr QUESTION_MARK statement COLON . statement
+
+    INT_LITERAL     shift, and go to state 4
+    BOOL_LITERAL    shift, and go to state 5
+    CHAR_LITERAL    shift, and go to state 6
+    STRING_LITERAL  shift, and go to state 7
+    MINUS           shift, and go to state 8
+    NOT             shift, and go to state 9
+    ID              shift, and go to state 10
+    LEFT_ROUND      shift, and go to state 11
+    CALLOUT         shift, and go to state 13
+    IF              shift, and go to state 14
+    FOR             shift, and go to state 15
+    WHILE           shift, and go to state 16
+    RETURN          shift, and go to state 17
+    BREAK           shift, and go to state 18
+    CONTINUE        shift, and go to state 19
+
+    statement    go to state 88
+    expr         go to state 25
+    literal      go to state 26
+    location     go to state 27
+    method_call  go to state 28
+
+
+State 80
+
+   12 statement: location EQUALS expr SEMICOLON .
+
+    $default  reduce using rule 12 (statement)
+
+
+State 81
+
+   38 location: ID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE . expr RIGHT_SQUARE
+
+    INT_LITERAL     shift, and go to state 4
+    BOOL_LITERAL    shift, and go to state 5
+    CHAR_LITERAL    shift, and go to state 6
+    STRING_LITERAL  shift, and go to state 7
+    MINUS           shift, and go to state 8
+    NOT             shift, and go to state 9
+    ID              shift, and go to state 10
+    LEFT_ROUND      shift, and go to state 11
+    CALLOUT         shift, and go to state 13
+
+    expr         go to state 89
+    literal      go to state 26
+    location     go to state 31
+    method_call  go to state 32
+
+
+State 82
+
+    4 composite_type: TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE LEFT_SQUARE . INT_LITERAL RIGHT_SQUARE
+
+    INT_LITERAL  shift, and go to state 90
+
+
+State 83
+
+   23 expr: expr . ARITH_OP expr
+   24     | expr . REL_OP expr
+   25     | expr . EQ_OP expr
+   26     | expr . COND_OP expr
+   41 callout_args: expr .
+
+    ARITH_OP  shift, and go to state 49
+    REL_OP    shift, and go to state 50
+    EQ_OP     shift, and go to state 51
+    COND_OP   shift, and go to state 52
+
+    $default  reduce using rule 41 (callout_args)
+
+
+State 84
+
+   39 method_call: CALLOUT LEFT_ROUND STRING_LITERAL COMMA callout_args . RIGHT_ROUND
+   42 callout_args: callout_args . COMMA expr
+
+    RIGHT_ROUND  shift, and go to state 91
+    COMMA        shift, and go to state 92
+
+
+State 85
+
+   14 statement: IF LEFT_ROUND expr RIGHT_ROUND block .
+   15          | IF LEFT_ROUND expr RIGHT_ROUND block . ELSE block
+
+    ELSE  shift, and go to state 93
+
+    $default  reduce using rule 14 (statement)
+
+
+State 86
+
+   18 statement: FOR LEFT_ROUND ID EQUALS expr . SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND block
+   23 expr: expr . ARITH_OP expr
+   24     | expr . REL_OP expr
+   25     | expr . EQ_OP expr
+   26     | expr . COND_OP expr
+
+    ARITH_OP   shift, and go to state 49
+    REL_OP     shift, and go to state 50
+    EQ_OP      shift, and go to state 51
+    COND_OP    shift, and go to state 52
+    SEMICOLON  shift, and go to state 94
+
+
+State 87
+
+   17 statement: WHILE LEFT_ROUND expr RIGHT_ROUND block .
+
+    $default  reduce using rule 17 (statement)
+
+
+State 88
+
+   16 statement: expr QUESTION_MARK statement COLON statement .
+
+    $default  reduce using rule 16 (statement)
+
+
+State 89
+
+   23 expr: expr . ARITH_OP expr
+   24     | expr . REL_OP expr
+   25     | expr . EQ_OP expr
+   26     | expr . COND_OP expr
+   38 location: ID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr . RIGHT_SQUARE
+
+    ARITH_OP      shift, and go to state 49
+    REL_OP        shift, and go to state 50
+    EQ_OP         shift, and go to state 51
+    COND_OP       shift, and go to state 52
+    RIGHT_SQUARE  shift, and go to state 95
+
+
+State 90
+
+    4 composite_type: TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE LEFT_SQUARE INT_LITERAL . RIGHT_SQUARE
+
+    RIGHT_SQUARE  shift, and go to state 96
+
+
+State 91
+
+   39 method_call: CALLOUT LEFT_ROUND STRING_LITERAL COMMA callout_args RIGHT_ROUND .
+
+    $default  reduce using rule 39 (method_call)
+
+
+State 92
+
+   42 callout_args: callout_args COMMA . expr
+
+    INT_LITERAL     shift, and go to state 4
+    BOOL_LITERAL    shift, and go to state 5
+    CHAR_LITERAL    shift, and go to state 6
+    STRING_LITERAL  shift, and go to state 7
+    MINUS           shift, and go to state 8
+    NOT             shift, and go to state 9
+    ID              shift, and go to state 10
+    LEFT_ROUND      shift, and go to state 11
+    CALLOUT         shift, and go to state 13
+
+    expr         go to state 97
+    literal      go to state 26
+    location     go to state 31
+    method_call  go to state 32
+
+
+State 93
+
+   15 statement: IF LEFT_ROUND expr RIGHT_ROUND block ELSE . block
+
+    LEFT_CURLY  shift, and go to state 1
+
+    block  go to state 98
+
+
+State 94
+
+   18 statement: FOR LEFT_ROUND ID EQUALS expr SEMICOLON . expr SEMICOLON ID EQUALS expr RIGHT_ROUND block
+
+    INT_LITERAL     shift, and go to state 4
+    BOOL_LITERAL    shift, and go to state 5
+    CHAR_LITERAL    shift, and go to state 6
+    STRING_LITERAL  shift, and go to state 7
+    MINUS           shift, and go to state 8
+    NOT             shift, and go to state 9
+    ID              shift, and go to state 10
+    LEFT_ROUND      shift, and go to state 11
+    CALLOUT         shift, and go to state 13
+
+    expr         go to state 99
+    literal      go to state 26
+    location     go to state 31
+    method_call  go to state 32
+
+
+State 95
+
+   38 location: ID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE .
+
+    $default  reduce using rule 38 (location)
+
+
+State 96
+
+    4 composite_type: TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE .
+
+    $default  reduce using rule 4 (composite_type)
+
+
+State 97
+
+   23 expr: expr . ARITH_OP expr
+   24     | expr . REL_OP expr
+   25     | expr . EQ_OP expr
+   26     | expr . COND_OP expr
+   42 callout_args: callout_args COMMA expr .
+
+    ARITH_OP  shift, and go to state 49
+    REL_OP    shift, and go to state 50
+    EQ_OP     shift, and go to state 51
+    COND_OP   shift, and go to state 52
+
+    $default  reduce using rule 42 (callout_args)
+
+
+State 98
+
+   15 statement: IF LEFT_ROUND expr RIGHT_ROUND block ELSE block .
+
+    $default  reduce using rule 15 (statement)
+
+
+State 99
+
+   18 statement: FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr . SEMICOLON ID EQUALS expr RIGHT_ROUND block
+   23 expr: expr . ARITH_OP expr
+   24     | expr . REL_OP expr
+   25     | expr . EQ_OP expr
+   26     | expr . COND_OP expr
+
+    ARITH_OP   shift, and go to state 49
+    REL_OP     shift, and go to state 50
+    EQ_OP      shift, and go to state 51
+    COND_OP    shift, and go to state 52
+    SEMICOLON  shift, and go to state 100
+
+
+State 100
+
+   18 statement: FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON . ID EQUALS expr RIGHT_ROUND block
+
+    ID  shift, and go to state 101
+
+
+State 101
+
+   18 statement: FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID . EQUALS expr RIGHT_ROUND block
+
+    EQUALS  shift, and go to state 102
+
+
+State 102
+
+   18 statement: FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS . expr RIGHT_ROUND block
+
+    INT_LITERAL     shift, and go to state 4
+    BOOL_LITERAL    shift, and go to state 5
+    CHAR_LITERAL    shift, and go to state 6
+    STRING_LITERAL  shift, and go to state 7
+    MINUS           shift, and go to state 8
+    NOT             shift, and go to state 9
+    ID              shift, and go to state 10
+    LEFT_ROUND      shift, and go to state 11
+    CALLOUT         shift, and go to state 13
+
+    expr         go to state 103
+    literal      go to state 26
+    location     go to state 31
+    method_call  go to state 32
+
+
+State 103
+
+   18 statement: FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr . RIGHT_ROUND block
+   23 expr: expr . ARITH_OP expr
+   24     | expr . REL_OP expr
+   25     | expr . EQ_OP expr
+   26     | expr . COND_OP expr
+
+    ARITH_OP     shift, and go to state 49
+    REL_OP       shift, and go to state 50
+    EQ_OP        shift, and go to state 51
+    COND_OP      shift, and go to state 52
+    RIGHT_ROUND  shift, and go to state 104
+
+
+State 104
+
+   18 statement: FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND . block
+
+    LEFT_CURLY  shift, and go to state 1
+
+    block  go to state 105
+
+
+State 105
+
+   18 statement: FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND block .
+
+    $default  reduce using rule 18 (statement)
