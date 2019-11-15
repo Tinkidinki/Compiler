@@ -1,1 +1,4 @@
-callout("method", "arg", 34543, true);
+{
+    int a; int b;
+    a = 5;
+}

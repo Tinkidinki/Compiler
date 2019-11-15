@@ -36,7 +36,7 @@ class BoolLiteral: public Leaf{
             value = val;
         }
 
-        string getvalue(){return string(1,value);}
+        string getvalue(){return value? "true" :"false";}
 };
 
 class StringLiteral: public Leaf{
@@ -160,6 +160,57 @@ class CalloutArgs: public List{
     public:
         CalloutArgs(){
             name = "ARGS";
-            cout << "constructor got called";
+            // cout << "constructor got called\n";
         }
+};
+
+class Statements: public List{
+    public:
+        Statements(){
+            name = "STATEMENTS";
+        }
+};
+
+class DecBlock: public Binary{
+    public:
+        DecBlock(Node* var_list, Node* stat_list){
+            name = "BLOCK";
+            left = var_list;
+            right = stat_list;
+        }
+};
+
+class StatBlock: public Unary{
+    public:
+        StatBlock(Node* stat_list){
+            name = "BLOCK";
+            operand = stat_list;
+        }
+};
+
+class VarDecls: public List{
+    public:
+        VarDecls(){
+            name = "VAR DECLS";
+        }
+};
+
+class VarDecl: public Binary{
+    public:
+        VarDecl(Node* comp_type, char* id){
+            name = "VAR_DECL";
+            left = comp_type;
+            right = new Identifier(id);
+        }
+};
+
+class Type: public Leaf{
+    string value;
+    public:
+        Type(char* type){
+            name = "TYPE";
+            value = type;
+        }
+    string getvalue(){return value;}
+        
 };
