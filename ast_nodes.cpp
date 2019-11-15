@@ -140,3 +140,23 @@ class BinaryExpression: public Ternary{
         }
 };
 
+class EnclosedExpression: public Unary{
+    public:
+        EnclosedExpression(Node* exp){
+            name = "EXP_ENC";
+            operand = exp;
+        }
+};
+
+class MethodCall: public Unary{
+    public:
+        MethodCall(char* meth_name,  Node* call_args){
+            name = meth_name;
+            operand = call_args;
+        }
+};
+
+class CalloutArgs: public List{
+    public:
+        CallOutArgs
+}

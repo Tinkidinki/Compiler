@@ -57,7 +57,7 @@ class Unary: public Node{
 };
 
 void PrettyPrint::UnaryOp(Unary* u){
-    cout << "(" <<  u->getname() << " , \n\t"; 
+    cout << "(" <<  u->getname() << " , \n"; 
     (u->operand)->doOp(this);
     cout <<  ")\n";
 } 
@@ -72,7 +72,7 @@ class Binary: public Node{
 };
 
 void PrettyPrint::BinaryOp(Binary* b){
-    cout << "(" <<  b->getname() << " , \n\t "; 
+    cout << "(" <<  b->getname() << " , \n "; 
     (b->left)->doOp(this);
     cout << ",";
     (b->right)->doOp(this);
@@ -90,11 +90,11 @@ class Ternary: public Node{
 };
 
 void PrettyPrint::TernaryOp(Ternary* t){
-    cout << "(" <<  t->getname() << " , \n\t"; 
+    cout << "(" <<  t->getname() << " , \n"; 
     (t->child1)->doOp(this);
     cout << ",";
     (t->child2)->doOp(this);
     cout << ",";
-    (t->child2)->doOp(this);
+    (t->child3)->doOp(this);
     cout <<  ")\n";
 } 
