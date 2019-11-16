@@ -323,3 +323,43 @@ class ContinueStatement: public Leaf{
         }
         string getvalue(){return value;}
 };
+
+class Parameters: public List{
+    public:
+        Parameters(){
+            name = "PARAMS";
+        }
+        void add(Node* type, char* id_char){
+            list.push_back(type);
+            Node* id = new Identifier(id_char);
+            list.push_back(id);
+        }
+};
+
+class MethodDecls: public List{
+    public:
+        MethodDecls(){
+            name = "METHOD_DECLS";
+        }
+};
+
+class MethodDeclParam: public List{
+    public:
+        MethodDeclParam(Node* type, char* id_char, Node* pars, Node* block){
+            list.push_back(type);
+            Node* id = new Identifier(id_char);
+            list.push_back(id);
+            list.push_back(pars);
+            list.push_back(block);
+        }
+};
+
+class ProgramVarMethod: public Binary{
+    public:
+        ProgramVarMethod(Node* var, Node* meth){
+            name = "PROGRAM";
+            left = var;
+            right = meth;
+        };
+};
+
