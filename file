@@ -1,7 +1,7 @@
 {
     int a;
-    int b;
-    c = b + d;
-    callout("sdfs","Sdfds");
-    x = 3 + callout("Sdf","SDf") + 7;
+    if(a==5){callout("print", "this is cool!"); }
+    while(b>4){c=7;}
+    for(i=0; i<7; i=i+1){callout("print", "hurray"); return i; continue; break;}
+    a==b ? a = 5; :  b = 7; 
 }

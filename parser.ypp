@@ -105,14 +105,14 @@ statements:     statement  {$$ = new Statements(); $$->list.push_back($1); print
 
 statement:      location EQUALS expr SEMICOLON  {$$ = new AssignmentStatement($1, $3); start = $$; printf("statement -> location EQUALS expr SEMICOLON \n"); } //
         |       method_call SEMICOLON  {$$ = $1; printf("statement -> method_call SEMICOLON \n"); } 
-        |       IF LEFT_ROUND expr RIGHT_ROUND block  { printf("statement -> IF LEFT_ROUND expr RIGHT_ROUND statement \n");}
-        |       IF LEFT_ROUND expr RIGHT_ROUND block ELSE block  {printf("statement -> IF LEFT_ROUND expr RIGHT_ROUND statement ELSE statement \n");}
-        |       expr  QUESTION_MARK statement COLON statement  {printf("statement -> expr  QUESTION_MARK statement COLON statement \n");}
-        |       WHILE LEFT_ROUND expr RIGHT_ROUND block {printf("statement -> WHILE LEFT_ROUND expr RIGHT_ROUND statement \n");}
-        |       FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND block{printf("statement -> FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND statement \n");}
-        |       RETURN expr SEMICOLON {printf("statement -> RETURN expr SEMICOLON \n");}
-        |       BREAK SEMICOLON {printf("statement -> BREAK SEMICOLON \n");}
-        |       CONTINUE SEMICOLON {printf("statement -> CONTINUE SEMICOLON \n");}
+        |       IF LEFT_ROUND expr RIGHT_ROUND block  { $$ = new IfThenStatement($3, $5); printf("statement -> IF LEFT_ROUND expr RIGHT_ROUND statement \n");}
+        |       IF LEFT_ROUND expr RIGHT_ROUND block ELSE block  {$$ = new IfThenElseStatement($3, $5, $7); printf("statement -> IF LEFT_ROUND expr RIGHT_ROUND statement ELSE statement \n");}
+        |       expr  QUESTION_MARK statement COLON statement  {$$ = new TernaryIfStatement($1,$3, $5); printf("statement -> expr  QUESTION_MARK statement COLON statement \n");}
+        |       WHILE LEFT_ROUND expr RIGHT_ROUND block {$$ = new WhileStatement($3, $5); printf("statement -> WHILE LEFT_ROUND expr RIGHT_ROUND statement \n");}
+        |       FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND block{$$ = new ForStatement($3, $5, $7, $9, $11, $13); printf("statement -> FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND statement \n");}
+        |       RETURN expr SEMICOLON {$$ = new ReturnStatement($2); printf("statement -> RETURN expr SEMICOLON \n");}
+        |       BREAK SEMICOLON {$$ = new BreakStatement(); printf("statement -> BREAK SEMICOLON \n");}
+        |       CONTINUE SEMICOLON {$$ = new ContinueStatement(); printf("statement -> CONTINUE SEMICOLON \n");}
 
 
 expr:           literal {$$ = $1;} // printf("expr -> literal \n");
@@ -166,3 +166,4 @@ int main(int argc, char **argv)
         
         return 0;
 }
+

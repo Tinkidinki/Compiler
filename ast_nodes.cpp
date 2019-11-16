@@ -6,8 +6,7 @@ using namespace std;
 class IntLiteral: public Leaf{
     public:
         int value;
-        
-
+      
         IntLiteral(int val){
             name = "INT_LIT";
             value = val;
@@ -243,4 +242,84 @@ class Type: public Leaf{
         }
     string getvalue(){return value;}
         
+};
+
+class IfThenStatement: public Binary{
+    public:
+        IfThenStatement(Node* exp, Node* block){
+            name = "IF_THEN";
+            left = exp;
+            right = block;
+        }
+        
+};
+
+class IfThenElseStatement: public Ternary{
+    public:
+        IfThenElseStatement(Node* exp, Node* thenblock, Node* elseblock){
+            name = "IF_THEN_ELSE";
+            child1 = exp;
+            child2 = thenblock;
+            child3 = elseblock;
+        }
+};
+
+class TernaryIfStatement: public Ternary{
+    public:
+        TernaryIfStatement(Node* exp, Node* thenblock, Node* elseblock){
+            name = "TERNARY_IF ";
+            child1 = exp;
+            child2 = thenblock;
+            child3 = elseblock;
+        }
+};
+
+class WhileStatement: public Binary{
+    public:
+        WhileStatement(Node* exp, Node* block){
+            name = "WHILE";
+            left = exp;
+            right = block;
+        }
+};
+
+class ForStatement: public List{
+    public:
+        ForStatement(char* id1_char, Node* exp1, Node* exp, char* id2_char, Node* exp2, Node* block){
+            name = "FOR";
+            Node* id1 = new Identifier(id1_char);
+            Node* id2 = new Identifier(id2_char);
+            list.push_back(id1);
+            list.push_back(exp1);
+            list.push_back(exp);
+            list.push_back(id2);
+            list.push_back(exp2);
+            list.push_back(block);
+        }
+};
+
+class ReturnStatement: public Unary{
+    public:
+        ReturnStatement(Node* exp){
+            name = "RETURN";
+            operand = exp;
+        }
+};
+
+class BreakStatement: public Leaf{
+    string value = "oops";
+    public:
+        BreakStatement(){
+            name = "BREAK";
+        }
+        string getvalue(){return value;}
+};
+
+class ContinueStatement: public Leaf{
+    string value = "oops";
+    public:
+        ContinueStatement(){
+            name = "CONTINUE";
+        }
+        string getvalue(){return value;}
 };
