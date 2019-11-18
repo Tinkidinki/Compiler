@@ -73,29 +73,30 @@
 %type <node> method_decl
 %type <node_list> method_decls
 %type <node_list> parameters
+%type <node> program
 %%
 
 Goal: program
 
-program:        CLASS PROGRAM LEFT_CURLY var_decls method_decls RIGHT_CURLY {printf("program -> CLASS PROGRAM LEFT_CURLY var_decls method_decls RIGHT_CURLY \n");}
+program:        CLASS PROGRAM LEFT_CURLY var_decls method_decls RIGHT_CURLY {$$ = new ProgramVarMethod($4, $5); start = $$; printf("program -> CLASS PROGRAM LEFT_CURLY var_decls method_decls RIGHT_CURLY \n");}
        |        CLASS PROGRAM LEFT_CURLY method_decls RIGHT_CURLY {printf("program -> CLASS PROGRAM LEFT_CURLY method_decls RIGHT_CURLY \n");}
 
-method_decl:    composite_type ID LEFT_ROUND parameters RIGHT_ROUND block  {$$ = new MethodDeclParam($1, $2, $3, $4); printf("method_decl -> composite_type ID LEFT_ROUND parameters RIGHT_ROUND block\n");}
+method_decl:    composite_type ID LEFT_ROUND parameters RIGHT_ROUND block  {$$ = new MethodDeclParam($1, $2, $4, $6); printf("method_decl -> composite_type ID LEFT_ROUND parameters RIGHT_ROUND block\n");}
        |        composite_type ID LEFT_ROUND RIGHT_ROUND block  {printf("method_decl -> composite_type ID LEFT_ROUND RIGHT_ROUND block\n");}
 
 method_decls:   method_decl  {$$ = new MethodDecls(); $$->list.push_back($1); printf("method_decls -> method_decl\n");}
         |       method_decls method_decl {$$->list.push_back($2); printf("method_decls -> method_decls method_decl \n");}
 
-parameters:     composite_type ID {$$ = new Parameters(); $$->add($1, $2); printf("parameters -> composite_type ID \n");}
-        |       parameters COMMA composite_type ID {$$->add($3, $4); printf("parameters -> parameters COMMA composite_type ID \n");}
+parameters:     composite_type ID {$$ = new Parameters(); $$->list.push_back($1); Node* id = new Identifier($2); $$->list.push_back(id); printf("parameters -> composite_type ID \n");}
+        |       parameters COMMA composite_type ID {$$->list.push_back($3); Node* id = new Identifier($4); $$->list.push_back(id);printf("parameters -> parameters COMMA composite_type ID \n");}
         
 composite_type: TYPE {$$ = new Type($1); printf("composite_type -> TYPE\n");}
         |       TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE {printf("composite_type -> TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE\n");}
         |       TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE {printf("composite_type -> TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE \n");}
 
 
-block:          LEFT_CURLY var_decls statements RIGHT_CURLY {$$ = new DecBlock($2, $3); printf("block -> LEFT_CURLY var_decls statements RIGHT_CURLY\n"); start = $$;}
-        |       LEFT_CURLY statements RIGHT_CURLY {$$ = new StatBlock($2); printf("block -> LEFT_CURLY statements RIGHT_CURLY\n"); start = $$;}
+block:          LEFT_CURLY var_decls statements RIGHT_CURLY {$$ = new DecBlock($2, $3); printf("block -> LEFT_CURLY var_decls statements RIGHT_CURLY\n"); }
+        |       LEFT_CURLY statements RIGHT_CURLY {$$ = new StatBlock($2); printf("block -> LEFT_CURLY statements RIGHT_CURLY\n");}
 
 var_decls:      var_decl {$$ = new VarDecls(); $$->list.push_back($1); printf("var_decls -> var_decl\n");}
         |       var_decls var_decl {$$->list.push_back($2); printf("var_decls-> var_decls var_decl\n");}
