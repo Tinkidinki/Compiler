@@ -48,6 +48,8 @@ class StringLiteral: public Leaf{
         }
 
         string getvalue(){return value;}
+
+        virtual Value* Codegen();
 };
 
 class Identifier: public Leaf{
@@ -183,6 +185,7 @@ class MethodCall: public Unary{
             name = meth_name;
             operand = call_args;
         }
+        virtual Value* Codegen();
 };
 
 class CalloutArgs: public List{
@@ -191,6 +194,7 @@ class CalloutArgs: public List{
             name = "ARGS";
             // cout << "constructor got called\n";
         }
+        virtual Value* Codegen();
 };
 
 class Statements: public List{
