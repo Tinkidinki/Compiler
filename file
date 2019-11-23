@@ -1,10 +1,1 @@
-class Program{
-    int a;
-    int method(int a){return a+1;}
-    int main(int b){
-        int b;
-        b = 5;
-        callout("method", a, b);
-        return 0;
-    }
-}
+callout("printf","This is cool!")

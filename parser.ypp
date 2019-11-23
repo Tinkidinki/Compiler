@@ -1,4 +1,4 @@
- %{     #include "ast_nodes.cpp"
+ %{     #include "code_generation.cpp"
 	#include <bits/stdc++.h>
         using namespace std;
 
@@ -76,7 +76,7 @@
 %type <node> program
 %%
 
-Goal: program
+Goal: method_call
 
 program:        CLASS PROGRAM LEFT_CURLY var_decls method_decls RIGHT_CURLY {$$ = new ProgramVarMethod($4, $5); start = $$; printf("program -> CLASS PROGRAM LEFT_CURLY var_decls method_decls RIGHT_CURLY \n");}
        |        CLASS PROGRAM LEFT_CURLY method_decls RIGHT_CURLY {printf("program -> CLASS PROGRAM LEFT_CURLY method_decls RIGHT_CURLY \n");}
@@ -146,7 +146,7 @@ location:
         |       ID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE {printf("location -> ID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE \n");}
 
 method_call:    
-                CALLOUT LEFT_ROUND STRING_LITERAL COMMA callout_args RIGHT_ROUND {printf("method_call -> CALLOUT LEFT_ROUND STRING_LITERAL COMMA\n"); $$ =new MethodCall($3, $5);} //{printf("method_call -> CALLOUT LEFT_ROUND STRING_LITERAL COMMA callout_args RIGHT_ROUND \n");}
+                CALLOUT LEFT_ROUND STRING_LITERAL COMMA callout_args RIGHT_ROUND {printf("method_call -> CALLOUT LEFT_ROUND STRING_LITERAL COMMA callout_args RIGHT_ROUND \n"); $$ =new MethodCall($3, $5); start = $$;} //{printf("method_call -> CALLOUT LEFT_ROUND STRING_LITERAL COMMA callout_args RIGHT_ROUND \n");}
         |       CALLOUT LEFT_ROUND STRING_LITERAL RIGHT_ROUND {printf("method_call -> CALLOUT LEFT_ROUND STRING_LITERAL RIGHT_ROUND \n");}
 
 callout_args:   
@@ -167,6 +167,9 @@ int main(int argc, char **argv)
         PrettyPrint printer;
         start->doOp(&printer);
         cout << endl;
+
+        Builder.SetInsertPoint(entry);
+        start->Codegen();
         
         return 0;
 }

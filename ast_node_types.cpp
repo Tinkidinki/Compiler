@@ -30,7 +30,10 @@ typedef class Node{
     public: 
         string name;
         virtual void doOp(Operation* op) = 0;
+        // virtual llvm::Value* Codegen();
         string getname(){return name;}
+        virtual vector <Node*> getList() = 0;
+        virtual llvm::Value* Codegen() = 0;
 } Node;
 
 class Operation{
@@ -57,7 +60,12 @@ class Leaf: public Node{
             op->LeafOp(this);
         }
         virtual string getvalue() = 0;
-    
+
+        // ignore, simply there
+        vector <Node*> getList(){
+            vector <Node*> dummy;
+            return dummy;
+        }
 };
 
 void PrettyPrint::LeafOp(Leaf* l){
@@ -70,6 +78,12 @@ class Unary: public Node{
             op->UnaryOp(this);
         }
         Node* operand;
+
+        // ignore, simply there
+        vector <Node*> getList(){
+            vector <Node*> dummy;
+            return dummy;
+        }
 };
 
 void PrettyPrint::UnaryOp(Unary* u){
@@ -85,6 +99,12 @@ class Binary: public Node{
         }
         Node* left;
         Node* right;
+
+        // ignore, simply there
+        vector <Node*> getList(){
+            vector <Node*> dummy;
+            return dummy;
+        }
 };
 
 void PrettyPrint::BinaryOp(Binary* b){
@@ -103,6 +123,12 @@ class Ternary: public Node{
         Node* child1;
         Node* child2;
         Node* child3;
+
+        // ignore, simply there
+        vector <Node*> getList(){
+            vector <Node*> dummy;
+            return dummy;
+        }
 };
 
 void PrettyPrint::TernaryOp(Ternary* t){
@@ -121,6 +147,11 @@ class List: public Node{
             op->ListOp(this);
         }
         vector <Node*> list;
+
+        vector <Node*> getList(){
+            return list;
+        }
+
 };
 
 void PrettyPrint::ListOp(List* l){
