@@ -2,9 +2,6 @@ class Program{
     int a;
     int main(){
         a = 5;
-        callout("printf", "so cool!");
-    }
-    int lala(){
-        a = 7;
     }
 }
+

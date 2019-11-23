@@ -441,6 +441,7 @@ class MethodDecls: public List{
 class MethodDeclParam: public List{
     public:
         MethodDeclParam(Node* type, char* id_char, Node* pars, Node* block){
+            cout << "WORKS" << endl;
             name = id_char;
             list.push_back(type);
             list.push_back(pars);
@@ -453,6 +454,7 @@ class MethodDeclParam: public List{
 class ProgramVarMethod: public Binary{
     public:
         ProgramVarMethod(Node* var, Node* meth){
+            cout << "Comes here \n";
             name = "PROGRAM";
             left = var;
             right = meth;
