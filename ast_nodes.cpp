@@ -278,7 +278,7 @@ class DecBlock: public Binary{
 class StatBlock: public Unary{
     public:
         StatBlock(Node* stat_list){
-            name = "BLOCK";
+            name = "STATBLOCK";
             operand = stat_list;
         }
         llvm::Value* Codegen();

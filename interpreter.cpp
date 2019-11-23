@@ -157,8 +157,11 @@ string DecBlock::interpret(){
 }
 string StatBlock::interpret(){
     for (auto i: operand->getList()){
-        i->interpret();
+        string ret = i->interpret();
+        if (ret == "BREAK") return "BREAK";
+        if (ret == "CONTINUE") return "CONTINUE";
     }
+    return "";
 }
 string VarDecls::interpret(){
     string v = "dummy";
@@ -176,20 +179,32 @@ string Type::interpret(){
     return value;
 }
 string IfThenStatement::interpret(){
-    if (left->interpret() == "true")
-        right->interpret();
+    if (left->interpret() == "true"){
+        string ret = right->interpret();
+        return ret;
+    }
 }
 string IfThenElseStatement::interpret(){
-    string v = "dummy";
-    return v;
+    if (child1->interpret() == "true"){
+        string ret = child2->interpret();
+        return ret;
+    }
+    else{
+        string ret = child3->interpret();
+        return ret;
+    }
 }
 string TernaryIfStatement::interpret(){
     string v = "dummy";
     return v;
 }
 string WhileStatement::interpret(){
-    string v = "dummy";
-    return v;
+    while(left->interpret() == "true"){
+        string ret = right->interpret();
+        if (ret == "BREAK") break;
+        if (ret == "CONTINUE") continue;
+    }
+    return "";
 }
 string ForStatement::interpret(){
     string v = "dummy";
@@ -200,12 +215,10 @@ string ReturnStatement::interpret(){
     return v;
 }
 string BreakStatement::interpret(){
-    string v = "dummy";
-    return v;
+    return "BREAK";
 }
 string ContinueStatement::interpret(){
-    string v = "dummy";
-    return v;
+    return "CONTINUE";
 }
 string Parameters::interpret(){
     string v = "dummy";

@@ -1,6 +1,9 @@
 {
     int a;
     a = 5;
-    if (2 != 3) {a = 2342;}
-    callout("printf", a);
+    while(a < 10){
+        a = a+1;
+        if (a==8) {continue;} else {callout("printf","oolala");}
+        callout("printf", a);
+    }
 }
