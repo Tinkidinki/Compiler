@@ -1,9 +1,10 @@
-{
+class Program{
     int a;
-    a = 5;
-    while(a < 10){
-        a = a+1;
-        if (a==8) {continue;} else {callout("printf","oolala");}
-        callout("printf", a);
+    int main(){
+        a = 5;
+        callout("printf", "so cool!");
+    }
+    int lala(){
+        a = 7;
     }
 }

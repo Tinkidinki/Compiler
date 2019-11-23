@@ -420,10 +420,11 @@ class Parameters: public List{
             name = "PARAMS";
         }
         void add(Node* type, char* id_char){
-            list.push_back(type);
             Node* id = new Identifier(id_char);
             list.push_back(id);
+            list.push_back(type);
         }
+        
         llvm::Value* Codegen();
         string interpret();
 };
@@ -440,9 +441,8 @@ class MethodDecls: public List{
 class MethodDeclParam: public List{
     public:
         MethodDeclParam(Node* type, char* id_char, Node* pars, Node* block){
+            name = id_char;
             list.push_back(type);
-            Node* id = new Identifier(id_char);
-            list.push_back(id);
             list.push_back(pars);
             list.push_back(block);
         }

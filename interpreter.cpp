@@ -10,6 +10,14 @@ typedef struct var{
 
 map <string, var> var_list;
 
+typedef struct func{
+    map <string, var> var_list;
+    Node* block;
+    string ret_type;
+} func;
+
+map <string, func> func_list;
+
 void printVarList(){
     for(auto i: var_list){
         cout << i.first << endl;
@@ -17,6 +25,62 @@ void printVarList(){
         cout << i.second.value << endl;
         cout << "----------------------" << endl;
     }
+}
+
+string ProgramVarMethod::interpret(){
+/* First interpret all the variable declarations */
+    for (auto i: left->getList())
+        i->interpret();
+
+/* Obtain all the method declarations */
+    for (auto i: right->getList()){
+    
+    // Only main gets interpreted, rest get stored.
+        if (i->name == "main")
+            i->interpret();
+
+        else{
+            vector <Node*> list = i->getList(); // get list containing method components
+            string func_name = i->name;
+            string ret_type = list[0]->interpret();
+            map <string, var> var_list;
+            
+            vector <Node*> params = list[1]->getList();
+            
+            bool name_check = true;
+            string temp_name;
+            string temp_value;
+            string temp_type;
+
+            // Params are stored as name, type, name, type and so on, 
+            // So need to alternate between them to make var_list
+            for (auto i: params){
+                if (name_check){
+                    temp_name = i->interpret();
+                    temp_value = "";
+                    name_check = false;
+                }
+                else{
+                    temp_type = i->interpret();
+                    var temp_var;
+                    temp_var.type = temp_type;
+                    temp_var.value = temp_value;
+                    var_list.insert({temp_name, temp_var});
+                    name_check = true;
+                }
+            }
+            
+            
+            Node* block = list[2];
+
+            func temp;
+            temp.ret_type = ret_type;
+            temp.var_list = var_list;
+            temp.block = block;
+            func_list.insert({func_name, temp});
+        }
+    }
+    return "";
 }
 
 string StringLiteral::interpret(){
@@ -28,8 +92,8 @@ string MethodCall::interpret(){
         cout << op->interpret() << endl;
           
     }
-    string v = "x";
-    return v;
+    else func_list[name].block->interpret();
+    return "";
 }
 string CalloutArgs::interpret(){
     string v = "dummy";
@@ -164,8 +228,7 @@ string StatBlock::interpret(){
     return "";
 }
 string VarDecls::interpret(){
-    string v = "dummy";
-    return v;
+    return "";
 }
 string VarDecl::interpret(){
     var temp;
@@ -207,8 +270,18 @@ string WhileStatement::interpret(){
     return "";
 }
 string ForStatement::interpret(){
-    string v = "dummy";
-    return v;
+    string id1 = list[0]->interpret();
+    string expr1 = list[1]->interpret();
+    var_list[id1].value = expr1;
+    while(list[2]->interpret() == "true"){
+        string ret = list[5]->interpret();
+        if (ret == "BREAK") break;
+        string id2 = list[3]->interpret();
+        string expr2 = list[4]->interpret();
+        var_list[id2].value = expr2;
+        if (ret == "CONTINUE") continue;
+    }
+    return "";
 }
 string ReturnStatement::interpret(){
     string v = "dummy";
@@ -221,18 +294,13 @@ string ContinueStatement::interpret(){
     return "CONTINUE";
 }
 string Parameters::interpret(){
-    string v = "dummy";
-    return v;
+    return "";
 }
 string MethodDecls::interpret(){
     string v = "dummy";
     return v;
 }
 string MethodDeclParam::interpret(){
-    string v = "dummy";
-    return v;
-}
-string ProgramVarMethod::interpret(){
     string v = "dummy";
     return v;
 }
