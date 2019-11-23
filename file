@@ -1,1 +1,10 @@
-callout("printf","This is cool!")
+{
+    string a;
+    int c;
+    int d;
+    int e;
+    d = 7+3;
+    e = 50/5+1;
+    c = d+ e + 4;
+    callout("printf", c);
+}

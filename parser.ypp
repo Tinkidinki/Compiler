@@ -1,4 +1,4 @@
- %{     #include "code_generation.cpp"
+ %{     #include "interpreter.cpp"
 	#include <bits/stdc++.h>
         using namespace std;
 
@@ -76,7 +76,7 @@
 %type <node> program
 %%
 
-Goal: method_call
+Goal: block
 
 program:        CLASS PROGRAM LEFT_CURLY var_decls method_decls RIGHT_CURLY {$$ = new ProgramVarMethod($4, $5); start = $$; printf("program -> CLASS PROGRAM LEFT_CURLY var_decls method_decls RIGHT_CURLY \n");}
        |        CLASS PROGRAM LEFT_CURLY method_decls RIGHT_CURLY {printf("program -> CLASS PROGRAM LEFT_CURLY method_decls RIGHT_CURLY \n");}
@@ -95,19 +95,19 @@ composite_type: TYPE {$$ = new Type($1); printf("composite_type -> TYPE\n");}
         |       TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE {printf("composite_type -> TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE \n");}
 
 
-block:          LEFT_CURLY var_decls statements RIGHT_CURLY {$$ = new DecBlock($2, $3); printf("block -> LEFT_CURLY var_decls statements RIGHT_CURLY\n"); }
+block:          LEFT_CURLY var_decls statements RIGHT_CURLY {$$ = new DecBlock($2, $3); start = $$; printf("block -> LEFT_CURLY var_decls statements RIGHT_CURLY\n"); }
         |       LEFT_CURLY statements RIGHT_CURLY {$$ = new StatBlock($2); printf("block -> LEFT_CURLY statements RIGHT_CURLY\n");}
 
 var_decls:      var_decl {$$ = new VarDecls(); $$->list.push_back($1); printf("var_decls -> var_decl\n");}
         |       var_decls var_decl {$$->list.push_back($2); printf("var_decls-> var_decls var_decl\n");}
 
-var_decl:       composite_type ID SEMICOLON {$$ = new VarDecl($1, $2); printf("var_decl -> composite_type ID SEMICOLON\n");}
+var_decl:       composite_type ID SEMICOLON {$$ = new VarDecl($1, $2);  printf("var_decl -> composite_type ID SEMICOLON\n");}
 
 
 statements:     statement  {$$ = new Statements(); $$->list.push_back($1); printf("statements -> statement\n");}
         |       statements statement  {$$ = $1; $$->list.push_back($2); printf("statements -> statements statement\n");}
 
-statement:      location EQUALS expr SEMICOLON  {$$ = new AssignmentStatement($1, $3); start = $$; printf("statement -> location EQUALS expr SEMICOLON \n"); } //
+statement:      ID EQUALS expr SEMICOLON  {$$ = new AssignmentStatement($1, $3); start = $$; printf("statement -> location EQUALS expr SEMICOLON \n"); } //
         |       method_call SEMICOLON  {$$ = $1; printf("statement -> method_call SEMICOLON \n"); } 
         |       IF LEFT_ROUND expr RIGHT_ROUND block  { $$ = new IfThenStatement($3, $5); printf("statement -> IF LEFT_ROUND expr RIGHT_ROUND statement \n");}
         |       IF LEFT_ROUND expr RIGHT_ROUND block ELSE block  {$$ = new IfThenElseStatement($3, $5, $7); printf("statement -> IF LEFT_ROUND expr RIGHT_ROUND statement ELSE statement \n");}
@@ -141,12 +141,12 @@ bin_op:         ARITH_OP  {$$ = new ArithmeticOperator($1);} //{printf("bin_op -
         |       COND_OP   {$$ = new ConditionalOperator($1);} //{printf("bin_op -> COND_OP \n");}
 
 location:       
-                ID {$$ = new Identifier($1);} // printf("location -> ID \n");
+                ID {$$ = new Location($1);} // printf("location -> ID \n");
         |       ID LEFT_SQUARE expr RIGHT_SQUARE {printf("location -> ID LEFT_SQUARE expr RIGHT_SQUARE \n");}
         |       ID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE {printf("location -> ID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE \n");}
 
 method_call:    
-                CALLOUT LEFT_ROUND STRING_LITERAL COMMA callout_args RIGHT_ROUND {printf("method_call -> CALLOUT LEFT_ROUND STRING_LITERAL COMMA callout_args RIGHT_ROUND \n"); $$ =new MethodCall($3, $5); start = $$;} //{printf("method_call -> CALLOUT LEFT_ROUND STRING_LITERAL COMMA callout_args RIGHT_ROUND \n");}
+                CALLOUT LEFT_ROUND STRING_LITERAL COMMA callout_args RIGHT_ROUND {printf("method_call -> CALLOUT LEFT_ROUND STRING_LITERAL COMMA callout_args RIGHT_ROUND \n"); $$ =new MethodCall($3, $5); } //{printf("method_call -> CALLOUT LEFT_ROUND STRING_LITERAL COMMA callout_args RIGHT_ROUND \n");}
         |       CALLOUT LEFT_ROUND STRING_LITERAL RIGHT_ROUND {printf("method_call -> CALLOUT LEFT_ROUND STRING_LITERAL RIGHT_ROUND \n");}
 
 callout_args:   
@@ -161,15 +161,26 @@ void yyerror(const char *s)
 
 int main(int argc, char **argv)
 {
+        printf("------------------\n");
+        printf("PARSER OUTPUT\n");
+        printf("------------------\n");
+
         yyparse();
         printf("Parsing Over\n");
+
+        printf("------------------\n");
+        printf("AST OUTPUT\n");
+        printf("------------------\n");
 
         PrettyPrint printer;
         start->doOp(&printer);
         cout << endl;
-
-        Builder.SetInsertPoint(entry);
-        start->Codegen();
+        printf("------------------\n");
+        printf("INTERPRETER OUTPUT\n");
+        printf("------------------\n");
+        // Builder.SetInsertPoint(entry);
+        // start->Codegen();
+        start->interpret();
         
         return 0;
 }

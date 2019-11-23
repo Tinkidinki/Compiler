@@ -203,3 +203,7 @@ llvm::Value* ProgramVarMethod::Codegen(){
     llvm::Value* v;
     return v;
 }
+llvm::Value* Location::Codegen(){
+    llvm::Value* v;
+    return v;
+}

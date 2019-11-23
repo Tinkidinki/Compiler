@@ -34,6 +34,7 @@ typedef class Node{
         string getname(){return name;}
         virtual vector <Node*> getList() = 0;
         virtual llvm::Value* Codegen() = 0;
+        virtual string interpret() = 0;
 } Node;
 
 class Operation{
