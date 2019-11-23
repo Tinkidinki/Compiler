@@ -1,10 +1,6 @@
 {
-    string a;
-    int c;
-    int d;
-    int e;
-    d = 7+3;
-    e = 50/5+1;
-    c = d+ e + 4;
-    callout("printf", c);
+    int a;
+    a = 5;
+    if (2 != 3) {a = 2342;}
+    callout("printf", a);
 }

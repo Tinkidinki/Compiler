@@ -43,37 +43,36 @@ string CharLiteral::interpret(){
     return v;
 }
 string BoolLiteral::interpret(){
-    string v = "dummy";
-    return v;
+    // cout << "the bool value "<< value << endl;
+    return value?"true":"false";
 }
 string Identifier::interpret(){
     return value;
 }
 string UnaryExpression::interpret(){
-    string v = "dummy";
-    return v;
+    string exp = operand->interpret();
+    if (name == "-")
+        return to_string(-stoi(exp));
+    else if (name == "!")
+        return exp=="true"?"false":"true";
 }
 string AssignmentStatement::interpret(){
     string loc = left->interpret();
     string val = right->interpret();
     var_list[loc].value = val;
-    string v = "dummy";
-    return v;
+    return "";
 }
 string ArithmeticOperator::interpret(){
     return value;
 }
 string RelationalOperator::interpret(){
-    string v = "dummy";
-    return v;
+    return value;
 }
 string EqualOperator::interpret(){
-    string v = "dummy";
-    return v;
+    return value;
 }
 string ConditionalOperator::interpret(){
-    string v = "dummy";
-    return v;
+    return value;
 }
 string ArithmeticExpression::interpret(){
     string op = child2->interpret();
@@ -90,7 +89,6 @@ string ArithmeticExpression::interpret(){
         return to_string(stoi(operand1) * stoi(operand2));
     else if (op == "/")
         return to_string(stoi(operand1) / stoi(operand2));
-    return "lala";
     
     
 }
@@ -98,21 +96,50 @@ string ArithmeticExpression::interpret(){
 string Location::interpret(){
     return var_list[value].value;
 }
+
 string EqualExpression::interpret(){
-    string v = "dummy";
-    return v;
+    string op = child2->interpret();
+    string operand1, operand2;
+
+    operand1 = child1->interpret();
+    operand2 = child3->interpret();
+
+    if (op == "==")
+        return operand1 == operand2 ? "true":"false";
+    else if (op == "!=")
+        return operand1 != operand2 ? "true":"false";
 }
 string ConditionalExpression::interpret(){
-    string v = "dummy";
-    return v;
+    string op = child2->interpret();
+    string operand1, operand2;
+
+    operand1 = child1->interpret();
+    operand2 = child3->interpret();
+
+    if (op == "&&")
+        return operand1 == "true" && operand2 == "true" ? "true":"false";
+    else if (op == "||")
+        return operand1 == "false" || operand2 == "false" ? "false":"true";
 }
 string RelationalExpression::interpret(){
-    string v = "dummy";
-    return v;
+    string op = child2->interpret();
+    string operand1, operand2;
+
+    operand1 = child1->interpret();
+    operand2 = child3->interpret();
+
+    if (op == "<")
+        return stoi(operand1) < stoi(operand2)?"true":"false";
+    else if (op == ">")
+        return stoi(operand1) > stoi(operand2)?"true":"false";
+    else if (op == "<=")
+        return stoi(operand1) <= stoi(operand2)?"true":"false";
+    else if (op == ">=")
+        return stoi(operand1) >= stoi(operand2)?"true":"false";
+    
 }
 string EnclosedExpression::interpret(){
-    string v = "dummy";
-    return v;
+    return operand->interpret();
 }
 
 string Statements::interpret(){
@@ -129,8 +156,9 @@ string DecBlock::interpret(){
     return "";
 }
 string StatBlock::interpret(){
-    string v = "dummy";
-    return v;
+    for (auto i: operand->getList()){
+        i->interpret();
+    }
 }
 string VarDecls::interpret(){
     string v = "dummy";
@@ -148,8 +176,8 @@ string Type::interpret(){
     return value;
 }
 string IfThenStatement::interpret(){
-    string v = "dummy";
-    return v;
+    if (left->interpret() == "true")
+        right->interpret();
 }
 string IfThenElseStatement::interpret(){
     string v = "dummy";

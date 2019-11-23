@@ -23,7 +23,7 @@ typedef union ASTnode YYSTYPE;
 
 [ \t] 			                    { /* eat white spaces */  }
 
-true|false                          { yylval.bool_val = strcmp(yytext,"true") ? true : false; return BOOL_LITERAL; }
+true|false                          { yylval.bool_val = strcmp(yytext,"true") ? false : true; return BOOL_LITERAL; }
 \'.\'                               { yylval.char_val = yytext[1]; return CHAR_LITERAL; }
 [0-9]+	                            { yylval.int_val = atoi(yytext); return INT_LITERAL; }
 \"[^\"]*+\"                         { yylval.str_val = strdup(yytext); return STRING_LITERAL; }

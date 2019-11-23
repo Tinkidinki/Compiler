@@ -267,7 +267,7 @@ class Statements: public List{
 class DecBlock: public Binary{
     public:
         DecBlock(Node* var_list, Node* stat_list){
-            name = "BLOCK";
+            name = "DECBLOCK";
             left = var_list;
             right = stat_list;
         }
