@@ -9,6 +9,7 @@ typedef struct var{
 } var;
 
 map <string, var> var_list;
+map <string, var> curr_var_list;
 
 typedef struct func{
     map <string, var> var_list;
@@ -110,12 +111,15 @@ string MethodCall::interpret(){
     }
     else { 
         name = name.substr(1, name.size()-2);
+        curr_var_list = func_list[name].var_list;
         return func_list[name].block->interpret();
     }
     return "";
 }
 
 string MethodCallEmpty::interpret(){
+    name = name.substr(1, name.size()-2);
+    curr_var_list = func_list[name].var_list;
     return func_list[name].block->interpret();
 }
 
@@ -182,6 +186,9 @@ string ArithmeticExpression::interpret(){
 }
 
 string Location::interpret(){
+    if (curr_var_list.count(value) > 0){
+        return curr_var_list[value].value;
+    }
     return var_list[value].value;
 }
 
@@ -282,8 +289,7 @@ string IfThenElseStatement::interpret(){
     }
 }
 string TernaryIfStatement::interpret(){
-    string v = "dummy";
-    return v;
+    return "";
 }
 string WhileStatement::interpret(){
     while(left->interpret() == "true"){
@@ -308,8 +314,7 @@ string ForStatement::interpret(){
     return "";
 }
 string ReturnStatement::interpret(){
-    string v = "dummy";
-    return v;
+    return operand->interpret();
 }
 string BreakStatement::interpret(){
     return "BREAK";

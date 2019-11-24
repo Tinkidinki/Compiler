@@ -1,19 +1,19 @@
 class Program{
     int a;
 
-    void rando(string s){
+    void rando(){
         callout("printf", "this is good");
     }
 
-    void weird(string s){
+    void weird(){
         callout("printf", "this is weird");
     }
 
-    int main(int x){
+    int main(){
         a = 5;
         callout ("printf", a);
-        callout ("rando", "lala");
-        callout ("weird", "SDfs");
+        callout ("rando");
+        callout ("weird");
     }
 }
 
