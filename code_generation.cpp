@@ -207,3 +207,15 @@ llvm::Value* Location::Codegen(){
     llvm::Value* v;
     return v;
 }
+llvm::Value* ProgramMethod::Codegen(){
+    llvm::Value* v;
+    return v;
+}
+llvm::Value* MethodDeclEmpty::Codegen(){
+    llvm::Value* v;
+    return v;
+}
+llvm::Value* MethodCallEmpty::Codegen(){
+    llvm::Value* v;
+    return v;
+}

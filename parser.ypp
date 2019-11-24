@@ -48,8 +48,6 @@
 %token  BAD_CHAR
         COMMA SEMICOLON EQUALS QUESTION_MARK COLON
       
-           
-        
         LEFT_SQUARE RIGHT_SQUARE LEFT_CURLY RIGHT_CURLY
        
         CALLOUT IF ELSE FOR WHILE RETURN BREAK CONTINUE CLASS PROGRAM
@@ -62,7 +60,6 @@
 %type <node> expr
 %type <node> location
 %type <node> statement
-%type <node> bin_op
 %type <node_list> callout_args
 %type <node_list> var_decls
 %type <node_list> statements
@@ -78,80 +75,255 @@
 
 Goal: program
 
-program:        CLASS PROGRAM LEFT_CURLY var_decls method_decls RIGHT_CURLY {$$ = new ProgramVarMethod($4, $5); start = $$; printf("program -> CLASS PROGRAM LEFT_CURLY var_decls method_decls RIGHT_CURLY \n");}
-       |        CLASS PROGRAM LEFT_CURLY method_decls RIGHT_CURLY {printf("program -> CLASS PROGRAM LEFT_CURLY method_decls RIGHT_CURLY \n");}
+program:        CLASS PROGRAM LEFT_CURLY var_decls method_decls RIGHT_CURLY{ 
+                        $$ = new ProgramVarMethod($4, $5); start = $$; 
+                        printf("program -> CLASS PROGRAM LEFT_CURLY var_decls method_decls RIGHT_CURLY \n");
+                }
 
-method_decl:    composite_type ID LEFT_ROUND parameters RIGHT_ROUND block  {$$ = new MethodDeclParam($1, $2, $4, $6); start = $$; printf("method_decl -> composite_type ID LEFT_ROUND parameters RIGHT_ROUND block\n");}
-       |        composite_type ID LEFT_ROUND RIGHT_ROUND block  {printf("method_decl -> composite_type ID LEFT_ROUND RIGHT_ROUND block\n");}
+       |        CLASS PROGRAM LEFT_CURLY method_decls RIGHT_CURLY {
+                        $$ = new ProgramMethod($4); start = $$;
+                        printf("program -> CLASS PROGRAM LEFT_CURLY method_decls RIGHT_CURLY \n");
+                }
 
-method_decls:   method_decl  {$$ = new MethodDecls(); $$->list.push_back($1); printf("method_decls -> method_decl\n");}
-        |       method_decls method_decl {$$->list.push_back($2); printf("method_decls -> method_decls method_decl \n");}
+method_decl:    composite_type ID LEFT_ROUND parameters RIGHT_ROUND block {
+                        $$ = new MethodDeclParam($1, $2, $4, $6); 
+                        printf("method_decl -> composite_type ID LEFT_ROUND parameters RIGHT_ROUND block\n");
+                }
 
-parameters:     composite_type ID {$$ = new Parameters(); $$->list.push_back($1); Node* id = new Identifier($2); $$->list.push_back(id); printf("parameters -> composite_type ID \n");}
-        |       parameters COMMA composite_type ID {$$->list.push_back($3); Node* id = new Identifier($4); $$->list.push_back(id);printf("parameters -> parameters COMMA composite_type ID \n");}
+       |        composite_type ID LEFT_ROUND RIGHT_ROUND block {
+                        $$ = new MethodDeclEmpty($1, $2, $5);
+                        printf("method_decl -> composite_type ID LEFT_ROUND RIGHT_ROUND block\n");
+                }
+
+method_decls:   method_decl  {
+                        $$ = new MethodDecls(); $$->list.push_back($1); 
+                        printf("method_decls -> method_decl\n");
+                }
+
+        |       method_decls method_decl {
+                        $$->list.push_back($2); 
+                        printf("method_decls -> method_decls method_decl \n");
+                }
+
+parameters:     composite_type ID {
+                        $$ = new Parameters(); $$->list.push_back($1); 
+                        Node* id = new Identifier($2); $$->list.push_back(id); 
+                        printf("parameters -> composite_type ID \n");
+                }
+
+        |       parameters COMMA composite_type ID {
+                        $$->list.push_back($3); Node* id = new Identifier($4); 
+                        $$->list.push_back(id);
+                        printf("parameters -> parameters COMMA composite_type ID \n");
+                }
         
-composite_type: TYPE {$$ = new Type($1); printf("composite_type -> TYPE\n");}
-        |       TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE {printf("composite_type -> TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE\n");}
+composite_type: TYPE {
+                        $$ = new Type($1); 
+                        printf("composite_type -> TYPE\n");
+                }
+
+        |       TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE {
+                        //ARRAY TYPES NOT DONE
+                        printf("composite_type -> TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE\n");
+                }
         |       TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE {printf("composite_type -> TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE \n");}
 
 
-block:          LEFT_CURLY var_decls statements RIGHT_CURLY {$$ = new DecBlock($2, $3); printf("block -> LEFT_CURLY var_decls statements RIGHT_CURLY\n"); }
-        |       LEFT_CURLY statements RIGHT_CURLY {$$ = new StatBlock($2); printf("block -> LEFT_CURLY statements RIGHT_CURLY\n");}
+block:          LEFT_CURLY var_decls statements RIGHT_CURLY {
+                        $$ = new DecBlock($2, $3); 
+                        printf("block -> LEFT_CURLY var_decls statements RIGHT_CURLY\n"); 
+                }
 
-var_decls:      var_decl {$$ = new VarDecls(); $$->list.push_back($1); printf("var_decls -> var_decl\n");}
-        |       var_decls var_decl {$$->list.push_back($2); printf("var_decls-> var_decls var_decl\n");}
+        |       LEFT_CURLY statements RIGHT_CURLY {
+                        $$ = new StatBlock($2); 
+                        printf("block -> LEFT_CURLY statements RIGHT_CURLY\n");
+                }
 
-var_decl:       composite_type ID SEMICOLON {$$ = new VarDecl($1, $2);  printf("var_decl -> composite_type ID SEMICOLON\n");}
+var_decls:      var_decl {
+                        $$ = new VarDecls(); $$->list.push_back($1); 
+                        printf("var_decls -> var_decl\n");
+                }
+
+        |       var_decls var_decl {
+                        $$->list.push_back($2); 
+                        printf("var_decls-> var_decls var_decl\n");
+                }
+
+var_decl:       composite_type ID SEMICOLON {
+                        $$ = new VarDecl($1, $2);  
+                        printf("var_decl -> composite_type ID SEMICOLON\n");
+                }
 
 
-statements:     statement  {$$ = new Statements(); $$->list.push_back($1); printf("statements -> statement\n");}
-        |       statements statement  {$$ = $1; $$->list.push_back($2); printf("statements -> statements statement\n");}
+statements:     statement  {
+                        $$ = new Statements(); $$->list.push_back($1); 
+                        printf("statements -> statement\n");
+                }
+        |       statements statement  {
+                        $$ = $1; $$->list.push_back($2); 
+                        printf("statements -> statements statement\n");
+                }
 
-statement:      ID EQUALS expr SEMICOLON  {$$ = new AssignmentStatement($1, $3); printf("statement -> location EQUALS expr SEMICOLON \n"); } //
-        |       method_call SEMICOLON  {$$ = $1; printf("statement -> method_call SEMICOLON \n"); } 
-        |       IF LEFT_ROUND expr RIGHT_ROUND block  { $$ = new IfThenStatement($3, $5); printf("statement -> IF LEFT_ROUND expr RIGHT_ROUND statement \n");}
-        |       IF LEFT_ROUND expr RIGHT_ROUND block ELSE block  {$$ = new IfThenElseStatement($3, $5, $7); printf("statement -> IF LEFT_ROUND expr RIGHT_ROUND statement ELSE statement \n");}
-        |       expr  QUESTION_MARK statement COLON statement  {$$ = new TernaryIfStatement($1,$3, $5); printf("statement -> expr  QUESTION_MARK statement COLON statement \n");}
-        |       WHILE LEFT_ROUND expr RIGHT_ROUND block {$$ = new WhileStatement($3, $5); printf("statement -> WHILE LEFT_ROUND expr RIGHT_ROUND statement \n");}
-        |       FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND block{$$ = new ForStatement($3, $5, $7, $9, $11, $13); printf("statement -> FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND statement \n");}
-        |       RETURN expr SEMICOLON {$$ = new ReturnStatement($2); printf("statement -> RETURN expr SEMICOLON \n");}
-        |       BREAK SEMICOLON {$$ = new BreakStatement(); printf("statement -> BREAK SEMICOLON \n");}
-        |       CONTINUE SEMICOLON {$$ = new ContinueStatement(); printf("statement -> CONTINUE SEMICOLON \n");}
+statement:      ID EQUALS expr SEMICOLON  {
+                        $$ = new AssignmentStatement($1, $3); 
+                        printf("statement -> location EQUALS expr SEMICOLON \n"); 
+                } 
+
+        |       method_call SEMICOLON  {
+                        $$ = $1; 
+                        printf("statement -> method_call SEMICOLON \n"); 
+                } 
+
+        |       IF LEFT_ROUND expr RIGHT_ROUND block  { 
+                        $$ = new IfThenStatement($3, $5); 
+                        printf("statement -> IF LEFT_ROUND expr RIGHT_ROUND statement \n");
+                }
+
+        |       IF LEFT_ROUND expr RIGHT_ROUND block ELSE block  {
+                        $$ = new IfThenElseStatement($3, $5, $7); 
+                        printf("statement -> IF LEFT_ROUND expr RIGHT_ROUND statement ELSE statement \n");
+                }
+
+        |       expr  QUESTION_MARK statement COLON statement  {
+                        $$ = new TernaryIfStatement($1,$3, $5); 
+                        printf("statement -> expr  QUESTION_MARK statement COLON statement \n");
+                }
+
+        |       WHILE LEFT_ROUND expr RIGHT_ROUND block {
+                        $$ = new WhileStatement($3, $5); 
+                        printf("statement -> WHILE LEFT_ROUND expr RIGHT_ROUND statement \n");
+                }
+
+        |       FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND block {
+                        $$ = new ForStatement($3, $5, $7, $9, $11, $13); 
+                        printf("statement -> FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND statement \n");}
+
+        |       RETURN expr SEMICOLON {
+                        $$ = new ReturnStatement($2); 
+                        printf("statement -> RETURN expr SEMICOLON \n");
+                }
+
+        |       BREAK SEMICOLON {
+                        $$ = new BreakStatement(); 
+                        printf("statement -> BREAK SEMICOLON \n");
+                }
+
+        |       CONTINUE SEMICOLON {
+                        $$ = new ContinueStatement(); 
+                        printf("statement -> CONTINUE SEMICOLON \n");
+                }
 
 
-expr:           literal {$$ = $1;} // printf("expr -> literal \n");
-        |       expr ARITH_OP expr {$$ = new ArithmeticExpression($1, $2, $3); }//{printf("expr -> expr bin_op expr \n");}
-        |       expr REL_OP expr {$$ = new RelationalExpression($1, $2, $3); }//{printf("expr -> expr bin_op expr \n");}
-        |       expr EQ_OP expr {$$ = new EqualExpression($1, $2, $3); }//{printf("expr -> expr bin_op expr \n");}
-        |       expr COND_OP expr {$$ = new ConditionalExpression($1, $2, $3); }//{printf("expr -> expr bin_op expr \n");}
-        |       MINUS expr {$$ = new UnaryExpression($1, $2); } // printf("expr -> MINUS expr \n");
-        |       NOT expr {$$ = new UnaryExpression($1, $2); } //  printf("expr -> NOT expr \n");
-        |       LEFT_ROUND expr RIGHT_ROUND {$$ = new EnclosedExpression($2);}//{printf("expr -> LEFT_ROUND expr RIGHT_ROUND \n");}
-        |       location {$$ = $1;} // printf("expr -> location \n");
-        |       method_call {$$ = $1; printf("expr -> method_call \n");}
+expr:           literal {
+                        $$ = $1;
+                        printf("expr -> literal \n");
+                }
 
-literal:        INT_LITERAL {$$ = new IntLiteral($1);} //  printf("literal -> INT_LITERAL \n");
-        |       CHAR_LITERAL {$$ = new CharLiteral($1);} // printf("literal -> CHAR_LITERAL \n");
-        |       BOOL_LITERAL {$$ = new BoolLiteral($1);} // printf("literal -> BOOL_LITERAL \n");
-        |       STRING_LITERAL  {$$ = new StringLiteral($1);} //printf("literal -> STRING_LITERAL \n");}
+        |       expr ARITH_OP expr {
+                        $$ = new ArithmeticExpression($1, $2, $3); 
+                        printf("expr -> expr ARITH_OP expr \n");
+                }
 
-bin_op:         ARITH_OP  {$$ = new ArithmeticOperator($1);} //{printf("bin_op -> ARITH_OP \n");}
-        |       REL_OP  {$$ = new RelationalOperator($1);} //{printf("bin_op -> REL_OP \n");}
-        |       EQ_OP  {$$ = new EqualOperator($1);} //{printf("bin_op -> EQ_OP \n");}
-        |       COND_OP   {$$ = new ConditionalOperator($1);} //{printf("bin_op -> COND_OP \n");}
+        |       expr REL_OP expr {
+                        $$ = new RelationalExpression($1, $2, $3); 
+                        printf("expr -> expr REL_OP expr \n");
+                }
+
+        |       expr EQ_OP expr {
+                        $$ = new EqualExpression($1, $2, $3);
+                        printf("expr -> expr EQ_OP expr \n"); 
+                }
+
+        |       expr COND_OP expr {
+                        $$ = new ConditionalExpression($1, $2, $3);
+                        printf("expr -> expr COND_OP expr \n"); 
+                }
+
+        |       MINUS expr {
+                        $$ = new UnaryExpression($1, $2);
+                        printf("expr -> MINUS expr \n");
+                } 
+
+        |       NOT expr {
+                        $$ = new UnaryExpression($1, $2); 
+                        printf("expr -> NOT expr \n");
+                } 
+
+        |       LEFT_ROUND expr RIGHT_ROUND {
+                        $$ = new EnclosedExpression($2);
+                        printf("expr -> LEFT_ROUND expr RIGHT_ROUND \n");
+                }
+
+        |       location {
+                        $$ = $1;
+                        printf("expr -> location \n");
+                }
+
+        |       method_call {
+                        $$ = $1; 
+                        printf("expr -> method_call \n");
+                }
+
+literal:        INT_LITERAL {
+                        $$ = new IntLiteral($1); 
+                        printf("literal -> INT_LITERAL \n");
+                }
+
+        |       CHAR_LITERAL {
+                        $$ = new CharLiteral($1); 
+                        printf("literal -> CHAR_LITERAL \n");
+                }
+
+        |       BOOL_LITERAL {
+                        $$ = new BoolLiteral($1); 
+                        printf("literal -> BOOL_LITERAL \n");
+                }
+
+        |       STRING_LITERAL  {
+                        $$ = new StringLiteral($1); 
+                        printf("literal -> STRING_LITERAL \n");
+                }
+
+// bin_op:         ARITH_OP  {$$ = new ArithmeticOperator($1);} //{printf("bin_op -> ARITH_OP \n");}
+//         |       REL_OP  {$$ = new RelationalOperator($1);} //{printf("bin_op -> REL_OP \n");}
+//         |       EQ_OP  {$$ = new EqualOperator($1);} //{printf("bin_op -> EQ_OP \n");}
+//         |       COND_OP   {$$ = new ConditionalOperator($1);} //{printf("bin_op -> COND_OP \n");}
 
 location:       
-                ID {$$ = new Location($1);} // printf("location -> ID \n");
-        |       ID LEFT_SQUARE expr RIGHT_SQUARE {printf("location -> ID LEFT_SQUARE expr RIGHT_SQUARE \n");}
-        |       ID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE {printf("location -> ID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE \n");}
+                ID {
+                        $$ = new Location($1); 
+                        printf("location -> ID \n");
+                }
+
+        |       ID LEFT_SQUARE expr RIGHT_SQUARE {
+                        // Arrays not implemented yet
+                        printf("location -> ID LEFT_SQUARE expr RIGHT_SQUARE \n");
+                }
+
+        |       ID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE {
+                        // Arrays not implemented yet
+                        printf("location -> ID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE \n");
+                }
 
 method_call:    
-                CALLOUT LEFT_ROUND STRING_LITERAL COMMA callout_args RIGHT_ROUND {printf("method_call -> CALLOUT LEFT_ROUND STRING_LITERAL COMMA callout_args RIGHT_ROUND \n"); $$ =new MethodCall($3, $5); } //{printf("method_call -> CALLOUT LEFT_ROUND STRING_LITERAL COMMA callout_args RIGHT_ROUND \n");}
-        |       CALLOUT LEFT_ROUND STRING_LITERAL RIGHT_ROUND {printf("method_call -> CALLOUT LEFT_ROUND STRING_LITERAL RIGHT_ROUND \n");}
+                CALLOUT LEFT_ROUND STRING_LITERAL COMMA callout_args RIGHT_ROUND {
+                        $$ =new MethodCall($3, $5);
+                        printf("method_call -> CALLOUT LEFT_ROUND STRING_LITERAL COMMA callout_args RIGHT_ROUND \n"); } 
+        |       CALLOUT LEFT_ROUND STRING_LITERAL RIGHT_ROUND {
+                        $$ = new MethodCallEmpty($3);
+                        printf("method_call -> CALLOUT LEFT_ROUND STRING_LITERAL RIGHT_ROUND \n");}
 
 callout_args:   
-                expr {printf("callout_args -> exp\n"); $$ = new CalloutArgs(); $$->list.push_back($1);} 
-        |       callout_args COMMA expr {printf("callout_args -> callout_args COMMA expr\n"); $$ = $1; $$->list.push_back($3);} 
+                expr {
+                        $$ = new CalloutArgs(); 
+                        $$->list.push_back($1);
+                        printf("callout_args -> exp\n");
+                }
+
+        |       callout_args COMMA expr {
+                        $$ = $1; $$->list.push_back($3);
+                        printf("callout_args -> callout_args COMMA expr\n"); 
+                } 
 
 %%
 void yyerror(const char *s)

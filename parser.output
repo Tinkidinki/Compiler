@@ -1,19 +1,6 @@
-Nonterminals useless in grammar
-
-   bin_op
-
-
 Terminals unused in grammar
 
    BAD_CHAR
-
-
-Rules useless in grammar
-
-   51 bin_op: ARITH_OP
-   52       | REL_OP
-   53       | EQ_OP
-   54       | COND_OP
 
 
 Grammar

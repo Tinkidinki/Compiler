@@ -441,7 +441,6 @@ class MethodDecls: public List{
 class MethodDeclParam: public List{
     public:
         MethodDeclParam(Node* type, char* id_char, Node* pars, Node* block){
-            cout << "WORKS" << endl;
             name = id_char;
             list.push_back(type);
             list.push_back(pars);
@@ -454,12 +453,47 @@ class MethodDeclParam: public List{
 class ProgramVarMethod: public Binary{
     public:
         ProgramVarMethod(Node* var, Node* meth){
-            cout << "Comes here \n";
-            name = "PROGRAM";
+            name = "PROG_WITH_VAR";
             left = var;
             right = meth;
         };
         llvm::Value* Codegen();
         string interpret();
+};
+
+class ProgramMethod: public Unary{
+    public:
+        ProgramMethod(Node* meth){
+            name = "PROG_WITHOUT_VAR";
+            operand = meth;
+        }
+        llvm::Value* Codegen();
+        string interpret();
+};
+
+
+class MethodDeclEmpty: public List{
+    public:
+        MethodDeclEmpty(Node* type, char* id_char, Node* block){
+            Node* p = new Parameters();
+            name = id_char;
+            list.push_back(type);
+            list.push_back(p);
+            list.push_back(block);
+        }
+
+        llvm::Value* Codegen();
+        string interpret();
+};
+
+class MethodCallEmpty: public Leaf{
+    public:
+        MethodCallEmpty(char* meth_name){
+            name = meth_name;
+        }
+        llvm::Value* Codegen();
+        string interpret();
+
+        string getvalue(){return "";}
 };
 

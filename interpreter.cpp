@@ -24,6 +24,17 @@ void printVarList(){
         cout << i.second.type << endl;
         cout << i.second.value << endl;
         cout << "----------------------" << endl;
+    } 
+}
+
+void printFuncList(){
+    for (auto i: func_list){
+        cout << i.first << endl;
+        // for (auto j: i.second.var_list){
+        //     printVarList(j);
+        // }
+        cout << i.second.ret_type << endl;
+        cout << "------------------------------------" << endl;
     }
 }
 
@@ -32,12 +43,13 @@ string ProgramVarMethod::interpret(){
     for (auto i: left->getList())
         i->interpret();
 
+
 /* Obtain all the method declarations */
     for (auto i: right->getList()){
     
     // Only main gets interpreted, rest get stored.
         if (i->name == "main")
-            i->interpret();
+            i->getList()[2]->interpret();
 
         else{
             vector <Node*> list = i->getList(); // get list containing method components
@@ -78,23 +90,35 @@ string ProgramVarMethod::interpret(){
             temp.var_list = var_list;
             temp.block = block;
             func_list.insert({func_name, temp});
+            printFuncList();
         }
     }
+    
+
     return "";
 }
 
 string StringLiteral::interpret(){
     return value;
 }
+
 string MethodCall::interpret(){
     if (name == "\"printf\""){
         Node* op = operand->getList()[0];
         cout << op->interpret() << endl;
           
     }
-    else func_list[name].block->interpret();
+    else { 
+        name = name.substr(1, name.size()-2);
+        return func_list[name].block->interpret();
+    }
     return "";
 }
+
+string MethodCallEmpty::interpret(){
+    return func_list[name].block->interpret();
+}
+
 string CalloutArgs::interpret(){
     string v = "dummy";
     return v;
@@ -301,6 +325,14 @@ string MethodDecls::interpret(){
     return v;
 }
 string MethodDeclParam::interpret(){
+    string v = "dummy";
+    return v;
+}
+string ProgramMethod::interpret(){
+    string v = "dummy";
+    return v;
+}
+string MethodDeclEmpty::interpret(){
     string v = "dummy";
     return v;
 }
