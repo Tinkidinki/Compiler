@@ -1,19 +1,16 @@
 class Program{
     int a;
 
-    void rando(){
-        callout("printf", "this is good");
-    }
-
-    void weird(){
-        callout("printf", "this is weird");
+    int lulu(){
+        callout("printf", "lulu");
     }
 
     int main(){
-        a = 5;
-        callout ("printf", a);
-        callout ("rando");
-        callout ("weird");
+        a = 1;
+        while(a<10){
+            callout("lulu");
+            a = a+1;
+        }
     }
 }
 

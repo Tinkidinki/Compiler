@@ -1,16 +1,17 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-#include "code_generation.cpp"
+#include "ast_nodes.cpp"
 
 typedef struct var{
     string type;
     string value;
 } var;
 
-map <string, var> var_list;
-map <string, var> curr_var_list;
+vector <map<string, var>> scope_stack;
 
+stack <int> s;
+vector <int> v;
 typedef struct func{
     map <string, var> var_list;
     Node* block;
@@ -20,11 +21,13 @@ typedef struct func{
 map <string, func> func_list;
 
 void printVarList(){
-    for(auto i: var_list){
-        cout << i.first << endl;
-        cout << i.second.type << endl;
-        cout << i.second.value << endl;
-        cout << "----------------------" << endl;
+    for (auto var_list: scope_stack){
+        for(auto i: var_list){
+            cout << i.first << endl;
+            cout << i.second.type << endl;
+            cout << i.second.value << endl;
+            cout << "----------------------" << endl;
+        }
     } 
 }
 
@@ -91,7 +94,6 @@ string ProgramVarMethod::interpret(){
             temp.var_list = var_list;
             temp.block = block;
             func_list.insert({func_name, temp});
-            printFuncList();
         }
     }
     
@@ -110,17 +112,20 @@ string MethodCall::interpret(){
           
     }
     else { 
-        name = name.substr(1, name.size()-2);
-        curr_var_list = func_list[name].var_list;
-        return func_list[name].block->interpret();
+        string stripped_name = name.substr(1, name.size()-2);
+        curr_var_list = func_list[stripped_name].var_list;
+        string ret = func_list[stripped_name].block->interpret();
+        curr_var_list.clear();
     }
     return "";
 }
 
 string MethodCallEmpty::interpret(){
-    name = name.substr(1, name.size()-2);
-    curr_var_list = func_list[name].var_list;
-    return func_list[name].block->interpret();
+    string stripped_name = name.substr(1, name.size()-2);
+    curr_var_list = func_list[stripped_name].var_list;
+    string ret = func_list[stripped_name].block->interpret();
+    curr_var_list.clear();
+    return ret;
 }
 
 string CalloutArgs::interpret(){
@@ -147,6 +152,7 @@ string UnaryExpression::interpret(){
         return to_string(-stoi(exp));
     else if (name == "!")
         return exp=="true"?"false":"true";
+    return "";
 }
 string AssignmentStatement::interpret(){
     string loc = left->interpret();
@@ -182,7 +188,7 @@ string ArithmeticExpression::interpret(){
     else if (op == "/")
         return to_string(stoi(operand1) / stoi(operand2));
     
-    
+    return "";
 }
 
 string Location::interpret(){
@@ -203,6 +209,8 @@ string EqualExpression::interpret(){
         return operand1 == operand2 ? "true":"false";
     else if (op == "!=")
         return operand1 != operand2 ? "true":"false";
+    
+    return "";
 }
 string ConditionalExpression::interpret(){
     string op = child2->interpret();
@@ -215,6 +223,8 @@ string ConditionalExpression::interpret(){
         return operand1 == "true" && operand2 == "true" ? "true":"false";
     else if (op == "||")
         return operand1 == "false" || operand2 == "false" ? "false":"true";
+    
+    return "";
 }
 string RelationalExpression::interpret(){
     string op = child2->interpret();
@@ -231,6 +241,8 @@ string RelationalExpression::interpret(){
         return stoi(operand1) <= stoi(operand2)?"true":"false";
     else if (op == ">=")
         return stoi(operand1) >= stoi(operand2)?"true":"false";
+
+    return "";
     
 }
 string EnclosedExpression::interpret(){
@@ -253,10 +265,13 @@ string DecBlock::interpret(){
 string StatBlock::interpret(){
     for (auto i: operand->getList()){
         string ret = i->interpret();
-        if (ret == "BREAK") return "BREAK";
-        if (ret == "CONTINUE") return "CONTINUE";
+        if (ret!=""){
+            // If no return value, statements give, null, else, BREAK, CONTINUE or RETURN.
+            return ret;
+        }
     }
     return "";
+    
 }
 string VarDecls::interpret(){
     return "";
@@ -265,7 +280,7 @@ string VarDecl::interpret(){
     var temp;
     temp.type = left->interpret();
     temp.value = "";
-    var_list.insert({right->interpret(), temp});
+    scope_stack.begin()->insert({right->interpret(), temp});
     string v = "dummy";
     return v;
 }
@@ -277,6 +292,8 @@ string IfThenStatement::interpret(){
         string ret = right->interpret();
         return ret;
     }
+
+    return "";
 }
 string IfThenElseStatement::interpret(){
     if (child1->interpret() == "true"){
