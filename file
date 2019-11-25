@@ -1,16 +1,12 @@
 class Program{
-    int a;
-
-    int lulu(){
-        callout("printf", "lulu");
+    int b;
+    
+    void add(int a, int b){
+        callout("printf", a + b);
     }
 
-    int main(){
-        a = 1;
-        while(a<10){
-            callout("lulu");
-            a = a+1;
-        }
+    void main(){
+        callout("add", 3, 5);
     }
 }
 

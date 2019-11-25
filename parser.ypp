@@ -106,14 +106,15 @@ method_decls:   method_decl  {
                 }
 
 parameters:     composite_type ID {
-                        $$ = new Parameters(); $$->list.push_back($1); 
+                        $$ = new Parameters();  
                         Node* id = new Identifier($2); $$->list.push_back(id); 
+                        $$->list.push_back($1);
                         printf("parameters -> composite_type ID \n");
                 }
 
         |       parameters COMMA composite_type ID {
-                        $$->list.push_back($3); Node* id = new Identifier($4); 
-                        $$->list.push_back(id);
+                        Node* id = new Identifier($4); $$->list.push_back(id); 
+                        $$->list.push_back($3); 
                         printf("parameters -> parameters COMMA composite_type ID \n");
                 }
         
