@@ -8,8 +8,8 @@ typedef struct var{
     string value;
 } var;
 
-vector <map<string, var>> scope_stack;
-
+deque <map<string, var>> scope_stack;
+map <string, var> curr_var_list;
 stack <int> s;
 vector <int> v;
 typedef struct func{
@@ -113,18 +113,24 @@ string MethodCall::interpret(){
     }
     else { 
         string stripped_name = name.substr(1, name.size()-2);
+
+        // Assigning the right variables
         curr_var_list = func_list[stripped_name].var_list;
+        
+
+        scope_stack.push_front(func_list[stripped_name].var_list);
         string ret = func_list[stripped_name].block->interpret();
-        curr_var_list.clear();
+        scope_stack.pop_front();
+        return ret;
     }
     return "";
 }
 
 string MethodCallEmpty::interpret(){
     string stripped_name = name.substr(1, name.size()-2);
-    curr_var_list = func_list[stripped_name].var_list;
+    scope_stack.push_front(func_list[stripped_name].var_list);
     string ret = func_list[stripped_name].block->interpret();
-    curr_var_list.clear();
+    scope_stack.pop_front();
     return ret;
 }
 
@@ -157,7 +163,7 @@ string UnaryExpression::interpret(){
 string AssignmentStatement::interpret(){
     string loc = left->interpret();
     string val = right->interpret();
-    var_list[loc].value = val;
+    (*scope_stack.begin())[loc].value = val;
     return "";
 }
 string ArithmeticOperator::interpret(){
@@ -281,8 +287,7 @@ string VarDecl::interpret(){
     temp.type = left->interpret();
     temp.value = "";
     scope_stack.begin()->insert({right->interpret(), temp});
-    string v = "dummy";
-    return v;
+    return "";
 }
 string Type::interpret(){
     return value;
