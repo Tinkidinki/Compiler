@@ -44,9 +44,6 @@ void printFuncList(){
 }
 
 string ProgramVarMethod::interpret(){
-
-    string x; getline(cin, x);
-    cout << "came beyond" << endl;
     /* start a new scope */
     map <string, var> global_scope;
     scope_stack.push_front(global_scope);
@@ -125,19 +122,19 @@ string StringLiteral::interpret(){
 
 string MethodCall::interpret(){
     // Writing out the print function here
-    if (name == "\"print\""){
+    if (name == "\"printf\""){
         Node* op = operand->getList()[0];
         cout << op->interpret() << endl;
           
     }
-    else if (name == "\"read\""){
-        //cout << "Comes here" << endl;
-        Node* op = operand->getList()[0];
-        //cout << op->interpret();
-        string input;
-        cin >> input;
-        return input;
-    }
+    // else if (name == "\"read\""){
+    //     //cout << "Comes here" << endl;
+    //     Node* op = operand->getList()[0];
+    //     //cout << op->interpret();
+    //     string input;
+    //     cin >> input;
+    //     return input;
+    // }
     else { 
         // Removing quotes from name
         string stripped_name = name.substr(1, name.size()-2);

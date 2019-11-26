@@ -12,7 +12,7 @@ class IntLiteral: public Leaf{
             value = val;
         }
         string getvalue(){return to_string(value);}
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -26,7 +26,7 @@ class CharLiteral: public Leaf{
         }
 
         string getvalue(){return string(1,value);}
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -40,7 +40,7 @@ class BoolLiteral: public Leaf{
         }
 
         string getvalue(){return value? "true" :"false";}
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -58,7 +58,7 @@ class StringLiteral: public Leaf{
 
         string getvalue(){return value;}
 
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -72,7 +72,7 @@ class Identifier: public Leaf{
         }
 
         string getvalue(){return value;}
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -86,7 +86,7 @@ class Location: public Leaf{
         }
 
         string getvalue(){return value;}
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -100,7 +100,7 @@ class UnaryExpression: public Unary{
             operand = expr;
         }
 
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
       
 };
@@ -119,7 +119,7 @@ class AssignmentStatement: public Binary{
             right = expr;
         }
 
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
         
 };
@@ -133,7 +133,7 @@ class ArithmeticOperator: public Leaf{
             value = op;
         }
         string getvalue(){return value;}
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
         
 };
@@ -146,7 +146,7 @@ class RelationalOperator: public Leaf{
             value = op;
         }
         string getvalue(){return value;}
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
         
 };
@@ -159,7 +159,7 @@ class EqualOperator: public Leaf{
             value = op;
         }
         string getvalue(){return value;}
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
         
 };
@@ -172,7 +172,7 @@ class ConditionalOperator: public Leaf{
             value = op;
         }
         string getvalue(){return value;}
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
         
 };
@@ -185,7 +185,7 @@ class ArithmeticExpression: public Ternary{
             child2 = new ArithmeticOperator(op);
             child3 = expr2;
         }
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -197,7 +197,7 @@ class EqualExpression: public Ternary{
             child2 = new EqualOperator(op);
             child3 = literal;
         }
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -209,7 +209,7 @@ class ConditionalExpression: public Ternary{
             child2 = new ConditionalOperator(op);
             child3 = literal;
         }
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -221,7 +221,7 @@ class RelationalExpression: public Ternary{
             child2 = new RelationalOperator(op);
             child3 = literal;
         }
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -231,7 +231,7 @@ class EnclosedExpression: public Unary{
             name = "EXP_ENC";
             operand = exp;
         }
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -241,7 +241,7 @@ class MethodCall: public Unary{
             name = meth_name;
             operand = call_args;
         }
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -251,7 +251,7 @@ class CalloutArgs: public List{
             name = "ARGS";
             // cout << "constructor got called\n";
         }
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -260,7 +260,7 @@ class Statements: public List{
         Statements(){
             name = "STATEMENTS";
         }
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -271,7 +271,7 @@ class DecBlock: public Binary{
             left = var_list;
             right = stat_list;
         }
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -281,7 +281,7 @@ class StatBlock: public Unary{
             name = "STATBLOCK";
             operand = stat_list;
         }
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -290,7 +290,7 @@ class VarDecls: public List{
         VarDecls(){
             name = "VAR DECLS";
         }
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -301,7 +301,7 @@ class VarDecl: public Binary{
             left = comp_type;
             right = new Identifier(id);
         }
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -313,7 +313,7 @@ class Type: public Leaf{
             value = type;
         }
         string getvalue(){return value;}
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
         
 };
@@ -325,7 +325,7 @@ class IfThenStatement: public Binary{
             left = exp;
             right = block;
         }
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
         
 };
@@ -338,7 +338,7 @@ class IfThenElseStatement: public Ternary{
             child2 = thenblock;
             child3 = elseblock;
         }
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -350,7 +350,7 @@ class TernaryIfStatement: public Ternary{
             child2 = thenblock;
             child3 = elseblock;
         }
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -361,7 +361,7 @@ class WhileStatement: public Binary{
             left = exp;
             right = block;
         }
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -378,7 +378,7 @@ class ForStatement: public List{
             list.push_back(exp2);
             list.push_back(block);
         }
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -388,7 +388,7 @@ class ReturnStatement: public Unary{
             name = "RETURN";
             operand = exp;
         }
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -399,7 +399,7 @@ class BreakStatement: public Leaf{
             name = "BREAK";
         }
         string getvalue(){return value;}
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -410,7 +410,7 @@ class ContinueStatement: public Leaf{
             name = "CONTINUE";
         }
         string getvalue(){return value;}
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -425,7 +425,7 @@ class Parameters: public List{
             list.push_back(type);
         }
         
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -434,7 +434,7 @@ class MethodDecls: public List{
         MethodDecls(){
             name = "METHOD_DECLS";
         }
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -446,7 +446,7 @@ class MethodDeclParam: public List{
             list.push_back(pars);
             list.push_back(block);
         }
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -457,7 +457,7 @@ class ProgramVarMethod: public Binary{
             left = var;
             right = meth;
         };
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -467,7 +467,7 @@ class ProgramMethod: public Unary{
             name = "PROG_WITHOUT_VAR";
             operand = meth;
         }
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -482,7 +482,7 @@ class MethodDeclEmpty: public List{
             list.push_back(block);
         }
 
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 };
 
@@ -491,7 +491,7 @@ class MethodCallEmpty: public Leaf{
         MethodCallEmpty(char* meth_name){
             name = meth_name;
         }
-        // llvm::Value* Codegen();
+        llvm::Value* Codegen();
         string interpret();
 
         string getvalue(){return "";}

@@ -1,4 +1,4 @@
- %{     #include "interpreter.cpp"
+ %{     #include "code_generation.cpp"
 	#include <bits/stdc++.h>
         using namespace std;
 
@@ -73,7 +73,7 @@
 %type <node> program
 %%
 
-Goal: program
+Goal: method_decl
 
 program:        CLASS PROGRAM LEFT_CURLY var_decls method_decls RIGHT_CURLY{ 
                         $$ = new ProgramVarMethod($4, $5); start = $$; 
@@ -92,6 +92,7 @@ method_decl:    composite_type ID LEFT_ROUND parameters RIGHT_ROUND block {
 
        |        composite_type ID LEFT_ROUND RIGHT_ROUND block {
                         $$ = new MethodDeclEmpty($1, $2, $5);
+                        start = $$;
                         printf("method_decl -> composite_type ID LEFT_ROUND RIGHT_ROUND block\n");
                 }
 
@@ -349,13 +350,17 @@ int main(int argc, char **argv)
         
         start->doOp(&printer);
         cout << endl;
-        printf("------------------\n");
-        printf("INTERPRETER OUTPUT\n");
-        printf("------------------\n");
-        // Builder.SetInsertPoint(entry);
-        // start->Codegen();
-        start->interpret();
-        
+
+        // printf("------------------\n");
+        // printf("INTERPRETER OUTPUT\n");
+        // printf("------------------\n");
+        // // Builder.SetInsertPoint(entry);
+        // // start->Codegen();
+        // start->interpret();
+
+        printf("Code generation started\n");
+        start->Codegen();
+        ModuleOb->dump();
         return 0;
 }
 

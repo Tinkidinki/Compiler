@@ -8,8 +8,7 @@ class Program{
     void main(){
         int a;
         int b;
-        a = callout("read", "Enter first number:");
-        b = callout("read", "Enter second number:");
+        a = 3; b = 7;
         callout ("printf", callout("add", a, b));
     }
 }
