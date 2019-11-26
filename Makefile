@@ -1,6 +1,6 @@
 .PHONY: parser clean
 
-all: parser clean
+all: parser 
 
 parser: scanner.l parser.ypp
 		bison -t -d -v parser.ypp

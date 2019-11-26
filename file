@@ -1,12 +1,16 @@
 class Program{
     int b;
     
-    void add(int a, int b){
-        callout("printf", a + b);
+    void add(int x, int y){
+        return x + y;
     }
 
     void main(){
-        callout("add", 3, 5);
+        int a;
+        int b;
+        a = callout("read", "Enter first number:");
+        b = callout("read", "Enter second number:");
+        callout ("printf", callout("add", a, b));
     }
 }
 
