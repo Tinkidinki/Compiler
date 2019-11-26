@@ -1,5 +1,6 @@
  %{     #include "code_generation.cpp"
 	#include <bits/stdc++.h>
+        #include <fstream>
         using namespace std;
 
         union ASTnode{
@@ -73,7 +74,7 @@
 %type <node> program
 %%
 
-Goal: method_decl
+Goal: program
 
 program:        CLASS PROGRAM LEFT_CURLY var_decls method_decls RIGHT_CURLY{ 
                         $$ = new ProgramVarMethod($4, $5); start = $$; 
@@ -358,9 +359,13 @@ int main(int argc, char **argv)
         // // start->Codegen();
         // start->interpret();
 
-        printf("Code generation started\n");
+        printf("------------------\n");
+        printf("AST OUTPUT\n");
+        printf("------------------\n");
+
         start->Codegen();
         ModuleOb->dump();
+
         return 0;
 }
 

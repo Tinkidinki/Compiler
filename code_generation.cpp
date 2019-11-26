@@ -30,11 +30,29 @@ llvm::BasicBlock *createBB(llvm::Function *fooFunc, std::string Name) {
     return llvm::BasicBlock::Create(Context, Name, fooFunc);
 }
 
+// To generate a global variable
+llvm::GlobalVariable *createGlob(llvm::IRBuilder<> &Builder, std::string Name, string type) {
+    if (type=="int"){
+        llvm::ConstantInt* const_int_val = llvm::ConstantInt::get(ModuleOb->getContext(), llvm::APInt(32,0));
+        ModuleOb->getOrInsertGlobal(Name, Builder.getInt32Ty());
+        llvm::GlobalVariable *gVar = ModuleOb->getNamedGlobal(Name);
+        gVar->setLinkage(llvm::GlobalValue::CommonLinkage);
+        gVar->setInitializer(const_int_val);
+        gVar->setAlignment(4);
+        return gVar;
+    }
+    llvm::GlobalVariable *dummy;
+    return dummy;
+    
+}
+
 // Codegen for all the nodes!
 
 llvm::Value* ProgramVarMethod::Codegen(){
-    llvm::Value* v;
-    return v;
+    for (auto vardec : left->getList())
+        vardec->Codegen();
+    for (auto methoddec: right->getList())
+        methoddec->Codegen();
 }
 
 llvm::Value* MethodDeclEmpty::Codegen(){
@@ -82,8 +100,10 @@ llvm::Value* CharLiteral::Codegen(){
     return v;
 }
 llvm::Value* BoolLiteral::Codegen(){
-    llvm::Value* v;
-    return v;
+    bool bool_val;
+    if (value) bool_val = 1;
+    else bool_val = 0;
+    return llvm::ConstantInt::get(Context, llvm::APInt(1, bool_val));
 }
 llvm::Value* Identifier::Codegen(){
     llvm::Value* v;
@@ -116,8 +136,8 @@ llvm::Value* ConditionalOperator::Codegen(){
 llvm::Value* ArithmeticExpression::Codegen(){
 
     string op = child2->interpret();
-    llvm::Value* operand1 = child1->Codegen();
-    llvm::Value* operand2 = child3->Codegen();
+    llvm::Value* left = child1->Codegen();
+    llvm::Value* right = child3->Codegen();
 
     llvm::Value* v;
 
@@ -125,33 +145,60 @@ llvm::Value* ArithmeticExpression::Codegen(){
     else if (op == "-") v = Builder.CreateSub(left, right, "subtraction");
     else if (op == "*") v = Builder.CreateMul(left, right, "multiplication");
     else if (op == "/") v = Builder.CreateSDiv(left, right, "division");
+    
     return v;
 }
+
 llvm::Value* EqualExpression::Codegen(){
-    op = child2->interpret();
+    string op = child2->interpret();
+    llvm::Value* left = child1->Codegen();
+    llvm::Value* right = child3->Codegen();
 
     llvm::Value* v;
-    if (op == "==") {
-        v = Builder.CreateICmpEQ(left, right, "equalcompare");
-    } else if (op == "!=") {
+    if (op == "==") 
+         v = Builder.CreateICmpEQ(left, right, "equalcompare");
+    else if (op == "!=") 
         v = Builder.CreateICmpNE(left, right, "notequalcompare");
-    
+
+ 
     return v;
 
 }
+
 llvm::Value* ConditionalExpression::Codegen(){
-    
+    string op = child2->interpret();
+    llvm::Value* left = child1->Codegen();
+    llvm::Value* right = child3->Codegen();
     if (op == "||") {
-        return Builder.Insert(BinaryOperator::Create(Instruction::Or, left, right, "doubleor"));
+        return Builder.Insert(llvm::BinaryOperator::Create(llvm::Instruction::Or, left, right, "doubleor"));
     } 
     else if (op == "&&") {
-        return Builder.Insert(BinaryOperator::Create(Instruction::And, left, right, "doubleand"));
+        return Builder.Insert(llvm::BinaryOperator::Create(llvm::Instruction::And, left, right, "doubleand"));
     }     
-}
-llvm::Value* RelationalExpression::Codegen(){
+
     llvm::Value* v;
     return v;
+    
 }
+llvm::Value* RelationalExpression::Codegen(){
+    string op = child2->interpret();
+    llvm::Value* left = child1->Codegen();
+    llvm::Value* right = child3->Codegen();
+
+    llvm::Value* v;
+    if (op == "<") {
+        v = Builder.CreateICmpSLT(left, right, "ltcompare");
+    } else if (op == ">") {
+        v = Builder.CreateICmpSGT(left, right, "gtcompare");
+    } else if (op == "<=") {
+        v = Builder.CreateICmpSLE(left, right, "lecompare");
+    } else if (op == ">=") {
+        v = Builder.CreateICmpSGE(left, right, "gecompare");
+    }
+
+    return v;
+}
+
 llvm::Value* EnclosedExpression::Codegen(){
     llvm::Value* v;
     return v;
@@ -176,8 +223,10 @@ llvm::Value* VarDecls::Codegen(){
     return v;
 }
 llvm::Value* VarDecl::Codegen(){
-    llvm::Value* v;
-    return v;
+    string var_name = right->interpret();
+    string var_type = left->interpret();
+    llvm::GlobalVariable *gVar = createGlob(Builder, var_name, var_type);
+
 }
 llvm::Value* Type::Codegen(){
     llvm::Value* v;

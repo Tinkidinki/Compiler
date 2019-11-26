@@ -1,15 +1,8 @@
 class Program{
     int b;
-    
-    void add(int x, int y){
-        return x + y;
-    }
-
+    int c;
     void main(){
-        int a;
-        int b;
-        a = 3; b = 7;
-        callout ("printf", callout("add", a, b));
+        callout ("printf", "Hello");
     }
 }
 

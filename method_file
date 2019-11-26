@@ -1,3 +1,4 @@
+
 void main(){
-    callout("printf", "%d", 4 + 4);
+    callout("printf", "%d", false && true);
 }
