@@ -37,6 +37,11 @@ bool isArray1D(string s){
     else return false;
 }
 
+bool isArray2D(string s){
+    if (count(s.begin(), s.end(), '_') == 2) return true;
+    else return false;
+}
+
 string Array1D_split(string s, int x){
     stringstream ss(s);
     string name;
@@ -46,6 +51,20 @@ string Array1D_split(string s, int x){
     
     if (x==0) return name;
     else return offset;
+}
+
+string Array2D_split(string s, int x){
+    stringstream ss(s);
+    string name;
+    string offset;
+    string offset2;
+    getline(ss, name, '_');
+    getline (ss, offset, '_');
+    getline (ss, offset2, '_');
+    
+    if (x==0) return name;
+    else if (x==1)return offset;
+    else if (x==2) return offset2;
 }
 
 void printFuncList(){
@@ -367,14 +386,23 @@ string VarDecl::interpret(){
     if (isArray1D(temp.type)){
         int offset = stoi(Array1D_split(temp.type, 1));
         temp.type = Array1D_split(temp.type, 0);
-        cout << offset << endl;
         for (int i=0; i<offset; i++){
             scope_stack.begin()->insert({right->interpret()+"_"+to_string(i), temp});
         }
     }
+
+    else if (isArray2D(temp.type)){
+        int offset = stoi(Array1D_split(temp.type, 1));
+        int offset2 = stoi(Array1D_split(temp.type, 2));
+        temp.type = Array2D_split(temp.type, 0);
+        for (int i=0; i<offset; i++){
+            for (int j=0; j< offset2; j++){
+                scope_stack.begin()->insert({right->interpret()+"_"+to_string(i)+"_"+to_string(j), temp});
+            }
+        }
+    }
     else 
         scope_stack.begin()->insert({right->interpret(), temp});
-    printScopeStack();
     return "";
 
     
@@ -457,6 +485,9 @@ string MethodDeclEmpty::interpret(){
 string ArrayType1D::interpret(){
     return left->interpret() + "_" + right->interpret();
 }
+string ArrayType2D::interpret(){
+    return child1->interpret() + "_" + child2->interpret() + "_" + child3->interpret();
+}
 string Location_Array::interpret(){
     string search_value = left->getname();
     search_value = search_value.substr(1)+"_"+right->interpret();
@@ -469,10 +500,30 @@ string Location_Array::interpret(){
     return "0";
 
 }
+
+string Location_Array2D::interpret(){
+    string search_value = child1->getname();
+    search_value = search_value.substr(1)+"_"+child2->interpret()+"_"+child3->interpret();
+    for (auto map_iter = scope_stack.begin(); map_iter != scope_stack.end(); map_iter++){
+        if (map_iter->count(search_value)) {
+            return (*map_iter)[search_value].value;
+        }
+    }
+    return "0";
+
+}
 string Identifier_Array::interpret(){
     string array_name = left->interpret();
     string offset = right->interpret();
     return array_name + "_" + offset;
+
+}
+
+string Identifier_Array2D::interpret(){
+    string array_name = child1->interpret();
+    string offset = child2->interpret();
+    string offset2 = child3->interpret();
+    return array_name + "_" + offset+"_"+ offset2;
 
 }
 

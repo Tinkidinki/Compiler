@@ -88,6 +88,19 @@ class Identifier_Array: public Binary{
 
 };
 
+class Identifier_Array2D: public Ternary{
+    public:
+        Identifier_Array2D(char* id, Node* exp, Node* exp2){
+            name = "ID_ARRAY2";
+            child1 = new Identifier(id);
+            child2 = exp;
+            child3 = exp2;
+        }
+        llvm::Value* Codegen();
+        string interpret();
+
+};
+
 class Location: public Leaf{
     public:
         string value;
@@ -108,6 +121,18 @@ class Location_Array: public Binary{
             name = "LOC_ARRAY";
             left = new Location(loc);
             right = expr;
+        }
+        llvm::Value* Codegen();
+        string interpret();
+};
+
+class Location_Array2D: public Ternary{
+    public:
+        Location_Array2D(char* loc, Node* expr, Node* expr2){
+            name = "LOC_ARRAY2D";
+            child1 = new Location(loc);
+            child2 = expr;
+            child3 = expr2;
         }
         llvm::Value* Codegen();
         string interpret();
@@ -529,3 +554,16 @@ class ArrayType1D: public Binary{
         llvm::Value* Codegen();
         string interpret();
 };
+
+class ArrayType2D: public Ternary{
+    public:
+        ArrayType2D(char* id, int int_lit, int int_lit2){
+            name = "1DArrayType";
+            child1 = new Identifier(id);
+            child2 = new IntLiteral(int_lit);
+            child3 = new IntLiteral(int_lit2);
+        }
+        llvm::Value* Codegen();
+        string interpret();
+};
+

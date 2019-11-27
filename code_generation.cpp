@@ -304,3 +304,17 @@ llvm::Value* Identifier_Array::Codegen(){
     llvm::Value* v;
     return v;
 }
+llvm::Value* ArrayType2D::Codegen(){
+    llvm::Value* v;
+    return v;
+}
+
+llvm::Value* Location_Array2D::Codegen(){
+    llvm::Value* v;
+    return v;
+}
+
+llvm::Value* Identifier_Array2D::Codegen(){
+    llvm::Value* v;
+    return v;
+}

@@ -131,7 +131,10 @@ composite_type: TYPE {
                         $$ = new ArrayType1D($1, $3);
                         printf("composite_type -> TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE\n");
                 }
-        |       TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE {printf("composite_type -> TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE \n");}
+        |       TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE {
+                        $$ = new ArrayType2D($1, $3, $6);
+                        printf("composite_type -> TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE \n");
+                }
 
 
 block:          LEFT_CURLY var_decls statements RIGHT_CURLY {
@@ -299,6 +302,11 @@ identifier:     ID{
                         $$ = new Identifier_Array($1, $3);
                         printf("identifier -> ID LEFT_SQUARE expr RIGHT_SQUARE \n");
                 }
+        
+        |       ID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE {
+                        $$ = new Identifier_Array2D($1, $3, $6);
+                        printf("identifier -> ID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE \n");
+                }
 
 location:       
                 LID {
@@ -311,10 +319,10 @@ location:
                         printf("location -> LID LEFT_SQUARE expr RIGHT_SQUARE \n");
                 }
 
-        // |       ID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE {
-        //                 // Arrays not implemented yet
-        //                 printf("location -> ID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE \n");
-        //         }
+        |       LID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE {
+                        $$ = new Location_Array2D($1, $3, $6);
+                        printf("location -> LID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE \n");
+                }
 
 
 method_call:    

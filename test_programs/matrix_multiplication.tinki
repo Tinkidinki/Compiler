@@ -1,0 +1,39 @@
+class Program{
+    int g;
+    void main(){
+        int[2][2] a;
+        int [3][2] b;
+        int [2][2] ans;
+        int i; int j; int k;
+        int n;
+        
+        n = 2;
+
+        a[0][0] = 3;
+        a[0][1] = 3;
+        a[1][0] = 3;
+        a[1][1] = 3;
+
+        b[0][0] = 3;
+        b[0][1] = 4;
+        b[1][0] = 2;
+        b[1][1] = 6;
+        
+        for(i = 0; $i < $n; i = $i + 1){
+            for (j = 0; $j< $n; j = $j+1){
+                ans[$i][$j] = 0;
+                for (k = 0; $k < $n; k = $k + 1){
+                    ans[$i][$j] = $ans[$i][$j] + ($a[$i][$k] * $b[$k][$j]);
+                }
+            }
+        }
+
+        callout("printf", "Final matrix:");
+
+        for(i = 0; $i < $n; i = $i + 1){
+            for (j = 0; $j< $n; j = $j+1){
+                callout("printf", $ans[$i][$j]);
+            }
+        }
+    }
+}
