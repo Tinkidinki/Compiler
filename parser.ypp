@@ -199,7 +199,7 @@ statement:      identifier EQUALS expr SEMICOLON  {
                         printf("statement -> WHILE LEFT_ROUND expr RIGHT_ROUND statement \n");
                 }
 
-        |       FOR LEFT_ROUND LID EQUALS expr SEMICOLON expr SEMICOLON LID EQUALS expr RIGHT_ROUND block {
+        |       FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND block {
                         $$ = new ForStatement($3, $5, $7, $9, $11, $13); 
                         printf("statement -> FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND statement \n");}
 
@@ -297,18 +297,18 @@ identifier:     ID{
 
         |       ID LEFT_SQUARE expr RIGHT_SQUARE {
                         $$ = new Identifier_Array($1, $3);
-                        printf("location -> identifier LEFT_SQUARE expr RIGHT_SQUARE \n");
+                        printf("identifier -> ID LEFT_SQUARE expr RIGHT_SQUARE \n");
                 }
 
 location:       
                 LID {
                         $$ = new Location($1); 
-                        printf("location -> ID \n");
+                        printf("location -> LID \n");
                 }
 
         |       LID LEFT_SQUARE expr RIGHT_SQUARE {
                         $$ = new Location_Array($1, $3);
-                        printf("location -> location LEFT_SQUARE expr RIGHT_SQUARE \n");
+                        printf("location -> LID LEFT_SQUARE expr RIGHT_SQUARE \n");
                 }
 
         // |       ID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE {

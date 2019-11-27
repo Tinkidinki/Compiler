@@ -1,0 +1,48 @@
+class Program{
+    int g;
+    void main(){
+        int n; int c; int d; int t; int i;
+        int[100] array;
+        bool flag;
+        
+        flag = false;
+
+        n=5;
+        array[0] = -7;
+        array[1] = 22;
+        array[2] = 1;
+        array[3] = 8;
+        array[4] = -19;
+
+        callout("printf", "Elements before sorting:");
+
+        
+        for (i = 0; $i<$n; i = $i + 1){
+            callout("printf", $array[$i]);
+        }
+
+        for (c = 1; $c < $n; c = $c + 1){
+            t = $array[$c];
+
+            for (d = $c + (-1); $d >=0; d = $d+(-1)){
+                if ($array[$d] > $t){
+                    array[$d + 1] = $array[$d];
+                    flag = true;
+                }
+                else{
+                    break;
+                }
+            }
+            if ($flag == true){
+                array[$d + 1] = $t;
+            }
+        }
+
+        callout("printf", "Elements after sorting:");
+
+        for (i = 0; $i<$n; i = $i + 1){
+            callout("printf", $array[$i]);
+        }
+
+    }
+}

@@ -366,13 +366,18 @@ string VarDecl::interpret(){
 
     if (isArray1D(temp.type)){
         int offset = stoi(Array1D_split(temp.type, 1));
+        temp.type = Array1D_split(temp.type, 0);
+        cout << offset << endl;
         for (int i=0; i<offset; i++){
-            scope_stack.begin()->insert({right->interpret()+"_"+i, temp});
+            scope_stack.begin()->insert({right->interpret()+"_"+to_string(i), temp});
         }
     }
     else 
         scope_stack.begin()->insert({right->interpret(), temp});
+    printScopeStack();
     return "";
+
+    
 }
 string Type::interpret(){
     return value;
@@ -453,7 +458,7 @@ string ArrayType1D::interpret(){
     return left->interpret() + "_" + right->interpret();
 }
 string Location_Array::interpret(){
-    string search_value = left->value;
+    string search_value = left->getname();
     search_value = search_value.substr(1)+"_"+right->interpret();
  
     for (auto map_iter = scope_stack.begin(); map_iter != scope_stack.end(); map_iter++){
@@ -465,7 +470,7 @@ string Location_Array::interpret(){
 
 }
 string Identifier_Array::interpret(){
-    string array_name = left->getvalue();
+    string array_name = left->interpret();
     string offset = right->interpret();
     return array_name + "_" + offset;
 

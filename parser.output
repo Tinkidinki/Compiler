@@ -42,7 +42,7 @@ Grammar
    23          | IF LEFT_ROUND expr RIGHT_ROUND block ELSE block
    24          | expr QUESTION_MARK statement COLON statement
    25          | WHILE LEFT_ROUND expr RIGHT_ROUND block
-   26          | FOR LEFT_ROUND LID EQUALS expr SEMICOLON expr SEMICOLON LID EQUALS expr RIGHT_ROUND block
+   26          | FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND block
    27          | RETURN expr SEMICOLON
    28          | BREAK SEMICOLON
    29          | CONTINUE SEMICOLON
@@ -86,8 +86,8 @@ CHAR_LITERAL (260) 41
 STRING_LITERAL (261) 43 48 49
 MINUS (262) 35
 NOT (263) 36
-ID (264) 4 5 8 9 17 44 45
-LID (265) 26 46 47
+ID (264) 4 5 8 9 17 26 44 45
+LID (265) 46 47
 ARITH_OP (266) 31
 REL_OP (267) 32
 EQ_OP (268) 33
@@ -621,7 +621,7 @@ State 46
 
 State 47
 
-   26 statement: FOR . LEFT_ROUND LID EQUALS expr SEMICOLON expr SEMICOLON LID EQUALS expr RIGHT_ROUND block
+   26 statement: FOR . LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND block
 
     LEFT_ROUND  shift, and go to state 72
 
@@ -938,9 +938,9 @@ State 71
 
 State 72
 
-   26 statement: FOR LEFT_ROUND . LID EQUALS expr SEMICOLON expr SEMICOLON LID EQUALS expr RIGHT_ROUND block
+   26 statement: FOR LEFT_ROUND . ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND block
 
-    LID  shift, and go to state 94
+    ID  shift, and go to state 94
 
 
 State 73
@@ -1251,7 +1251,7 @@ State 93
 
 State 94
 
-   26 statement: FOR LEFT_ROUND LID . EQUALS expr SEMICOLON expr SEMICOLON LID EQUALS expr RIGHT_ROUND block
+   26 statement: FOR LEFT_ROUND ID . EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND block
 
     EQUALS  shift, and go to state 109
 
@@ -1405,7 +1405,7 @@ State 108
 
 State 109
 
-   26 statement: FOR LEFT_ROUND LID EQUALS . expr SEMICOLON expr SEMICOLON LID EQUALS expr RIGHT_ROUND block
+   26 statement: FOR LEFT_ROUND ID EQUALS . expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND block
 
     INT_LITERAL     shift, and go to state 36
     BOOL_LITERAL    shift, and go to state 37
@@ -1505,7 +1505,7 @@ State 115
 
 State 116
 
-   26 statement: FOR LEFT_ROUND LID EQUALS expr . SEMICOLON expr SEMICOLON LID EQUALS expr RIGHT_ROUND block
+   26 statement: FOR LEFT_ROUND ID EQUALS expr . SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND block
    31 expr: expr . ARITH_OP expr
    32     | expr . REL_OP expr
    33     | expr . EQ_OP expr
@@ -1570,7 +1570,7 @@ State 121
 
 State 122
 
-   26 statement: FOR LEFT_ROUND LID EQUALS expr SEMICOLON . expr SEMICOLON LID EQUALS expr RIGHT_ROUND block
+   26 statement: FOR LEFT_ROUND ID EQUALS expr SEMICOLON . expr SEMICOLON ID EQUALS expr RIGHT_ROUND block
 
     INT_LITERAL     shift, and go to state 36
     BOOL_LITERAL    shift, and go to state 37
@@ -1613,7 +1613,7 @@ State 124
 
 State 125
 
-   26 statement: FOR LEFT_ROUND LID EQUALS expr SEMICOLON expr . SEMICOLON LID EQUALS expr RIGHT_ROUND block
+   26 statement: FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr . SEMICOLON ID EQUALS expr RIGHT_ROUND block
    31 expr: expr . ARITH_OP expr
    32     | expr . REL_OP expr
    33     | expr . EQ_OP expr
@@ -1628,21 +1628,21 @@ State 125
 
 State 126
 
-   26 statement: FOR LEFT_ROUND LID EQUALS expr SEMICOLON expr SEMICOLON . LID EQUALS expr RIGHT_ROUND block
+   26 statement: FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON . ID EQUALS expr RIGHT_ROUND block
 
-    LID  shift, and go to state 127
+    ID  shift, and go to state 127
 
 
 State 127
 
-   26 statement: FOR LEFT_ROUND LID EQUALS expr SEMICOLON expr SEMICOLON LID . EQUALS expr RIGHT_ROUND block
+   26 statement: FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID . EQUALS expr RIGHT_ROUND block
 
     EQUALS  shift, and go to state 128
 
 
 State 128
 
-   26 statement: FOR LEFT_ROUND LID EQUALS expr SEMICOLON expr SEMICOLON LID EQUALS . expr RIGHT_ROUND block
+   26 statement: FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS . expr RIGHT_ROUND block
 
     INT_LITERAL     shift, and go to state 36
     BOOL_LITERAL    shift, and go to state 37
@@ -1662,7 +1662,7 @@ State 128
 
 State 129
 
-   26 statement: FOR LEFT_ROUND LID EQUALS expr SEMICOLON expr SEMICOLON LID EQUALS expr . RIGHT_ROUND block
+   26 statement: FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr . RIGHT_ROUND block
    31 expr: expr . ARITH_OP expr
    32     | expr . REL_OP expr
    33     | expr . EQ_OP expr
@@ -1677,7 +1677,7 @@ State 129
 
 State 130
 
-   26 statement: FOR LEFT_ROUND LID EQUALS expr SEMICOLON expr SEMICOLON LID EQUALS expr RIGHT_ROUND . block
+   26 statement: FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND . block
 
     LEFT_CURLY  shift, and go to state 30
 
@@ -1686,6 +1686,6 @@ State 130
 
 State 131
 
-   26 statement: FOR LEFT_ROUND LID EQUALS expr SEMICOLON expr SEMICOLON LID EQUALS expr RIGHT_ROUND block .
+   26 statement: FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND block .
 
     $default  reduce using rule 26 (statement)

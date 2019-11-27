@@ -93,7 +93,7 @@ class Location: public Leaf{
         string value;
 
         Location(string val){
-            name = "LOC";
+            name = val;
             value = val;
         }
 
@@ -320,7 +320,7 @@ class VarDecl: public Binary{
         VarDecl(Node* comp_type, char* id){
             name = "VAR_DECL";
             left = comp_type;
-            right = new Location(id);
+            right = new Identifier(id);
         }
         llvm::Value* Codegen();
         string interpret();
