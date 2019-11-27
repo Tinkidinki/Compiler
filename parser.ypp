@@ -295,7 +295,7 @@ identifier:     ID{
                         printf("Identifier -> ID \n");
                 }
 
-        |       identifier LEFT_SQUARE expr RIGHT_SQUARE {
+        |       ID LEFT_SQUARE expr RIGHT_SQUARE {
                         $$ = new Identifier_Array($1, $3);
                         printf("location -> identifier LEFT_SQUARE expr RIGHT_SQUARE \n");
                 }
@@ -306,7 +306,7 @@ location:
                         printf("location -> ID \n");
                 }
 
-        |       location LEFT_SQUARE expr RIGHT_SQUARE {
+        |       LID LEFT_SQUARE expr RIGHT_SQUARE {
                         $$ = new Location_Array($1, $3);
                         printf("location -> location LEFT_SQUARE expr RIGHT_SQUARE \n");
                 }

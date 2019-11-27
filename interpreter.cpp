@@ -32,6 +32,22 @@ void printScopeStack(){
     } 
 }
 
+bool isArray1D(string s){
+    if (count(s.begin(), s.end(), '_') == 1) return true;
+    else return false;
+}
+
+string Array1D_split(string s, int x){
+    stringstream ss(s);
+    string name;
+    string offset;
+    getline(ss, name, '_');
+    getline (ss, offset, '_');
+    
+    if (x==0) return name;
+    else return offset;
+}
+
 void printFuncList(){
     for (auto i: func_list){
         cout << i.first << endl;
@@ -213,6 +229,21 @@ string UnaryExpression::interpret(){
 string AssignmentStatement::interpret(){
     string loc = left->interpret();
     string val = right->interpret();
+    int offset1;
+    string search_val;
+    int* pointer;
+    int* advanced_pointer;
+
+    if (isArray1D(loc)){
+        search_val = Array1D_split(loc, 0);
+        int offset = stoi(Array1D_split(loc, 1));
+
+        sscanf((*scope_stack.begin())[search_val].value, "%p", &pointer)
+        advanced_pointer = pointer+offset;
+
+        *advanced_pointer = val;
+    }
+
     (*scope_stack.begin())[loc].value = val;
     return "";
 }
@@ -346,7 +377,14 @@ string VarDecls::interpret(){
 string VarDecl::interpret(){
     var temp;
     temp.type = left->interpret();
-    temp.value = "";
+    int* ptr;
+
+    if isArray1D(temp.type){
+        int size = Array1D_split(temp.type, 1);
+        ptr = (int*)malloc(size * sizeof(int)); 
+        sprintf(temp.value, "%p", ptr);
+    }
+    else temp.value = "";
     scope_stack.begin()->insert({right->interpret(), temp});
     return "";
 }
@@ -426,15 +464,32 @@ string MethodDeclEmpty::interpret(){
     return v;
 }
 string ArrayType1D::interpret(){
-    string v = "dummy";
-    return v;
+    return left->interpret() + "_" + right_interpret();
 }
 string Location_Array::interpret(){
-    string v = "dummy";
-    return v;
+    string search_value = left->value();
+    search_value = search_value.substr(1);
+    string string_pointer;
+    for (auto map_iter = scope_stack.begin(); map_iter != scope_stack.end(); map_iter++){
+        if (map_iter->count(search_value)) {
+            string_pointer =  (*map_iter)[search_value].value;
+        }
+    }
+
+    int* pointer;
+    sscanf(string_pointer, "%p", &pointer);
+    int offset = stoi(right->interpret());
+
+    string return_val;
+    sprintf(pointer, "%p", return_val);
+
+    return return_val;
+
 }
 string Identifier_Array::interpret(){
-    string v = "dummy";
-    return v;
+    string array_name = left->getvalue();
+    string offset = right->interpret();
+    return array_name + "_" + offset;
+
 }
 

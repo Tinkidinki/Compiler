@@ -78,9 +78,9 @@ class Identifier: public Leaf{
 
 class Identifier_Array: public Binary{
     public:
-        Identifier_Array(Node* id, Node* exp){
+        Identifier_Array(char* id, Node* exp){
             name = "ID_ARRAY";
-            left = id;
+            left = new Identifier(id);
             right = exp;
         }
         llvm::Value* Codegen();
@@ -104,9 +104,9 @@ class Location: public Leaf{
 
 class Location_Array: public Binary{
     public:
-        Location_Array(Node* loc, Node* expr){
+        Location_Array(char* loc, Node* expr){
             name = "LOC_ARRAY";
-            left = loc;
+            left = new Location(loc);
             right = expr;
         }
         llvm::Value* Codegen();
