@@ -60,7 +60,7 @@ return                              {return RETURN;}
 break                               {return BREAK;}
 continue                            {return CONTINUE;}    
 [a-zA-Z][a-zA-Z0-9]*                {yylval.symbol = strdup(yytext); return ID;}
-
+$[a-zA-Z][a-zA-Z0-9]*               {yylval.symbol = strdup(yytext); return LID;}
 
 
 .			                        { printf("FLEX: Unrecognized character '%c'\n", yytext[0]); return BAD_CHAR;}

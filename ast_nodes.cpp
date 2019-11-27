@@ -76,6 +76,18 @@ class Identifier: public Leaf{
         string interpret();
 };
 
+class Identifier_Array: public Binary{
+    public:
+        Identifier_Array(Node* id, Node* exp){
+            name = "ID_ARRAY";
+            left = id;
+            right = exp;
+        }
+        llvm::Value* Codegen();
+        string interpret();
+
+};
+
 class Location: public Leaf{
     public:
         string value;
@@ -90,6 +102,16 @@ class Location: public Leaf{
         string interpret();
 };
 
+class Location_Array: public Binary{
+    public:
+        Location_Array(Node* loc, Node* expr){
+            name = "LOC_ARRAY";
+            left = loc;
+            right = expr;
+        }
+        llvm::Value* Codegen();
+        string interpret();
+};
 
 class UnaryExpression: public Unary{
     public:
@@ -113,15 +135,14 @@ class UnaryExpression: public Unary{
 class AssignmentStatement: public Binary{
     public:
         
-        AssignmentStatement(char* id, Node* expr){
+        AssignmentStatement(Node* loc, Node* expr){
             name = "ASSIGN";
-            left = new Identifier(id);
+            left = loc;
             right = expr;
         }
 
         llvm::Value* Codegen();
-        string interpret();
-        
+        string interpret();        
 };
 
 
@@ -299,7 +320,7 @@ class VarDecl: public Binary{
         VarDecl(Node* comp_type, char* id){
             name = "VAR_DECL";
             left = comp_type;
-            right = new Identifier(id);
+            right = new Location(id);
         }
         llvm::Value* Codegen();
         string interpret();
@@ -497,3 +518,14 @@ class MethodCallEmpty: public Leaf{
         string getvalue(){return "";}
 };
 
+
+class ArrayType1D: public Binary{
+    public:
+        ArrayType1D(char* id, int int_lit){
+            name = "1DArrayType";
+            left = new Identifier(id);
+            right = new IntLiteral(int_lit);
+        }
+        llvm::Value* Codegen();
+        string interpret();
+};

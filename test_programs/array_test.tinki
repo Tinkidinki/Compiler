@@ -1,0 +1,7 @@
+class Program{
+    int[10] a;
+    void main(){
+        int x;
+        x[1] = a[3][4];
+    }
+}   

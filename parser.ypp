@@ -37,6 +37,7 @@
 %token <symbol> MINUS
 %token <symbol> NOT
 %token <symbol> ID
+%token <symbol> LID
 %token <symbol> ARITH_OP
 %token <symbol> REL_OP
 %token <symbol> EQ_OP 
@@ -60,6 +61,7 @@
 %type <node> literal 
 %type <node> expr
 %type <node> location
+%type <node> identifier
 %type <node> statement
 %type <node_list> callout_args
 %type <node_list> var_decls
@@ -126,7 +128,7 @@ composite_type: TYPE {
                 }
 
         |       TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE {
-                        //ARRAY TYPES NOT DONE
+                        $$ = new ArrayType1D($1, $3);
                         printf("composite_type -> TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE\n");
                 }
         |       TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE {printf("composite_type -> TYPE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE LEFT_SQUARE INT_LITERAL RIGHT_SQUARE \n");}
@@ -167,7 +169,7 @@ statements:     statement  {
                         printf("statements -> statements statement\n");
                 }
 
-statement:      ID EQUALS expr SEMICOLON  {
+statement:      identifier EQUALS expr SEMICOLON  {
                         $$ = new AssignmentStatement($1, $3); 
                         printf("statement -> location EQUALS expr SEMICOLON \n"); 
                 } 
@@ -197,7 +199,7 @@ statement:      ID EQUALS expr SEMICOLON  {
                         printf("statement -> WHILE LEFT_ROUND expr RIGHT_ROUND statement \n");
                 }
 
-        |       FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND block {
+        |       FOR LEFT_ROUND LID EQUALS expr SEMICOLON expr SEMICOLON LID EQUALS expr RIGHT_ROUND block {
                         $$ = new ForStatement($3, $5, $7, $9, $11, $13); 
                         printf("statement -> FOR LEFT_ROUND ID EQUALS expr SEMICOLON expr SEMICOLON ID EQUALS expr RIGHT_ROUND statement \n");}
 
@@ -287,26 +289,33 @@ literal:        INT_LITERAL {
                         printf("literal -> STRING_LITERAL \n");
                 }
 
-// bin_op:         ARITH_OP  {$$ = new ArithmeticOperator($1);} //{printf("bin_op -> ARITH_OP \n");}
-//         |       REL_OP  {$$ = new RelationalOperator($1);} //{printf("bin_op -> REL_OP \n");}
-//         |       EQ_OP  {$$ = new EqualOperator($1);} //{printf("bin_op -> EQ_OP \n");}
-//         |       COND_OP   {$$ = new ConditionalOperator($1);} //{printf("bin_op -> COND_OP \n");}
+
+identifier:     ID{
+                        $$ = new Identifier($1);
+                        printf("Identifier -> ID \n");
+                }
+
+        |       identifier LEFT_SQUARE expr RIGHT_SQUARE {
+                        $$ = new Identifier_Array($1, $3);
+                        printf("location -> identifier LEFT_SQUARE expr RIGHT_SQUARE \n");
+                }
 
 location:       
-                ID {
+                LID {
                         $$ = new Location($1); 
                         printf("location -> ID \n");
                 }
 
-        |       ID LEFT_SQUARE expr RIGHT_SQUARE {
-                        // Arrays not implemented yet
-                        printf("location -> ID LEFT_SQUARE expr RIGHT_SQUARE \n");
+        |       location LEFT_SQUARE expr RIGHT_SQUARE {
+                        $$ = new Location_Array($1, $3);
+                        printf("location -> location LEFT_SQUARE expr RIGHT_SQUARE \n");
                 }
 
-        |       ID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE {
-                        // Arrays not implemented yet
-                        printf("location -> ID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE \n");
-                }
+        // |       ID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE {
+        //                 // Arrays not implemented yet
+        //                 printf("location -> ID LEFT_SQUARE expr RIGHT_SQUARE LEFT_SQUARE expr RIGHT_SQUARE \n");
+        //         }
+
 
 method_call:    
                 CALLOUT LEFT_ROUND STRING_LITERAL COMMA callout_args RIGHT_ROUND {
@@ -352,19 +361,21 @@ int main(int argc, char **argv)
         start->doOp(&printer);
         cout << endl;
 
-        // printf("------------------\n");
-        // printf("INTERPRETER OUTPUT\n");
-        // printf("------------------\n");
-        // // Builder.SetInsertPoint(entry);
-        // // start->Codegen();
-        // start->interpret();
-
         printf("------------------\n");
-        printf("AST OUTPUT\n");
+        printf("INTERPRETER OUTPUT\n");
         printf("------------------\n");
+        
+        start->interpret();
 
-        start->Codegen();
-        ModuleOb->dump();
+        // printf("------------------\n");
+        // printf("CODE GENERATION STARTED\n");
+        // pritnf("To run:\n");
+        // printf("llvm-as tinki.ll\n");
+        // printf("lli tinki.bc\n");
+        // printf("------------------\n");
+
+        // start->Codegen();
+        // ModuleOb->dump();
 
         return 0;
 }

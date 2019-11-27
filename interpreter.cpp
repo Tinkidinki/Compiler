@@ -164,9 +164,12 @@ string MethodCall::interpret(){
             advance(vlist_pointer, 1);
         }
 
+        map<string, var> old_scope = scope_stack.front();
+        scope_stack.pop_front();
         scope_stack.push_front(temp_map);
         string ret = func_list[stripped_name].block->interpret();
         scope_stack.pop_front();
+        scope_stack.push_front(old_scope);
         return ret;
     }
     return "";
@@ -240,17 +243,20 @@ string ArithmeticExpression::interpret(){
         return to_string(stoi(operand1) * stoi(operand2));
     else if (op == "/")
         return to_string(stoi(operand1) / stoi(operand2));
+    else if (op == "%")
+        return to_string(stoi(operand1) % stoi(operand2));
     
     return "";
 }
 
 string Location::interpret(){
+    string search_value = value.substr(1);
     for (auto map_iter = scope_stack.begin(); map_iter != scope_stack.end(); map_iter++){
-        if (map_iter->count(value)) {
-            return (*map_iter)[value].value;
+        if (map_iter->count(search_value)) {
+            return (*map_iter)[search_value].value;
         }
     }
-    return "";
+    return "0";
 }
 
 string EqualExpression::interpret(){
@@ -313,7 +319,11 @@ string DecBlock::interpret(){
         i->interpret();
     }
     for (auto i: right->getList()){
-        i->interpret();
+        string ret = i->interpret();
+         if (ret!=""){
+            // If no return value, statements give, null, else, BREAK, CONTINUE or RETURN.
+            return ret;
+        }
     }
     return "";
 }
@@ -415,3 +425,16 @@ string MethodDeclEmpty::interpret(){
     string v = "dummy";
     return v;
 }
+string ArrayType1D::interpret(){
+    string v = "dummy";
+    return v;
+}
+string Location_Array::interpret(){
+    string v = "dummy";
+    return v;
+}
+string Identifier_Array::interpret(){
+    string v = "dummy";
+    return v;
+}
+

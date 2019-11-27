@@ -1,0 +1,20 @@
+class Program{
+    int p;
+    int gcd(int a, int b){
+        if ($b == 0){
+            return $a;
+        }
+        else {
+            return callout("gcd", $b, $a % $b);
+        }
+    }
+
+    void main(){
+        int x;
+        int y;
+        x = 98;
+        y = 56;
+        callout("printf", "The gcd is:");
+        callout("printf", callout("gcd", $x, $y));
+    }
+}

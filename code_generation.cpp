@@ -290,3 +290,16 @@ llvm::Value* MethodCallEmpty::Codegen(){
     llvm::Value* v;
     return v;
 }
+llvm::Value* ArrayType1D::Codegen(){
+    llvm::Value* v;
+    return v;
+}
+
+llvm::Value* Location_Array::Codegen(){
+    llvm::Value* v;
+    return v;
+}
+llvm::Value* Identifier_Array::Codegen(){
+    llvm::Value* v;
+    return v;
+}
