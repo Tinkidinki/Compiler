@@ -135,9 +135,9 @@ class UnaryExpression: public Unary{
 class AssignmentStatement: public Binary{
     public:
         
-        AssignmentStatement(Node* loc, Node* expr){
+        AssignmentStatement(Node* id, Node* expr){
             name = "ASSIGN";
-            left = loc;
+            left = id;
             right = expr;
         }
 

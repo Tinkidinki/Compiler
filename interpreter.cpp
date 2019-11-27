@@ -227,24 +227,9 @@ string UnaryExpression::interpret(){
     return "";
 }
 string AssignmentStatement::interpret(){
-    string loc = left->interpret();
+    string loc_name = left->interpret();
     string val = right->interpret();
-    int offset1;
-    string search_val;
-    int* pointer;
-    int* advanced_pointer;
-
-    if (isArray1D(loc)){
-        search_val = Array1D_split(loc, 0);
-        int offset = stoi(Array1D_split(loc, 1));
-
-        sscanf((*scope_stack.begin())[search_val].value, "%p", &pointer)
-        advanced_pointer = pointer+offset;
-
-        *advanced_pointer = val;
-    }
-
-    (*scope_stack.begin())[loc].value = val;
+    (*scope_stack.begin())[loc_name].value = val;
     return "";
 }
 string ArithmeticOperator::interpret(){
@@ -377,15 +362,16 @@ string VarDecls::interpret(){
 string VarDecl::interpret(){
     var temp;
     temp.type = left->interpret();
-    int* ptr;
+    temp.value = "";
 
-    if isArray1D(temp.type){
-        int size = Array1D_split(temp.type, 1);
-        ptr = (int*)malloc(size * sizeof(int)); 
-        sprintf(temp.value, "%p", ptr);
+    if (isArray1D(temp.type)){
+        int offset = stoi(Array1D_split(temp.type, 1));
+        for (int i=0; i<offset; i++){
+            scope_stack.begin()->insert({right->interpret()+"_"+i, temp});
+        }
     }
-    else temp.value = "";
-    scope_stack.begin()->insert({right->interpret(), temp});
+    else 
+        scope_stack.begin()->insert({right->interpret(), temp});
     return "";
 }
 string Type::interpret(){
@@ -464,26 +450,18 @@ string MethodDeclEmpty::interpret(){
     return v;
 }
 string ArrayType1D::interpret(){
-    return left->interpret() + "_" + right_interpret();
+    return left->interpret() + "_" + right->interpret();
 }
 string Location_Array::interpret(){
-    string search_value = left->value();
-    search_value = search_value.substr(1);
-    string string_pointer;
+    string search_value = left->value;
+    search_value = search_value.substr(1)+"_"+right->interpret();
+ 
     for (auto map_iter = scope_stack.begin(); map_iter != scope_stack.end(); map_iter++){
         if (map_iter->count(search_value)) {
-            string_pointer =  (*map_iter)[search_value].value;
+            return (*map_iter)[search_value].value;
         }
     }
-
-    int* pointer;
-    sscanf(string_pointer, "%p", &pointer);
-    int offset = stoi(right->interpret());
-
-    string return_val;
-    sprintf(pointer, "%p", return_val);
-
-    return return_val;
+    return "0";
 
 }
 string Identifier_Array::interpret(){
