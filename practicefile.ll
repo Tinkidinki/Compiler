@@ -7,28 +7,44 @@ target triple = "x86_64-pc-linux-gnu"
 @.str.1 = private unnamed_addr constant [6 x i8] c"else\0A\00", align 1
 
 ; Function Attrs: noinline nounwind optnone uwtable
+define i32 @add(i32, i32) #0 {
+  %3 = alloca i32, align 4
+  %4 = alloca i32, align 4
+  store i32 %0, i32* %3, align 4
+  store i32 %1, i32* %4, align 4
+  %5 = load i32, i32* %3, align 4
+  %6 = load i32, i32* %4, align 4
+  %7 = add nsw i32 %5, %6
+  ret i32 %7
+}
+
+; Function Attrs: noinline nounwind optnone uwtable
 define i32 @main() #0 {
   %1 = alloca i32, align 4
   %2 = alloca i32, align 4
   %3 = alloca i32, align 4
+  %4 = alloca i32, align 4
   store i32 0, i32* %1, align 4
   store i32 0, i32* %2, align 4
   store i32 7, i32* %3, align 4
-  %4 = load i32, i32* %2, align 4
-  %5 = load i32, i32* %3, align 4
-  %6 = icmp slt i32 %4, %5
-  br i1 %6, label %7, label %9
+  %5 = load i32, i32* %2, align 4
+  %6 = load i32, i32* %3, align 4
+  %7 = icmp slt i32 %5, %6
+  br i1 %7, label %8, label %10
 
-; <label>:7:                                      ; preds = %0
-  %8 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str, i32 0, i32 0))
-  br label %11
+; <label>:8:                                      ; preds = %0
+  %9 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str, i32 0, i32 0))
+  br label %12
 
-; <label>:9:                                      ; preds = %0
-  %10 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([6 x i8], [6 x i8]* @.str.1, i32 0, i32 0))
-  br label %11
+; <label>:10:                                     ; preds = %0
+  %11 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([6 x i8], [6 x i8]* @.str.1, i32 0, i32 0))
+  br label %12
 
-; <label>:11:                                     ; preds = %9, %7
-  ret i32 0
+; <label>:12:                                     ; preds = %10, %8
+  %13 = call i32 @add(i32 3, i32 5)
+  store i32 %13, i32* %4, align 4
+  %14 = load i32, i32* %1, align 4
+  ret i32 %14
 }
 
 declare i32 @printf(i8*, ...) #1

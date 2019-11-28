@@ -9,12 +9,22 @@ static llvm::LLVMContext Context;
 static llvm::Module* ModuleOb = new llvm::Module("Tinki Compiler", Context);
 static llvm::IRBuilder<> Builder(Context);
 static map <string, llvm::AllocaInst*> NamedValues;
+static map <string, llvm::Argument*> NamedArgs;
+static map <string, llvm::FunctionType*> Functypes;
 //-------------------------------------------------------
 
 
 void printNamedValues(){
     cout << "NAMED VALUES" << endl;
     for (auto i: NamedValues){
+        cout << i.first << endl;
+    }
+    cout << "--------------------------";
+}
+
+void printNamedArgs(){
+    cout << "NAMED ARGS" << endl;
+    for (auto i: NamedArgs){
         cout << i.first << endl;
     }
     cout << "--------------------------";
@@ -34,8 +44,10 @@ void setFuncParams(llvm::Function *fooFunc, vector<string> FunArgs) {
     unsigned Idx = 0;
     llvm::Function::arg_iterator AI, AE;
     for (AI = fooFunc->arg_begin(), AE = fooFunc->arg_end(); AI != AE;
-    ++AI, ++Idx)
-    AI->setName(FunArgs[Idx]);
+    ++AI, ++Idx){
+        AI->setName(FunArgs[Idx]);
+        NamedArgs[FunArgs[Idx]] = AI;
+    }
 }
 
 
@@ -115,22 +127,31 @@ llvm::Value* MethodDeclParam::Codegen(){
         advance(par_pointer, 1);
     }
 
+    
+
+    llvm::Function* Func = createFunc(Builder, name, func_type, Parameter_types);
+    llvm::FunctionType *funcType = llvm::FunctionType::get(TypeMap[func_type], Parameter_types,false);
+    Functypes[name] = funcType;
+    setFuncParams(Func, Parameter_names);
+    printNamedValues();
+    llvm::BasicBlock *entry = createBB(Func, "entry");
+    Builder.SetInsertPoint(entry);
+
     cout << "Began the loop" << endl;
     llvm::AllocaInst* alloc;
     auto type_pointer = Parameter_types.begin();
     for (auto par: Parameter_names){
-        alloc = Builder.CreateAlloca(*type_pointer, 0, par);
-        cout << "Reached after alloc" << endl;
-        NamedValues[par] = alloc;
+        cout << "Reached before alloc" << endl;
+        // alloc = Builder.CreateAlloca(*type_pointer, 0, par);
+        // NamedValues[par] = alloc;
+        // // store = Builder.CreateStore(par,alloc);
+        // cout << "Reached after alloc" << endl;
+        // NamedValues[par] = alloc;
         advance(type_pointer, 1);
     }
 
     cout << "Finished the loop" << endl;
 
-    llvm::Function* Func = createFunc(Builder, name, func_type, Parameter_types);
-    setFuncParams(Func, Parameter_names);
-    llvm::BasicBlock *entry = createBB(Func, "entry");
-    Builder.SetInsertPoint(entry);
     list[2]->Codegen();
 }
 
@@ -159,8 +180,16 @@ llvm::Value *MethodCall::Codegen(){
     if (name == "\"printf\""){
         Builder.CreateCall(printfunc, arguments, "printfcall");
     }
-    llvm::Value* v;
-    return v;
+    
+    else {
+        cout << "reached here" << endl;
+        string methcall_name = name.substr(1,name.size()-2);
+        cout << methcall_name << endl;
+        llvm::FunctionCallee func = ModuleOb->getOrInsertFunction(methcall_name, Functypes[methcall_name]);
+                                                   
+        cout << "funccallee created" << endl;
+        return Builder.CreateCall(func, arguments, "funccall");
+    }
 }
 
 llvm::Value* IntLiteral::Codegen(){
@@ -210,12 +239,16 @@ llvm::Value* ConditionalOperator::Codegen(){
 }
 llvm::Value* ArithmeticExpression::Codegen(){
 
+    cout << "Reached Arithmetic expression" << endl;
     string op = child2->interpret();
     llvm::Value* left = child1->Codegen();
     llvm::Value* right = child3->Codegen();
-
+    cout << "finished codegen" << endl;
+    cout << child1->getname() << endl;
     if (child1->getname().front()=='$')
         left = Builder.CreateLoad(left);
+
+    cout << "AFTER GETNAME" << endl;
     
     if (child3->getname().front() == '$')
         right = Builder.CreateLoad(right); 
@@ -426,8 +459,9 @@ llvm::Value* MethodDecls::Codegen(){
 llvm::Value* Location::Codegen(){
     string lname = getvalue();
     cout << lname << "lname" << endl;
-    printNamedValues();
-    return NamedValues[lname];
+    printNamedArgs();
+    if (NamedArgs.count(lname) > 0){name = name.substr(1); return NamedArgs[lname]; }
+    else return NamedValues[lname];
 }
 
 llvm::Value* MethodCallEmpty::Codegen(){

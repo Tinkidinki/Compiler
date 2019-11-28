@@ -1,9 +1,15 @@
 
 int printf(const char *format, ...); 
 
+int add(int a, int b){
+        return a + b;
+    }
+
+
 int main(){
     int x;
     int y;
+    int a;
 
     x = 0;
     y = 7;
@@ -14,5 +20,9 @@ int main(){
     else {
         printf("else\n");
     }
-    return 0;
+
+    a = add(3,5);
+
+
+
 }

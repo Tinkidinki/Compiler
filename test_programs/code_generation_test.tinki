@@ -1,0 +1,27 @@
+class Program{
+
+    int add(int a, int b){
+        return $a + $b;
+    }
+
+    int main(){
+        int x;
+        int y;
+        int a;
+
+        x = 0;
+        y = 7;
+        
+        if ($x > $y){
+            callout("printf", "if");
+        }
+        else {
+            callout("printf", "else");
+        }
+
+        callout("printf", "%d", callout("add", 10, 15));
+
+        return 0;
+    }
+}
+
