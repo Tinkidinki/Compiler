@@ -369,11 +369,11 @@ int main(int argc, char **argv)
         start->doOp(&printer);
         cout << endl;
 
-        printf("------------------\n");
-        printf("INTERPRETER OUTPUT\n");
-        printf("------------------\n");
+        // printf("------------------\n");
+        // printf("INTERPRETER OUTPUT\n");
+        // printf("------------------\n");
         
-        start->interpret();
+        // start->interpret();
 
         printf("------------------\n");
         printf("CODE GENERATION STARTED\n");
@@ -382,11 +382,7 @@ int main(int argc, char **argv)
         printf("lli tinki.bc\n");
         printf("------------------\n");
 
-        TypeMap.insert({"int", Builder.getInt32Ty()});
-        TypeMap.insert({"bool", Builder.getInt1Ty()});
-        TypeMap.insert({"char", Builder.getInt8Ty()});
-        TypeMap.insert({"string",Builder.getInt8PtrTy()});
-        // TypeMap.insert({"void", Builder.getVoidTy()});
+        
 
         start->Codegen();
         ModuleOb->dump();

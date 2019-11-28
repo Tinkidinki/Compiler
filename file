@@ -1,7 +1,20 @@
 class Program{
-    int b;
-    void main(){
-        callout ("printf", "Hello");
+    int main(){
+        int x;
+        int y;
+
+        x = 0;
+        y = 7;
+        
+        if ($x > $y){
+            callout("printf", "if");
+            callout("printf", "if again");
+        }
+        else {
+            callout("printf", "else");
+        }
+        callout("printf", "always");
+        return 0;
     }
 }
 

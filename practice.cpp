@@ -20,6 +20,10 @@ BasicBlock *createBB(Function *fooFunc, std::string Name) {
     return BasicBlock::Create(Context, Name, fooFunc);
 }
 
+typedef SmallVector<BasicBlock *, 16> BBList;
+typedef SmallVector<Value *, 16> ValList;
+
+
 int main(int argc, char* argv[]){
 
     FunctionCallee printfunc = ModuleOb->getOrInsertFunction("printf",
