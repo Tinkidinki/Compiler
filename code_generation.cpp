@@ -9,9 +9,16 @@ static llvm::LLVMContext Context;
 static llvm::Module* ModuleOb = new llvm::Module("Tinki Compiler", Context);
 static llvm::IRBuilder<> Builder(Context);
 static map <string, llvm::AllocaInst*> NamedValues;
-// static stack <llvm::loopInfo *> *loops = new stack<llvm::loopInfo*>();
 //-------------------------------------------------------
 
+
+void printNamedValues(){
+    cout << "NAMED VALUES" << endl;
+    for (auto i: NamedValues){
+        cout << i.first << endl;
+    }
+    cout << "--------------------------";
+}
 map<string, llvm::Type*> TypeMap;
 //TypeMap[type]
 
@@ -107,6 +114,10 @@ llvm::Value* MethodDeclParam::Codegen(){
         Parameter_types.push_back(TypeMap[(*par_pointer)->interpret()]);
         advance(par_pointer, 1);
     }
+
+    Int idx = 0;
+    
+
     llvm::Function* Func = createFunc(Builder, name, func_type, Parameter_types);
     setFuncParams(Func, Parameter_names);
     llvm::BasicBlock *entry = createBB(Func, "entry");
@@ -222,12 +233,14 @@ llvm::Value* EqualExpression::Codegen(){
         right = Builder.CreateLoad(right); 
 
     llvm::Value* v;
-    if (op == "==") 
-         v = Builder.CreateICmpEQ(left, right, "equalcompare");
+    if (op == "=="){
+        cout << "Reached inside equal" << endl;
+        v = Builder.CreateICmpEQ(left, right, "equalcompare");
+    }
     else if (op == "!=") 
         v = Builder.CreateICmpNE(left, right, "notequalcompare");
 
- 
+    cout << "Finished equal expression" << endl;
     return v;
 
 }
@@ -404,6 +417,7 @@ llvm::Value* MethodDecls::Codegen(){
 llvm::Value* Location::Codegen(){
     string lname = getvalue();
     cout << lname << "lname" << endl;
+    printNamedValues();
     return NamedValues[lname];
 }
 
