@@ -375,15 +375,21 @@ int main(int argc, char **argv)
         
         start->interpret();
 
-        // printf("------------------\n");
-        // printf("CODE GENERATION STARTED\n");
-        // pritnf("To run:\n");
-        // printf("llvm-as tinki.ll\n");
-        // printf("lli tinki.bc\n");
-        // printf("------------------\n");
+        printf("------------------\n");
+        printf("CODE GENERATION STARTED\n");
+        printf("To run:\n");
+        printf("llvm-as tinki.ll\n");
+        printf("lli tinki.bc\n");
+        printf("------------------\n");
 
-        // start->Codegen();
-        // ModuleOb->dump();
+        TypeMap.insert({"int", Builder.getInt32Ty()});
+        TypeMap.insert({"bool", Builder.getInt1Ty()});
+        TypeMap.insert({"char", Builder.getInt8Ty()});
+        TypeMap.insert({"string",Builder.getInt8PtrTy()});
+        // TypeMap.insert({"void", Builder.getVoidTy()});
+
+        start->Codegen();
+        ModuleOb->dump();
 
         return 0;
 }

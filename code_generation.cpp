@@ -12,13 +12,25 @@ static llvm::IRBuilder<> Builder(Context);
 // static stack <llvm::loopInfo *> *loops = new stack<llvm::loopInfo*>();
 //-------------------------------------------------------
 
+map<string, llvm::Type*> TypeMap;
+//TypeMap[type]
 
 // To create any function
-llvm::Function *createFunc(llvm::IRBuilder<> &Builder, string Name) {
-    llvm::FunctionType *funcType = llvm::FunctionType::get(Builder.getInt32Ty(),false);
+llvm::Function *createFunc(llvm::IRBuilder<> &Builder, string Name, string type, vector <llvm::Type*> Parameter_types) {
+    llvm::FunctionType *funcType = llvm::FunctionType::get(TypeMap[type], Parameter_types,false);
     llvm::Function *fooFunc = llvm::Function::Create(funcType, llvm::Function::ExternalLinkage, Name, ModuleOb);
     return fooFunc;
 }
+
+// Set Parameters for function
+void setFuncParams(llvm::Function *fooFunc, vector<string> FunArgs) {
+    unsigned Idx = 0;
+    llvm::Function::arg_iterator AI, AE;
+    for (AI = fooFunc->arg_begin(), AE = fooFunc->arg_end(); AI != AE;
+    ++AI, ++Idx)
+    AI->setName(FunArgs[Idx]);
+}
+
 
 // To add the print function's declaration
 llvm::FunctionCallee printfunc = ModuleOb->getOrInsertFunction("printf",
@@ -49,6 +61,12 @@ llvm::GlobalVariable *createGlob(llvm::IRBuilder<> &Builder, std::string Name, s
 // Codegen for all the nodes!
 
 llvm::Value* ProgramVarMethod::Codegen(){
+    TypeMap.insert({"int", Builder.getInt32Ty()});
+    TypeMap.insert({"bool", Builder.getInt1Ty()});
+    TypeMap.insert({"char", Builder.getInt8Ty()});
+    TypeMap.insert({"string",Builder.getInt8PtrTy()});
+    TypeMap.insert({"void", Builder.getVoidTy()});
+
     for (auto vardec : left->getList())
         vardec->Codegen();
     for (auto methoddec: right->getList())
@@ -56,15 +74,37 @@ llvm::Value* ProgramVarMethod::Codegen(){
 }
 
 llvm::Value* MethodDeclEmpty::Codegen(){
-    llvm::Function* Func = createFunc(Builder, "main");
+    string func_type = list[0]->interpret();
+    vector <llvm::Type*> Parameter_types;
+    vector <string> Parameter_names;
+    llvm::Function* Func = createFunc(Builder, name, func_type, Parameter_types);
     llvm::BasicBlock *entry = createBB(Func, "entry");
     Builder.SetInsertPoint(entry);
     list[2]->Codegen();
-    Builder.CreateRet(Builder.getInt32(0));
 }
 
+llvm::Value* MethodDeclParam::Codegen(){
+    string func_type = list[0]->interpret();
+    vector <Node*> params = list[1]->getList();
+    vector <llvm::Type*> Parameter_types;
+    vector <string> Parameter_names;
+
+    auto par_pointer = params.begin();
+    while(par_pointer != params.end()){
+        Parameter_names.push_back((*par_pointer)->interpret());
+        advance(par_pointer, 1);
+        Parameter_types.push_back(TypeMap[(*par_pointer)->interpret()]);
+        advance(par_pointer, 1);
+    }
+    llvm::Function* Func = createFunc(Builder, name, func_type, Parameter_types);
+    setFuncParams(Func, Parameter_names);
+    llvm::BasicBlock *entry = createBB(Func, "entry");
+    Builder.SetInsertPoint(entry);
+    list[2]->Codegen();
+}
 
 llvm::Value *StringLiteral::Codegen() {
+    cout << value << endl;
     return Builder.CreateGlobalStringPtr(value);
 }
 
@@ -213,10 +253,11 @@ llvm::Value* DecBlock::Codegen(){
     return v;
 }
 llvm::Value* StatBlock::Codegen(){
+    llvm::Value* ret;
     for (auto i: operand->getList()){
-        llvm::Value* ret = i->Codegen();
-        return ret;
+        ret = i->Codegen();
     }
+    return ret;
 }
 llvm::Value* VarDecls::Codegen(){
     llvm::Value* v;
@@ -253,8 +294,10 @@ llvm::Value* ForStatement::Codegen(){
     return v;
 }
 llvm::Value* ReturnStatement::Codegen(){
-    llvm::Value* v;
-    return v;
+    cout << "Comes to return statement" << endl;
+    Builder.CreateRet(operand->Codegen());
+    cout << "came back after" << endl;
+    llvm::Value* v; return v;
 }
 llvm::Value* BreakStatement::Codegen(){
     llvm::Value* v;
@@ -272,10 +315,7 @@ llvm::Value* MethodDecls::Codegen(){
     llvm::Value* v;
     return v;
 }
-llvm::Value* MethodDeclParam::Codegen(){
-    llvm::Value* v;
-    return v;
-}
+
 
 llvm::Value* Location::Codegen(){
     llvm::Value* v;

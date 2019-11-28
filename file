@@ -1,6 +1,5 @@
 class Program{
     int b;
-    int c;
     void main(){
         callout ("printf", "Hello");
     }
