@@ -107,7 +107,8 @@ class Location: public Leaf{
 
         Location(string val){
             name = val;
-            value = val.substr(1);
+            // value = val.substr(1);
+            value = val;
         }
 
         string getvalue(){return value;}

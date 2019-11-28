@@ -62,20 +62,20 @@ llvm::BasicBlock *createBB(llvm::Function *fooFunc, std::string Name) {
 }
 
 // To generate a global variable
-llvm::GlobalVariable *createGlob(llvm::IRBuilder<> &Builder, std::string Name, string type) {
-    if (type=="int"){
-        llvm::ConstantInt* const_int_val = llvm::ConstantInt::get(ModuleOb->getContext(), llvm::APInt(32,0));
-        ModuleOb->getOrInsertGlobal(Name, Builder.getInt32Ty());
-        llvm::GlobalVariable *gVar = ModuleOb->getNamedGlobal(Name);
-        gVar->setLinkage(llvm::GlobalValue::CommonLinkage);
-        gVar->setInitializer(const_int_val);
-        gVar->setAlignment(4);
-        return gVar;
-    }
-    llvm::GlobalVariable *dummy;
-    return dummy;
+// llvm::GlobalVariable *createGlob(llvm::IRBuilder<> &Builder, std::string Name, string type) {
+//     if (type=="int"){
+//         llvm::ConstantInt* const_int_val = llvm::ConstantInt::get(ModuleOb->getContext(), llvm::APInt(32,0));
+//         ModuleOb->getOrInsertGlobal(Name, Builder.getInt32Ty());
+//         llvm::GlobalVariable *gVar = ModuleOb->getNamedGlobal(Name);
+//         gVar->setLinkage(llvm::GlobalValue::CommonLinkage);
+//         gVar->setInitializer(const_int_val);
+//         gVar->setAlignment(4);
+//         return gVar;
+//     }
+//     llvm::GlobalVariable *dummy;
+//     return dummy;
     
-}
+// }
 
 // Codegen for all the nodes!
 
@@ -133,30 +133,15 @@ llvm::Value* MethodDeclParam::Codegen(){
     llvm::FunctionType *funcType = llvm::FunctionType::get(TypeMap[func_type], Parameter_types,false);
     Functypes[name] = funcType;
     setFuncParams(Func, Parameter_names);
-    printNamedValues();
     llvm::BasicBlock *entry = createBB(Func, "entry");
     Builder.SetInsertPoint(entry);
 
-    cout << "Began the loop" << endl;
     llvm::AllocaInst* alloc;
     auto type_pointer = Parameter_types.begin();
-    for (auto par: Parameter_names){
-        cout << "Reached before alloc" << endl;
-        // alloc = Builder.CreateAlloca(*type_pointer, 0, par);
-        // NamedValues[par] = alloc;
-        // // store = Builder.CreateStore(par,alloc);
-        // cout << "Reached after alloc" << endl;
-        // NamedValues[par] = alloc;
-        advance(type_pointer, 1);
-    }
-
-    cout << "Finished the loop" << endl;
-
     list[2]->Codegen();
 }
 
 llvm::Value *StringLiteral::Codegen() {
-    cout << value << endl;
     return Builder.CreateGlobalStringPtr(value);
 }
 
@@ -176,18 +161,14 @@ llvm::Value *MethodCall::Codegen(){
         else arguments.push_back(node->Codegen());
     }
 
-    cout << "REACHED AFTER LIST MADE" << endl;
     if (name == "\"printf\""){
         Builder.CreateCall(printfunc, arguments, "printfcall");
     }
     
     else {
-        cout << "reached here" << endl;
+
         string methcall_name = name.substr(1,name.size()-2);
-        cout << methcall_name << endl;
         llvm::FunctionCallee func = ModuleOb->getOrInsertFunction(methcall_name, Functypes[methcall_name]);
-                                                   
-        cout << "funccallee created" << endl;
         return Builder.CreateCall(func, arguments, "funccall");
     }
 }
@@ -217,9 +198,7 @@ llvm::Value* UnaryExpression::Codegen(){
 llvm::Value* AssignmentStatement::Codegen(){
     llvm::AllocaInst* var_name = NamedValues[left->interpret()];
     llvm::Value* expr = right->Codegen();
-    cout << "reached assignment before store" << endl;
     Builder.CreateStore(expr, var_name);
-    cout << "reached assignment after store" << endl;
 }
 llvm::Value* ArithmeticOperator::Codegen(){
     llvm::Value* v;
@@ -239,23 +218,18 @@ llvm::Value* ConditionalOperator::Codegen(){
 }
 llvm::Value* ArithmeticExpression::Codegen(){
 
-    cout << "Reached Arithmetic expression" << endl;
     string op = child2->interpret();
     llvm::Value* left = child1->Codegen();
     llvm::Value* right = child3->Codegen();
-    cout << "finished codegen" << endl;
-    cout << child1->getname() << endl;
     if (child1->getname().front()=='$')
         left = Builder.CreateLoad(left);
-
-    cout << "AFTER GETNAME" << endl;
     
     if (child3->getname().front() == '$')
         right = Builder.CreateLoad(right); 
 
     llvm::Value* v;
 
-    if (op == "+") {cout << "reached before add" << endl;v = Builder.CreateAdd(left, right, "addition"); cout << "reached add" << endl;}
+    if (op == "+") {v = Builder.CreateAdd(left, right, "addition"); }
     else if (op == "-") v = Builder.CreateSub(left, right, "subtraction");
     else if (op == "*") v = Builder.CreateMul(left, right, "multiplication");
     else if (op == "/") v = Builder.CreateSDiv(left, right, "division");
@@ -276,13 +250,11 @@ llvm::Value* EqualExpression::Codegen(){
 
     llvm::Value* v;
     if (op == "=="){
-        cout << "Reached inside equal" << endl;
         v = Builder.CreateICmpEQ(left, right, "equalcompare");
     }
     else if (op == "!=") 
         v = Builder.CreateICmpNE(left, right, "notequalcompare");
 
-    cout << "Finished equal expression" << endl;
     return v;
 
 }
@@ -368,10 +340,8 @@ llvm::Value* VarDecl::Codegen(){
     string var_name = right->interpret();
     string var_type = left->interpret();
     // llvm::GlobalVariable *gVar = createGlob(Builder, var_name, var_type);
-    cout << "reached before alloca" << endl;
     llvm::AllocaInst* alloc = Builder.CreateAlloca(TypeMap[var_type], 0, var_name);
     NamedValues[var_name] = alloc;
-    cout << "reached after alloca" << endl;
 }
 llvm::Value* Type::Codegen(){
     llvm::Value* v;
@@ -394,20 +364,19 @@ llvm::Value* IfThenElseStatement::Codegen(){
     llvm::Value* ifval = child2->Codegen();
     Builder.CreateBr(merge);
 
-    cout << "If part generated" << endl;
+   
 
     ifBlock = Builder.GetInsertBlock();
 
     TheFunction->getBasicBlockList().push_back(elseBlock);
     Builder.SetInsertPoint(elseBlock);
     llvm::Value* elseval = child3->Codegen();
-    cout << "came back after else" << endl;
+
     Builder.CreateBr(merge);
 
     TheFunction->getBasicBlockList().push_back(merge);
     Builder.SetInsertPoint(merge);
 
-    cout << "else part generated" << endl;
 
     // Builder.SetInsertPoint(merge);
     // llvm::PHINode *Phi = Builder.CreatePHI(TypeMap["int"], 2, "iftmp");
@@ -433,9 +402,9 @@ llvm::Value* ForStatement::Codegen(){
     return v;
 }
 llvm::Value* ReturnStatement::Codegen(){
-    cout << "Comes to return statement" << endl;
+    
     Builder.CreateRet(operand->Codegen());
-    cout << "came back after" << endl;
+  
     llvm::Value* v; return v;
 }
 llvm::Value* BreakStatement::Codegen(){
@@ -458,8 +427,7 @@ llvm::Value* MethodDecls::Codegen(){
 
 llvm::Value* Location::Codegen(){
     string lname = getvalue();
-    cout << lname << "lname" << endl;
-    printNamedArgs();
+    lname = lname.substr(1);
     if (NamedArgs.count(lname) > 0){name = name.substr(1); return NamedArgs[lname]; }
     else return NamedValues[lname];
 }

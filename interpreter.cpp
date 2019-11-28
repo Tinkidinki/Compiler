@@ -108,34 +108,64 @@ string ProgramVarMethod::interpret(){
             
             vector <Node*> params = list[1]->getList();
             
-            // bool name_check = true;
-            // string temp_name;
-            // string temp_value;
-            // string temp_type;
+           
 
             vector <string> var_list;
             for (auto param: params){
                 var_list.push_back(param->interpret());
             }
 
-            // Params are stored as name, type, name, type and so on, 
-            // So need to alternate between them to make var_list
-            // for (auto i: params){
-            //     if (name_check){
-            //         temp_name = i->interpret();
-            //         temp_value = "";
-            //         name_check = false;
-            //     }
-            //     else{
-            //         temp_type = i->interpret();
-            //         var temp_var;
-            //         temp_var.type = temp_type;
-            //         temp_var.value = temp_value;
-            //         var_list.insert({temp_name, temp_var});
-            //         name_check = true;
-            //     }
-            // }
+         
             
+            Node* block = list[2];
+
+            func temp;
+            temp.ret_type = ret_type;
+            temp.var_list = var_list;
+            temp.block = block;
+            func_list.insert({func_name, temp});
+        }
+    }
+    
+
+    return "";
+}
+
+string ProgramMethod::interpret(){
+      /* start a new scope */
+    map <string, var> global_scope;
+    scope_stack.push_front(global_scope);
+
+
+
+/* Obtain all the method declarations */
+    for (auto i: operand->getList()){
+    
+    // Only main gets interpreted, rest get stored.
+        if (i->name == "main"){
+            map <string, var> main_scope;
+            scope_stack.push_front(main_scope);
+            i->getList()[2]->interpret();
+            scope_stack.pop_front();
+
+        }
+
+        else{
+            vector <Node*> list = i->getList(); // get list containing method components
+            string func_name = i->name;
+            string ret_type = list[0]->interpret();
+            
+            
+            vector <Node*> params = list[1]->getList();
+            
+           
+
+            vector <string> var_list;
+            for (auto param: params){
+                var_list.push_back(param->interpret());
+            }
+
+         
             
             Node* block = list[2];
 
@@ -474,10 +504,7 @@ string MethodDeclParam::interpret(){
     string v = "dummy";
     return v;
 }
-string ProgramMethod::interpret(){
-    string v = "dummy";
-    return v;
-}
+
 string MethodDeclEmpty::interpret(){
     string v = "dummy";
     return v;
