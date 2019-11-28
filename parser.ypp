@@ -375,17 +375,17 @@ int main(int argc, char **argv)
         
         start->interpret();
 
-        printf("------------------\n");
-        printf("CODE GENERATION STARTED\n");
-        printf("To run:\n");
-        printf("llvm-as tinki.ll\n");
-        printf("lli tinki.bc\n");
-        printf("------------------\n");
+        // printf("------------------\n");
+        // printf("CODE GENERATION STARTED\n");
+        // printf("To run:\n");
+        // printf("llvm-as tinki.ll\n");
+        // printf("lli tinki.bc\n");
+        // printf("------------------\n");
 
         
 
-        start->Codegen();
-        ModuleOb->dump();
+        // start->Codegen();
+        // ModuleOb->dump();
 
         return 0;
 }
