@@ -115,8 +115,17 @@ llvm::Value* MethodDeclParam::Codegen(){
         advance(par_pointer, 1);
     }
 
-    Int idx = 0;
-    
+    cout << "Began the loop" << endl;
+    llvm::AllocaInst* alloc;
+    auto type_pointer = Parameter_types.begin();
+    for (auto par: Parameter_names){
+        alloc = Builder.CreateAlloca(*type_pointer, 0, par);
+        cout << "Reached after alloc" << endl;
+        NamedValues[par] = alloc;
+        advance(type_pointer, 1);
+    }
+
+    cout << "Finished the loop" << endl;
 
     llvm::Function* Func = createFunc(Builder, name, func_type, Parameter_types);
     setFuncParams(Func, Parameter_names);
